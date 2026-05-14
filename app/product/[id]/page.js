@@ -18,7 +18,7 @@ export default function ProductPage() {
 
   if (!product) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
+      <div className="min-h-screen bg-[#f8f8f8] px-4 sm:px-6 lg:px-8 py-8 overflow-hidden">
         Product not found
       </div>
     );
