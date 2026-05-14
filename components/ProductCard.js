@@ -5,13 +5,11 @@ import Link from "next/link";
 
 export default function ProductCard({ product }) {
 
-  // Dynamic ratings for premium ecommerce feel
-
-
   return (
+
     <Link href={`/product/${product.id}`}>
 
-      <div className="bg-white rounded-2xl overflow-hidden shadow-md hover:shadow-2xl hover:-translate-y-1 transition duration-300 cursor-pointer group w-full w-full mx-auto border border-gray-100">
+      <div className="bg-white rounded-3xl overflow-hidden shadow-md hover:shadow-2xl hover:-translate-y-1 transition duration-300 cursor-pointer group border border-gray-100 flex flex-col h-full">
 
         {/* IMAGE */}
         <div className="relative overflow-hidden">
@@ -29,36 +27,36 @@ export default function ProductCard({ product }) {
 
           {/* PREMIUM TAG */}
           <span className="absolute top-3 right-3 bg-[#D4AF37] text-black text-xs font-semibold px-3 py-1 rounded-full shadow-md">
-           {product.badge}
+            {product.badge}
           </span>
 
         </div>
 
         {/* CONTENT */}
-        <div className="p-5">
+        <div className="p-5 flex flex-col flex-1">
 
           {/* PRODUCT NAME */}
-          <h2 className="text-xl font-semibold mb-1">
+          <h2 className="text-2xl font-semibold mb-2">
             {product.name}
           </h2>
 
           {/* SHORT DESCRIPTION */}
-          <p className="text-gray-500 text-sm mb-3">
+          <p className="text-gray-500 text-sm mb-4">
             Premium Luxury Fragrance
           </p>
 
           {/* PERFUME NOTES */}
           <div className="flex flex-wrap gap-2 mb-4">
 
-            <span className="bg-gray-100 text-xs px-2 py-1 rounded-full">
+            <span className="bg-gray-100 text-xs px-3 py-1 rounded-full">
               Woody
             </span>
 
-            <span className="bg-gray-100 text-xs px-2 py-1 rounded-full">
+            <span className="bg-gray-100 text-xs px-3 py-1 rounded-full">
               Musk
             </span>
 
-            <span className="bg-gray-100 text-xs px-2 py-1 rounded-full">
+            <span className="bg-gray-100 text-xs px-3 py-1 rounded-full">
               Long Lasting
             </span>
 
@@ -78,11 +76,11 @@ export default function ProductCard({ product }) {
           </div>
 
           {/* PRICE */}
-          <div className="flex items-center justify-between mb-2">
+          <div className="flex items-center justify-between mb-3">
 
             <div>
 
-              <p className="text-2xl font-bold">
+              <p className="text-3xl font-bold">
                 ₹{product.price}
               </p>
 
@@ -104,7 +102,7 @@ export default function ProductCard({ product }) {
           </p>
 
           {/* TRUST BADGES */}
-          <div className="flex items-center gap-3 text-xs text-gray-500 mb-5">
+          <div className="flex items-center gap-3 text-xs text-gray-500 mb-6 flex-wrap">
 
             <span>🔒 Secure</span>
 
@@ -119,18 +117,23 @@ export default function ProductCard({ product }) {
           </div>
 
           {/* BUTTON */}
-          <button
-            onClick={(e) => {
-              e.preventDefault();
-              addToCart(product);
-              alert("Added to cart ✅");
-            }}
-            className="w-full bg-black text-white py-3 rounded-xl hover:bg-[#D4AF37] hover:text-black transition duration-300 font-medium"
-          >
-            Add to Cart
-          </button>
+          <div className="mt-auto">
+
+            <button
+              onClick={(e) => {
+                e.preventDefault();
+                addToCart(product);
+                alert("Added to cart ✅");
+              }}
+              className="w-full bg-black text-white py-3 rounded-xl hover:bg-[#D4AF37] hover:text-black transition duration-300 font-medium"
+            >
+              Add to Cart
+            </button>
+
+          </div>
 
         </div>
+
       </div>
 
     </Link>

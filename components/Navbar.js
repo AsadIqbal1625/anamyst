@@ -28,12 +28,12 @@ export default function Navbar() {
 
   return (
 
-    <nav className="sticky top-0 z-50 bg-black/90 backdrop-blur-xl border-b border-white/10 w-full overflow-x-hidden">
+    <nav className="sticky top-0 z-50 bg-black/90 backdrop-blur-xl border-b border-white/10 w-full overflow-hidden">
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3 flex flex-col lg:flex-row items-center justify-between gap-4">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3 flex flex-col gap-4">
 
-        {/* TOP SECTION */}
-        <div className="w-full flex items-center justify-between gap-4">
+        {/* TOP BAR */}
+        <div className="flex items-center justify-between w-full">
 
           {/* LOGO */}
           <Link
@@ -44,12 +44,12 @@ export default function Navbar() {
             <Image
               src="/logo.jpeg"
               alt="ANAMYST"
-              width={48}
-              height={48}
+              width={50}
+              height={50}
               className="rounded-xl object-cover"
             />
 
-            <h1 className="text-white text-2xl sm:text-4xl font-semibold tracking-[0.25em] hover:text-[#D4AF37] transition duration-300">
+            <h1 className="text-white text-2xl sm:text-4xl font-semibold tracking-[0.22em] hover:text-[#D4AF37] transition duration-300">
 
               ANAMYST
 
@@ -57,47 +57,48 @@ export default function Navbar() {
 
           </Link>
 
-          {/* MENU DESKTOP */}
+          {/* DESKTOP MENU */}
           <div className="hidden lg:flex items-center gap-6 text-white text-sm uppercase font-medium">
 
             <Link
               href="/"
-             className="relative text-white text-sm uppercase font-medium transition duration-300 active:text-[#D4AF37] hover:text-[#D4AF37]"
->
+              className="hover:text-[#D4AF37] transition duration-300"
+            >
               Home
             </Link>
 
             <Link
               href="/shop"
-              className="relative text-white text-sm uppercase font-medium transition duration-300 active:text-[#D4AF37] hover:text-[#D4AF37]"
->
+              className="hover:text-[#D4AF37] transition duration-300"
+            >
               Shop
             </Link>
 
             <Link
               href="/about"
-              className="relative text-white text-sm uppercase font-medium transition duration-300 active:text-[#D4AF37] hover:text-[#D4AF37]"
->
+              className="hover:text-[#D4AF37] transition duration-300"
+            >
               About
             </Link>
 
             <Link
               href="/faq"
-              className="relative text-white text-sm uppercase font-medium transition duration-300 active:text-[#D4AF37] hover:text-[#D4AF37]"
->
+              className="hover:text-[#D4AF37] transition duration-300"
+            >
               FAQ
             </Link>
 
+            {/* DESKTOP CART */}
             <Link
               href="/cart"
-              className="relative text-white text-sm uppercase font-medium transition duration-300 active:text-[#D4AF37] hover:text-[#D4AF37]"
+              className="relative hover:text-[#D4AF37] transition duration-300"
             >
 
               Cart
 
               {cartCount > 0 && (
 
-                <span className="absolute -top-2 -right-3 bg-[#D4AF37] text-black text-xs font-bold w-5 h-5 rounded-full flex items-center justify-center">
+                <span className="absolute -top-2 -right-3 bg-[#D4AF37] text-black text-[10px] font-bold w-5 h-5 rounded-full flex items-center justify-center shadow-md">
 
                   {cartCount}
 
@@ -112,7 +113,7 @@ export default function Navbar() {
         </div>
 
         {/* SEARCH */}
-        <div className="w-full lg:max-w-2xl">
+        <div className="w-full">
 
           <input
             type="text"
@@ -123,9 +124,7 @@ export default function Navbar() {
 
               if (e.key === "Enter") {
 
-                router.push(
-                  `/shop?search=${search}`
-                );
+                router.push(`/shop?search=${search}`);
 
               }
 
@@ -136,44 +135,47 @@ export default function Navbar() {
         </div>
 
         {/* MOBILE MENU */}
-        <div className="flex lg:hidden flex-wrap justify-center items-center gap-4 text-white text-sm uppercase font-medium pb-2">
+        <div className="flex lg:hidden justify-center flex-wrap gap-6 text-white text-sm uppercase font-medium pb-2">
 
           <Link
             href="/"
-            className="text-white text-sm uppercase font-medium transition duration-300 active:text-[#D4AF37] hover:text-[#D4AF37]">
+            className="active:text-[#D4AF37] transition duration-300"
+          >
             Home
           </Link>
 
           <Link
             href="/shop"
-            className="text-white text-sm uppercase font-medium transition duration-300 active:text-[#D4AF37] hover:text-[#D4AF37]">
+            className="active:text-[#D4AF37] transition duration-300"
+          >
             Shop
           </Link>
 
           <Link
             href="/about"
-            className="text-white text-sm uppercase font-medium transition duration-300 active:text-[#D4AF37] hover:text-[#D4AF37]"
->
+            className="active:text-[#D4AF37] transition duration-300"
+          >
             About
           </Link>
 
           <Link
             href="/faq"
-            className="text-white text-sm uppercase font-medium transition duration-300 active:text-[#D4AF37] hover:text-[#D4AF37]"
->
+            className="active:text-[#D4AF37] transition duration-300"
+          >
             FAQ
           </Link>
 
+          {/* MOBILE CART */}
           <Link
             href="/cart"
-            className="text-white text-sm uppercase font-medium transition duration-300 active:text-[#D4AF37] hover:text-[#D4AF37]"
->
+            className="relative inline-flex items-center active:text-[#D4AF37] transition duration-300"
+          >
 
             Cart
 
             {cartCount > 0 && (
 
-              <span className="absolute -top-2 -right-3 bg-[#D4AF37] text-black text-xs font-bold w-5 h-5 rounded-full flex items-center justify-center">
+              <span className="absolute -top-3 -right-4 bg-[#D4AF37] text-black text-[10px] font-bold w-5 h-5 rounded-full flex items-center justify-center shadow-md">
 
                 {cartCount}
 
