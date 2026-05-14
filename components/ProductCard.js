@@ -4,10 +4,13 @@ import { useParams } from "next/navigation";
 import { products } from "../../../data/products";
 import { addToCart } from "../../../lib/cart";
 import Image from "next/image";
+import { useState } from "react";
 
 export default function ProductPage() {
 
   const params = useParams();
+
+  const [qty, setQty] = useState(1);
 
   const product = products.find(
     (p) => p.id.toString() === params.id
@@ -16,44 +19,42 @@ export default function ProductPage() {
   if (!product) {
 
     return (
-
-      <div className="min-h-screen flex items-center justify-center text-2xl font-semibold">
+      <div className="min-h-screen flex items-center justify-center text-2xl font-bold">
         Product not found
       </div>
-
     );
 
   }
 
   return (
 
-    <div className="min-h-screen bg-[#f7f7f7] px-4 sm:px-6 lg:px-10 py-8">
+    <div className="bg-[#f6f6f6] min-h-screen px-3 sm:px-6 py-4">
 
-      <div className="max-w-6xl mx-auto bg-white rounded-3xl shadow-xl overflow-hidden">
+      <div className="max-w-6xl mx-auto bg-white rounded-3xl shadow-lg overflow-hidden">
 
         <div className="grid grid-cols-1 lg:grid-cols-2">
 
-          {/* IMAGE SECTION */}
-          <div className="relative bg-[#f4f4f4] flex items-center justify-center p-4 sm:p-8">
+          {/* IMAGE SIDE */}
+          <div className="relative bg-[#fafafa] p-4 sm:p-6 flex items-center justify-center">
 
-            <div className="relative w-full max-w-md">
+            <div className="relative w-full max-w-sm">
 
               <Image
                 src={product.image}
                 alt={product.name}
-                width={600}
-                height={700}
-                className="w-full h-auto object-contain rounded-3xl"
+                width={500}
+                height={600}
                 priority
+                className="w-full h-auto object-contain rounded-3xl"
               />
 
-              {/* LEFT BADGE */}
-              <span className="absolute top-4 left-4 bg-black text-white text-xs sm:text-sm px-4 py-2 rounded-full shadow-lg">
+              {/* TAG */}
+              <span className="absolute top-3 left-3 bg-black text-white text-xs px-3 py-1 rounded-full">
                 {product.tag}
               </span>
 
-              {/* RIGHT BADGE */}
-              <span className="absolute top-4 right-4 bg-[#D4AF37] text-black text-xs sm:text-sm font-semibold px-4 py-2 rounded-full shadow-lg">
+              {/* BADGE */}
+              <span className="absolute top-3 right-3 bg-[#D4AF37] text-black text-xs font-semibold px-3 py-1 rounded-full">
                 {product.badge}
               </span>
 
@@ -61,89 +62,147 @@ export default function ProductPage() {
 
           </div>
 
-          {/* CONTENT SECTION */}
-          <div className="p-6 sm:p-10 flex flex-col justify-center">
+          {/* DETAILS SIDE */}
+          <div className="p-5 sm:p-8 flex flex-col justify-center">
 
             {/* TITLE */}
-            <h1 className="text-4xl sm:text-5xl font-bold mb-4 leading-tight">
+            <h1 className="text-3xl sm:text-5xl font-bold leading-tight mb-2">
               {product.name}
             </h1>
 
-            {/* SUBTITLE */}
-            <p className="text-gray-500 text-base sm:text-lg mb-6">
-              Premium Luxury Fragrance crafted for elegance and long lasting freshness.
+            {/* SUBTEXT */}
+            <p className="text-gray-500 text-base mb-4">
+              Premium Luxury Fragrance Collection
             </p>
 
-            {/* NOTES */}
-            <div className="flex flex-wrap gap-3 mb-6">
-
-              <span className="bg-gray-100 px-4 py-2 rounded-full text-sm">
-                Woody
-              </span>
-
-              <span className="bg-gray-100 px-4 py-2 rounded-full text-sm">
-                Musk
-              </span>
-
-              <span className="bg-gray-100 px-4 py-2 rounded-full text-sm">
-                Long Lasting
-              </span>
-
-            </div>
-
             {/* RATING */}
-            <div className="flex items-center gap-3 mb-6">
+            <div className="flex items-center gap-2 mb-4">
 
-              <div className="text-yellow-500 text-lg">
+              <div className="text-yellow-500 text-base">
                 ★★★★★
               </div>
 
-              <span className="text-gray-600">
+              <span className="text-gray-600 text-sm">
                 {product.rating} ({product.reviews} reviews)
               </span>
 
-            </div>
-
-            {/* PRICE */}
-            <div className="flex items-center gap-4 mb-6 flex-wrap">
-
-              <p className="text-4xl font-bold">
-                ₹{product.price}
-              </p>
-
-              <p className="text-xl text-gray-400 line-through">
-                ₹{product.oldPrice}
-              </p>
-
-              <span className="text-green-600 font-semibold">
+              <span className="text-green-600 text-sm font-medium ml-auto">
                 In Stock
               </span>
 
             </div>
 
-            {/* SHIPPING */}
-            <div className="mb-6 text-gray-600">
+            {/* DESCRIPTION */}
+            <p className="text-gray-700 text-base leading-relaxed mb-5">
+              Luxury oud fragrance for men
+            </p>
 
-              <p className="mb-2">
-                🚚 Shipping Across India
-              </p>
+            {/* NOTES */}
+            <div className="mb-5">
 
-              <p>
-                🔒 100% Authentic Premium Product
-              </p>
+              <h3 className="font-semibold text-xl mb-3">
+                Fragrance Notes
+              </h3>
+
+              <div className="flex flex-wrap gap-2">
+
+                {["Citrus", "Rose", "Oud", "Musk", "Long Lasting"].map((note) => (
+
+                  <span
+                    key={note}
+                    className="bg-gray-100 px-4 py-2 rounded-full text-sm"
+                  >
+                    {note}
+                  </span>
+
+                ))}
+
+              </div>
 
             </div>
 
-            {/* BUTTON */}
-            <button
-              onClick={() => {
-                addToCart(product);
-                alert("Added to cart ✅");
-              }}
-              className="w-full sm:w-fit bg-black text-white px-10 py-4 rounded-2xl hover:bg-[#D4AF37] hover:text-black transition duration-300 text-lg font-semibold"
-            >
-              Add to Cart
-            </button>
+            {/* PRICE */}
+            <div className="flex items-center gap-4 mb-5 flex-wrap">
+
+              <h2 className="text-5xl font-bold">
+                ₹{product.price}
+              </h2>
+
+              <span className="line-through text-gray-400 text-2xl">
+                ₹{product.oldPrice}
+              </span>
+
+              <span className="text-green-600 font-semibold text-lg">
+                Save ₹{product.oldPrice - product.price}
+              </span>
+
+            </div>
+
+            {/* FEATURES */}
+            <div className="bg-[#fafafa] border rounded-2xl p-4 mb-5 text-gray-700 space-y-2 text-sm">
+
+              <p>🚚 Shipping Across India • T&C Apply</p>
+              <p>🔒 Secure Checkout</p>
+              <p>💯 Authentic Luxury Fragrance</p>
+              <p>📦 Easy WhatsApp Support</p>
+
+            </div>
+
+            {/* QUANTITY */}
+            <div className="flex items-center gap-4 mb-6">
+
+              <div className="flex items-center border rounded-2xl overflow-hidden">
+
+                <button
+                  onClick={() => qty > 1 && setQty(qty - 1)}
+                  className="px-4 py-3 text-xl font-semibold bg-gray-100"
+                >
+                  -
+                </button>
+
+                <span className="px-6 text-xl font-semibold">
+                  {qty}
+                </span>
+
+                <button
+                  onClick={() => setQty(qty + 1)}
+                  className="px-4 py-3 text-xl font-semibold bg-gray-100"
+                >
+                  +
+                </button>
+
+              </div>
+
+              <span className="text-gray-500">
+                Quantity
+              </span>
+
+            </div>
+
+            {/* BUTTONS */}
+            <div className="flex flex-col sm:flex-row gap-4">
+
+              <button
+                onClick={() => {
+                  addToCart({
+                    ...product,
+                    qty,
+                  });
+
+                  alert("Added to cart ✅");
+                }}
+                className="flex-1 bg-black text-white py-4 rounded-2xl text-lg font-medium hover:bg-[#D4AF37] hover:text-black transition"
+              >
+                Add to Cart
+              </button>
+
+              <button
+                className="flex-1 border-2 border-black py-4 rounded-2xl text-lg font-medium hover:bg-black hover:text-white transition"
+              >
+                Buy Now
+              </button>
+
+            </div>
 
           </div>
 
