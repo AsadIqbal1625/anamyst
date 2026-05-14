@@ -62,35 +62,35 @@ export default function Navbar() {
 
             <Link
               href="/"
-              className="hover:text-[#D4AF37] transition"
-            >
+             className="relative text-white text-sm uppercase font-medium transition duration-300 active:text-[#D4AF37] hover:text-[#D4AF37]"
+>
               Home
             </Link>
 
             <Link
               href="/shop"
-              className="hover:text-[#D4AF37] transition"
-            >
+              className="relative text-white text-sm uppercase font-medium transition duration-300 active:text-[#D4AF37] hover:text-[#D4AF37]"
+>
               Shop
             </Link>
 
             <Link
               href="/about"
-              className="hover:text-[#D4AF37] transition"
-            >
+              className="relative text-white text-sm uppercase font-medium transition duration-300 active:text-[#D4AF37] hover:text-[#D4AF37]"
+>
               About
             </Link>
 
             <Link
               href="/faq"
-              className="hover:text-[#D4AF37] transition"
-            >
+              className="relative text-white text-sm uppercase font-medium transition duration-300 active:text-[#D4AF37] hover:text-[#D4AF37]"
+>
               FAQ
             </Link>
 
             <Link
               href="/cart"
-              className="relative hover:text-[#D4AF37] transition"
+              className="relative text-white text-sm uppercase font-medium transition duration-300 active:text-[#D4AF37] hover:text-[#D4AF37]"
             >
 
               Cart
@@ -140,36 +140,34 @@ export default function Navbar() {
 
           <Link
             href="/"
-            className="hover:text-[#D4AF37] transition"
-          >
+            className="text-white text-sm uppercase font-medium transition duration-300 active:text-[#D4AF37] hover:text-[#D4AF37]">
             Home
           </Link>
 
           <Link
             href="/shop"
-            className="hover:text-[#D4AF37] transition"
-          >
+            className="text-white text-sm uppercase font-medium transition duration-300 active:text-[#D4AF37] hover:text-[#D4AF37]">
             Shop
           </Link>
 
           <Link
             href="/about"
-            className="hover:text-[#D4AF37] transition"
-          >
+            className="text-white text-sm uppercase font-medium transition duration-300 active:text-[#D4AF37] hover:text-[#D4AF37]"
+>
             About
           </Link>
 
           <Link
             href="/faq"
-            className="hover:text-[#D4AF37] transition"
-          >
+            className="text-white text-sm uppercase font-medium transition duration-300 active:text-[#D4AF37] hover:text-[#D4AF37]"
+>
             FAQ
           </Link>
 
           <Link
             href="/cart"
-            className="relative hover:text-[#D4AF37] transition"
-          >
+            className="text-white text-sm uppercase font-medium transition duration-300 active:text-[#D4AF37] hover:text-[#D4AF37]"
+>
 
             Cart
 
