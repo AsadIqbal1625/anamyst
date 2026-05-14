@@ -1,17 +1,17 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { useEffect, useState } from "react";
 import { getCart } from "../lib/cart";
 import { useRouter } from "next/navigation";
 
 export default function Navbar() {
 
-  const [cartCount, setCartCount] = useState(0);
+  const router = useRouter();
 
   const [search, setSearch] = useState("");
-
-  const router = useRouter();
+  const [cartCount, setCartCount] = useState(0);
 
   useEffect(() => {
 
@@ -28,42 +28,97 @@ export default function Navbar() {
 
   return (
 
-    <nav className="sticky top-0 z-50 backdrop-blur-xl bg-[#111111]/95 border-b border-white/10">
+    <nav className="sticky top-0 z-50 bg-black/90 backdrop-blur-xl border-b border-white/10 w-full overflow-x-hidden">
 
-      <div className="w-full flex items-center justify-between px-4 md:px-8 py-3">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3 flex flex-col lg:flex-row items-center justify-between gap-4">
 
-        {/* LEFT */}
-        <Link
-          href="/"
-          className="flex items-center gap-3 shrink-0 group"
-        >
+        {/* TOP SECTION */}
+        <div className="w-full flex items-center justify-between gap-4">
 
           {/* LOGO */}
-          <img
-            src="/logo.jpeg"
-            alt="Anamyst Logo"
-            className="h-10 w-10 rounded-lg object-cover"
-          />
+          <Link
+            href="/"
+            className="flex items-center gap-3 shrink-0"
+          >
 
-          {/* BRAND */}
-          <h1 className="text-white text-2xl md:text-4xl font-semibold tracking-[0.25em] hover:text-[#D4AF37] transition duration-300">
+            <Image
+              src="/logo.jpeg"
+              alt="ANAMYST"
+              width={48}
+              height={48}
+              className="rounded-xl object-cover"
+            />
 
-            ANAMYST
+            <h1 className="text-white text-2xl sm:text-4xl font-semibold tracking-[0.25em] hover:text-[#D4AF37] transition duration-300">
 
-          </h1>
+              ANAMYST
 
-        </Link>
+            </h1>
 
-        {/* SEARCH BAR DESKTOP */}
-        <div className="hidden lg:flex flex-1 justify-center px-10">
+          </Link>
+
+          {/* MENU DESKTOP */}
+          <div className="hidden lg:flex items-center gap-6 text-white text-sm uppercase font-medium">
+
+            <Link
+              href="/"
+              className="hover:text-[#D4AF37] transition"
+            >
+              Home
+            </Link>
+
+            <Link
+              href="/shop"
+              className="hover:text-[#D4AF37] transition"
+            >
+              Shop
+            </Link>
+
+            <Link
+              href="/about"
+              className="hover:text-[#D4AF37] transition"
+            >
+              About
+            </Link>
+
+            <Link
+              href="/faq"
+              className="hover:text-[#D4AF37] transition"
+            >
+              FAQ
+            </Link>
+
+            <Link
+              href="/cart"
+              className="relative hover:text-[#D4AF37] transition"
+            >
+
+              Cart
+
+              {cartCount > 0 && (
+
+                <span className="absolute -top-2 -right-3 bg-[#D4AF37] text-black text-xs font-bold w-5 h-5 rounded-full flex items-center justify-center">
+
+                  {cartCount}
+
+                </span>
+
+              )}
+
+            </Link>
+
+          </div>
+
+        </div>
+
+        {/* SEARCH */}
+        <div className="w-full lg:max-w-2xl">
 
           <input
             type="text"
-            placeholder="Search luxury fragrances..."
+            placeholder="Search perfumes..."
             value={search}
-            onChange={(e) =>
-              setSearch(e.target.value)
-            }
+            onChange={(e) => setSearch(e.target.value)}
             onKeyDown={(e) => {
 
               if (e.key === "Enter") {
@@ -75,13 +130,13 @@ export default function Navbar() {
               }
 
             }}
-            className="w-full max-w-2xl bg-white/10 border border-[#D4AF37] text-white placeholder:text-gray-300 px-6 py-3 rounded-full outline-none focus:border-[#D4AF37]"
+            className="w-full px-5 py-3 rounded-full bg-white/10 border border-[#D4AF37] text-white placeholder:text-gray-300 outline-none focus:border-[#D4AF37] transition"
           />
 
         </div>
 
-        {/* RIGHT MENU */}
-        <div className="flex items-center gap-4 md:gap-7 text-white text-sm md:text-base uppercase font-medium">
+        {/* MOBILE MENU */}
+        <div className="flex lg:hidden flex-wrap justify-center items-center gap-4 text-white text-sm uppercase font-medium pb-2">
 
           <Link
             href="/"
@@ -97,7 +152,6 @@ export default function Navbar() {
             Shop
           </Link>
 
-          {/* HIDE ON MOBILE */}
           <Link
             href="/about"
             className="hover:text-[#D4AF37] transition"
@@ -112,7 +166,6 @@ export default function Navbar() {
             FAQ
           </Link>
 
-          {/* CART */}
           <Link
             href="/cart"
             className="relative hover:text-[#D4AF37] transition"
@@ -122,7 +175,7 @@ export default function Navbar() {
 
             {cartCount > 0 && (
 
-              <span className="absolute -top-2 -right-3 bg-[#D4AF37] text-black text-xs w-5 h-5 rounded-full flex items-center justify-center font-bold">
+              <span className="absolute -top-2 -right-3 bg-[#D4AF37] text-black text-xs font-bold w-5 h-5 rounded-full flex items-center justify-center">
 
                 {cartCount}
 
@@ -133,32 +186,6 @@ export default function Navbar() {
           </Link>
 
         </div>
-
-      </div>
-
-      {/* MOBILE SEARCH BAR */}
-      <div className="lg:hidden px-4 pb-4">
-
-        <input
-          type="text"
-          placeholder="Search perfumes..."
-          value={search}
-          onChange={(e) =>
-            setSearch(e.target.value)
-          }
-          onKeyDown={(e) => {
-
-            if (e.key === "Enter") {
-
-              router.push(
-                `/shop?search=${search}`
-              );
-
-            }
-
-          }}
-          className="w-full bg-white/10 border border-[#D4AF37] text-white placeholder:text-gray-300 px-5 py-3 rounded-full outline-none"
-        />
 
       </div>
 

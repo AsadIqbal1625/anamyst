@@ -11,7 +11,7 @@ export default function ProductCard({ product }) {
   return (
     <Link href={`/product/${product.id}`}>
 
-      <div className="bg-white rounded-2xl overflow-hidden shadow-md hover:shadow-2xl hover:-translate-y-1 transition duration-300 cursor-pointer group w-full max-w-[320px] mx-auto border border-gray-100">
+      <div className="bg-white rounded-2xl overflow-hidden shadow-md hover:shadow-2xl hover:-translate-y-1 transition duration-300 cursor-pointer group w-full w-full mx-auto border border-gray-100">
 
         {/* IMAGE */}
         <div className="relative overflow-hidden">
