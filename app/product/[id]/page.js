@@ -11,24 +11,26 @@ export default function ProductPage() {
 
   const params = useParams();
 
-   const product = products.find(
+const product = products.find(
         (p) => p.id === Number(params.id)
       );
+
+      if (!product) {
+
+        return (
+          <div className="min-h-screen flex items-center justify-center text-3xl font-bold">
+            Product not found
+          </div>
+        );
+
+      }
 
       const relatedProducts = products.filter(
         (p) => p.id !== product.id
       );
   const [qty, setQty] = useState(1);
 
-  if (!product) {
-
-    return (
-      <div className="min-h-screen flex items-center justify-center text-3xl font-bold">
-        Product not found
-      </div>
-    );
-
-  }
+ 
 
   return (
 
