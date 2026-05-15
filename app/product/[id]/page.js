@@ -58,18 +58,18 @@ export default function ProductPage() {
         </div>
 
         {/* DETAILS SECTION */}
-        <div className="bg-white rounded-3xl shadow-xl p-6 md:p-8">
+        <div className="bg-white rounded-3xl shadow-xl p-4 sm:p-6 md:p-8">
 
-          <h1 className="text-4xl md:text-5xl font-bold mb-4">
+          <h1 className="text-2xl sm:text-3xl md:text-5xl font-bold mb-3">
             {product.name}
           </h1>
 
-          <p className="text-gray-600 text-lg mb-4">
+          <p className="text-gray-600 text-sm sm:text-base md:text-lg mb-3">
             Premium Luxury Fragrance Collection
           </p>
 
           {/* RATING */}
-          <div className="flex items-center justify-between mb-5">
+          <div className="flex items-center justify-between mb-4 flex-wrap gap-2">
 
             <div className="flex items-center gap-3">
 
@@ -90,14 +90,14 @@ export default function ProductPage() {
           </div>
 
           {/* DESCRIPTION */}
-          <p className="text-gray-700 text-lg leading-relaxed mb-6">
+          <p className="text-gray-700 text-sm sm:text-base md:text-lg leading-relaxed mb-4">
             {product.description}
           </p>
 
           {/* NOTES */}
           <div className="mb-8">
 
-            <h3 className="text-2xl font-semibold mb-4">
+            <h3 className="text-lg sm:text-xl md:text-2xl font-semibold mb-3">
               Fragrance Notes
             </h3>
 
@@ -123,7 +123,7 @@ export default function ProductPage() {
 
             <div className="flex items-center gap-4 flex-wrap">
 
-              <span className="text-5xl font-bold">
+              <span className="text-xl sm:text-2xl md:text-3xl text-gray-400 line-through">
                 ₹{product.price}
               </span>
 
@@ -133,16 +133,16 @@ export default function ProductPage() {
 
             </div>
 
-            <span className="text-green-600 text-2xl font-semibold">
+            <span className="text-green-600 text-lg sm:text-xl md:text-2xl font-semibold">
               Save ₹{product.oldPrice - product.price}
             </span>
 
           </div>
 
           {/* SHIPPING */}
-          <div className="bg-gray-50 rounded-2xl p-5 mb-8 border">
+          <div className="bg-gray-50 rounded-2xl p-4 mb-6 border">
 
-            <div className="space-y-3 text-gray-700">
+            <div className="space-y-2 text-sm sm:text-base text-gray-700">
 
               <p>🚚 Shipping Across India • T&C Apply</p>
 
@@ -157,7 +157,7 @@ export default function ProductPage() {
           </div>
 
           {/* QUANTITY */}
-          <div className="flex items-center gap-5 mb-8">
+          <div className="flex items-center gap-3 mb-6 flex-wrap">
 
             <div className="flex items-center bg-gray-100 rounded-2xl overflow-hidden">
 
@@ -165,12 +165,12 @@ export default function ProductPage() {
                 onClick={() =>
                   setQty(qty > 1 ? qty - 1 : 1)
                 }
-                className="px-5 py-3 text-2xl"
+                className="px-4 py-2 text-xl"
               >
                 -
               </button>
 
-              <span className="px-6 text-xl font-semibold">
+              <span className="px-4 text-lg font-semibold">
                 {qty}
               </span>
 
@@ -183,7 +183,7 @@ export default function ProductPage() {
 
             </div>
 
-            <span className="text-gray-500 text-lg">
+            <span className="text-gray-500 text-sm sm:text-base">
               Quantity
             </span>
 
@@ -202,13 +202,13 @@ export default function ProductPage() {
                 alert("Added to cart ✅");
 
               }}
-              className="flex-1 bg-black text-white py-4 rounded-2xl text-lg font-medium hover:bg-[#D4AF37] hover:text-black transition"
+              className="flex-1 bg-black text-white py-3 rounded-2xl text-base sm:text-lg font-medium:bg-[#D4AF37] hover:text-black transition"
             >
               Add to Cart
             </button>
 
             <button
-              className="flex-1 border-2 border-black py-4 rounded-2xl text-lg font-medium hover:bg-black hover:text-white transition"
+              className="flex-1 bg-black text-white py-3 rounded-2xl text-base sm:text-lg font-medium:bg-black hover:text-white transition"
             >
               Buy Now
             </button>
