@@ -1,8 +1,8 @@
 "use client";
 
 import { useParams } from "next/navigation";
-import { products } from "../../../data/products";
-import { addToCart } from "../../../lib/cart";
+import { products } from "../data/products";
+import { addToCart } from "../lib/cart";
 import Image from "next/image";
 import { useState } from "react";
 
