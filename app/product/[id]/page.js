@@ -53,21 +53,15 @@ export default function ProductPage() {
 
               {/* IMAGE */}
               <div className="bg-[#f8f8f8] rounded-3xl flex items-center justify-center p-4">
+                <div className="w-full aspect-[4/5] sm:aspect-[4/5] lg:h-[650px] overflow-hidden rounded-3xl bg-[#f8f8f8]">
 
-                <img
-                  src={product.image}
-                  alt={product.name}
-                  className="
-                    w-full
-                    max-w-[260px]
-                    sm:max-w-[320px]
-                    md:max-w-[400px]
-                    h-auto
-                    object-contain
-                    rounded-3xl
-                  "
-                />
-
+                  <img
+                    src={product.image}
+                    alt={product.name}
+                    className="w-full h-full object-cover rounded-3xl"
+                  />
+                </div>
+                
               </div>
 
             </div>
