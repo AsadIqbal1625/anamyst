@@ -30,19 +30,20 @@ export default function ProductPage() {
 
     <div className="max-w-7xl mx-auto px-4 py-6 md:py-10">
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-14 items-start">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-12 items-start">
 
-        {/* IMAGE SECTION */}
-        <div className="w-full">
+        {/* PRODUCT IMAGE */}
 
-          <div className="relative w-full h-[340px] sm:h-[420px] md:h-[520px] bg-white rounded-3xl overflow-hidden shadow-xl">
+        <div className="bg-white rounded-3xl shadow-xl p-4">
+
+          <div className="relative w-full h-[320px] sm:h-[420px] md:h-[520px] overflow-hidden rounded-2xl bg-[#f8f8f8]">
 
             <Image
               src={product.image}
               alt={product.name}
               fill
               priority
-              className="object-contain p-4"
+              className="object-contain"
             />
 
             <span className="absolute top-4 left-4 bg-black text-white text-xs px-4 py-2 rounded-full z-10">
@@ -57,27 +58,29 @@ export default function ProductPage() {
 
         </div>
 
-        {/* DETAILS SECTION */}
+        {/* PRODUCT DETAILS */}
+
         <div className="bg-white rounded-3xl shadow-xl p-4 sm:p-6 md:p-8">
 
           <h1 className="text-2xl sm:text-3xl md:text-5xl font-bold mb-3">
             {product.name}
           </h1>
 
-          <p className="text-gray-600 text-sm sm:text-base md:text-lg mb-3">
+          <p className="text-gray-600 text-sm sm:text-base md:text-lg mb-4">
             Premium Luxury Fragrance Collection
           </p>
 
           {/* RATING */}
-          <div className="flex items-center justify-between mb-4 flex-wrap gap-2">
+
+          <div className="flex items-center justify-between mb-5 flex-wrap gap-2">
 
             <div className="flex items-center gap-3">
 
-              <div className="text-yellow-500 text-xl">
+              <div className="text-yellow-500 text-lg">
                 ★★★★★
               </div>
 
-              <span className="text-gray-600 text-lg">
+              <span className="text-gray-600 text-sm sm:text-base">
                 {product.rating} ({product.reviews} reviews)
               </span>
 
@@ -90,14 +93,16 @@ export default function ProductPage() {
           </div>
 
           {/* DESCRIPTION */}
-          <p className="text-gray-700 text-sm sm:text-base md:text-lg leading-relaxed mb-4">
+
+          <p className="text-gray-700 text-sm sm:text-base leading-relaxed mb-6">
             {product.description}
           </p>
 
           {/* NOTES */}
-          <div className="mb-8">
 
-            <h3 className="text-lg sm:text-xl md:text-2xl font-semibold mb-3">
+          <div className="mb-6">
+
+            <h3 className="text-xl font-semibold mb-3">
               Fragrance Notes
             </h3>
 
@@ -119,30 +124,32 @@ export default function ProductPage() {
           </div>
 
           {/* PRICE */}
-          <div className="flex items-center justify-between mb-8 flex-wrap gap-4">
+
+          <div className="flex items-center justify-between flex-wrap gap-4 mb-6">
 
             <div className="flex items-center gap-4 flex-wrap">
 
-              <span className="text-xl sm:text-2xl md:text-3xl text-gray-400 line-through">
+              <span className="text-3xl sm:text-4xl font-bold text-black">
                 ₹{product.price}
               </span>
 
-              <span className="text-3xl text-gray-400 line-through">
+              <span className="text-xl text-gray-400 line-through">
                 ₹{product.oldPrice}
               </span>
 
             </div>
 
-            <span className="text-green-600 text-lg sm:text-xl md:text-2xl font-semibold">
+            <span className="text-green-600 text-xl font-semibold">
               Save ₹{product.oldPrice - product.price}
             </span>
 
           </div>
 
           {/* SHIPPING */}
+
           <div className="bg-gray-50 rounded-2xl p-4 mb-6 border">
 
-            <div className="space-y-2 text-sm sm:text-base text-gray-700">
+            <div className="space-y-3 text-sm sm:text-base text-gray-700">
 
               <p>🚚 Shipping Across India • T&C Apply</p>
 
@@ -157,7 +164,8 @@ export default function ProductPage() {
           </div>
 
           {/* QUANTITY */}
-          <div className="flex items-center gap-3 mb-6 flex-wrap">
+
+          <div className="flex items-center gap-4 mb-6 flex-wrap">
 
             <div className="flex items-center bg-gray-100 rounded-2xl overflow-hidden">
 
@@ -176,7 +184,7 @@ export default function ProductPage() {
 
               <button
                 onClick={() => setQty(qty + 1)}
-                className="px-5 py-3 text-2xl"
+                className="px-4 py-2 text-xl"
               >
                 +
               </button>
@@ -190,6 +198,7 @@ export default function ProductPage() {
           </div>
 
           {/* BUTTONS */}
+
           <div className="flex flex-col sm:flex-row gap-4">
 
             <button
@@ -202,13 +211,13 @@ export default function ProductPage() {
                 alert("Added to cart ✅");
 
               }}
-              className="flex-1 bg-black text-white py-3 rounded-2xl text-base sm:text-lg font-medium:bg-[#D4AF37] hover:text-black transition"
+              className="flex-1 bg-black text-white py-3 rounded-2xl text-base sm:text-lg font-medium hover:bg-[#D4AF37] hover:text-black transition"
             >
               Add to Cart
             </button>
 
             <button
-              className="flex-1 bg-black text-white py-3 rounded-2xl text-base sm:text-lg font-medium:bg-black hover:text-white transition"
+              className="flex-1 border-2 border-black py-3 rounded-2xl text-base sm:text-lg font-medium hover:bg-black hover:text-white transition"
             >
               Buy Now
             </button>
