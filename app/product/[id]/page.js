@@ -18,7 +18,7 @@ export default function ProductPage() {
 
   if (!product) {
     return (
-      <div className="min-h-screen bg-[#f8f8f8] px-4 sm:px-6 lg:px-8 py-8 overflow-hidden">
+      <div className="min-h-screen flex items-center justify-center">
         Product not found
       </div>
     );
@@ -26,43 +26,46 @@ export default function ProductPage() {
 
   return (
 
-    <div className="min-h-screen bg-gradient-to-br from-[#f5f5f5] via-[#ececec] to-[#f8f8f8] overflow-hidden">
+    <div className="min-h-screen bg-[#f5f5f5] py-6 px-4 overflow-x-hidden">
 
-      {/* TOP BLUR EFFECTS */}
-      <div className="absolute top-0 left-0 w-[400px] h-[400px] bg-[#D4AF37]/10 rounded-full blur-3xl"></div>
-
-      <div className="absolute bottom-0 right-0 w-[350px] h-[350px] bg-black/5 rounded-full blur-3xl"></div>
-
-      <div className="relative max-w-7xl mx-auto px-6 py-16">
+      <div className="max-w-7xl mx-auto">
 
         {/* PRODUCT SECTION */}
-        <div className="bg-white/80 backdrop-blur-lg rounded-[32px] shadow-2xl border border-white/50 overflow-hidden">
+        <div className="bg-white rounded-[30px] shadow-xl overflow-hidden">
 
-          <div className="grid lg:grid-cols-2 gap-10 p-8 lg:p-12">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 p-4 sm:p-6 lg:p-10">
 
             {/* IMAGE SIDE */}
-            <div className="relative group">
+            <div className="relative">
 
-              {/* PREMIUM TAGS */}
-              <div className="absolute top-5 left-5 z-20 flex gap-3">
+              {/* TAGS */}
+              <div className="absolute top-4 left-4 z-20 flex gap-3">
 
-                <span className="bg-black text-white text-xs px-4 py-2 rounded-full shadow-lg">
-                  Best Seller
+                <span className="bg-black text-white text-xs px-4 py-2 rounded-full">
+                  {product.tag}
                 </span>
 
-                <span className="bg-[#D4AF37] text-black text-xs px-4 py-2 rounded-full shadow-lg font-semibold">
-                  Premium
+                <span className="bg-[#D4AF37] text-black text-xs font-semibold px-4 py-2 rounded-full">
+                  {product.badge}
                 </span>
 
               </div>
 
-              {/* IMAGE CONTAINER */}
-              <div className="overflow-hidden rounded-3xl bg-white shadow-xl">
+              {/* IMAGE */}
+              <div className="bg-[#f8f8f8] rounded-3xl flex items-center justify-center p-4">
 
                 <img
                   src={product.image}
                   alt={product.name}
-                  className="w-full h-[600px] object-cover group-hover:scale-105 transition duration-700"
+                  className="
+                    w-full
+                    max-w-[260px]
+                    sm:max-w-[320px]
+                    md:max-w-[400px]
+                    h-auto
+                    object-contain
+                    rounded-3xl
+                  "
                 />
 
               </div>
@@ -73,17 +76,17 @@ export default function ProductPage() {
             <div className="flex flex-col justify-center">
 
               {/* TITLE */}
-              <h1 className="text-5xl font-bold mb-4 leading-tight">
+              <h1 className="text-3xl sm:text-5xl font-bold mb-4 leading-tight">
                 {product.name}
               </h1>
 
               {/* SUBTITLE */}
-              <p className="text-gray-600 text-lg mb-3">
+              <p className="text-gray-600 text-lg mb-4">
                 Premium Luxury Fragrance Collection
               </p>
 
               {/* RATINGS */}
-              <div className="flex items-center gap-3 mb-6">
+              <div className="flex flex-wrap items-center gap-3 mb-6">
 
                 <div className="text-yellow-500 text-lg">
                   ★★★★★
@@ -100,7 +103,7 @@ export default function ProductPage() {
               </div>
 
               {/* DESCRIPTION */}
-              <p className="text-gray-700 text-lg leading-8 mb-6">
+              <p className="text-gray-700 text-base sm:text-lg leading-7 mb-6">
                 {product.description}
               </p>
 
@@ -138,13 +141,13 @@ export default function ProductPage() {
               </div>
 
               {/* PRICE */}
-              <div className="flex items-center gap-5 mb-8">
+              <div className="flex flex-wrap items-center gap-4 mb-8">
 
-                <p className="text-5xl font-bold">
+                <p className="text-4xl sm:text-5xl font-bold">
                   ₹{product.price}
                 </p>
 
-                <p className="text-2xl text-gray-400 line-through">
+                <p className="text-xl text-gray-400 line-through">
                   ₹{product.price + 500}
                 </p>
 
@@ -176,7 +179,7 @@ export default function ProductPage() {
               </div>
 
               {/* QUANTITY */}
-              <div className="flex items-center gap-5 mb-8">
+              <div className="flex items-center gap-5 mb-8 flex-wrap">
 
                 <div className="flex items-center gap-3 bg-gray-100 rounded-2xl px-4 py-3">
 
@@ -184,7 +187,7 @@ export default function ProductPage() {
                     onClick={() =>
                       setQty(qty > 1 ? qty - 1 : 1)
                     }
-                    className="w-8 h-8 rounded-lg bg-white shadow hover:bg-gray-200 transition"
+                    className="w-8 h-8 rounded-lg bg-white shadow"
                   >
                     -
                   </button>
@@ -195,7 +198,7 @@ export default function ProductPage() {
 
                   <button
                     onClick={() => setQty(qty + 1)}
-                    className="w-8 h-8 rounded-lg bg-white shadow hover:bg-gray-200 transition"
+                    className="w-8 h-8 rounded-lg bg-white shadow"
                   >
                     +
                   </button>
@@ -211,7 +214,6 @@ export default function ProductPage() {
               {/* BUTTONS */}
               <div className="flex flex-col sm:flex-row gap-4">
 
-                {/* ADD TO CART */}
                 <button
                   onClick={() => {
 
@@ -222,40 +224,40 @@ export default function ProductPage() {
                     alert("Added to cart ✅");
 
                   }}
-                  className="flex-1 bg-black text-white py-5 rounded-2xl hover:bg-[#D4AF37] hover:text-black transition duration-300 text-lg font-medium shadow-xl"
+                  className="flex-1 bg-black text-white py-4 rounded-2xl hover:bg-[#D4AF37] hover:text-black transition duration-300 text-lg font-medium"
                 >
                   Add to Cart
                 </button>
 
-                {/* BUY NOW */}
                 <button
-                    onClick={() => {
+                  onClick={() => {
 
-                      for (let i = 0; i < qty; i++) {
-                        addToCart(product);
-                      }
+                    for (let i = 0; i < qty; i++) {
+                      addToCart(product);
+                    }
 
-                      window.location.href = "/checkout";
+                    window.location.href = "/checkout";
 
-                    }}
-                    className="flex-1 bg-black text-white py-5 rounded-2xl hover:bg-[#D4AF37] hover:text-black transition duration-300 text-lg font-medium shadow-xl"
-                  >
-                    Buy Now
-                  </button>
+                  }}
+                  className="flex-1 bg-black text-white py-4 rounded-2xl hover:bg-[#D4AF37] hover:text-black transition duration-300 text-lg font-medium"
+                >
+                  Buy Now
+                </button>
 
               </div>
 
             </div>
 
           </div>
+
         </div>
 
-        {/* YOU MAY ALSO LIKE */}
-        <div className="mt-24">
+        {/* RELATED PRODUCTS */}
+        <div className="mt-20">
 
-          <div className="flex items-center justify-between mb-10">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-10">
 
-            <h2 className="text-4xl font-bold">
+            <h2 className="text-3xl sm:text-4xl font-bold">
               You may also like
             </h2>
 
@@ -265,7 +267,7 @@ export default function ProductPage() {
 
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
 
             {products
               .filter((p) => p.id !== product.id)
@@ -284,6 +286,7 @@ export default function ProductPage() {
         </div>
 
       </div>
+
     </div>
   );
 }
