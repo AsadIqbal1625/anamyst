@@ -2,139 +2,166 @@
 
 import Link from "next/link";
 
-export default function MobileMenu({
-  isOpen,
-  setIsOpen,
-}) {
+export default function MobileMenu({ isOpen, setIsOpen }) {
+
+  if (!isOpen) return null;
 
   return (
 
     <>
-
-      {/* OVERLAY */}
-
-      {isOpen && (
-
-        <div
-          onClick={() => setIsOpen(false)}
-          className="fixed inset-0 bg-black/50 z-40"
-        />
-
-      )}
+      {/* BACKDROP */}
+      <div
+        className="fixed inset-0 bg-black/70 backdrop-blur-sm z-[998]"
+        onClick={() => setIsOpen(false)}
+      />
 
       {/* SIDEBAR */}
+      <div className="fixed top-0 left-0 h-screen w-[82%] max-w-[340px] bg-[#0d0d0d] z-[999] shadow-2xl overflow-y-auto flex flex-col">
 
-      <div
-    className={`fixed top-0 left-0 h-screen overflow-y-auto w-[280px] bg-white z-50 shadow-2xl transition-transform duration-300 ${
-          isOpen
-            ? "translate-x-0"
-            : "-translate-x-full"
-        }`}
-      >
+        {/* TOP SECTION */}
+        <div className="relative px-6 pt-8 pb-10 border-b border-white/10">
 
-        {/* HEADER */}
-
-        <div className="bg-black text-white p-5 flex items-center justify-between">
-
-          <div>
-
-            <p className="text-sm text-gray-300">
-              Welcome to
-            </p>
-
-            <h2 className="text-2xl font-bold tracking-wide">
-              ANAMYST
-            </h2>
-
-          </div>
-
+          {/* CLOSE */}
           <button
             onClick={() => setIsOpen(false)}
-            className="text-3xl"
+            className="absolute top-5 right-5 text-white text-4xl font-light"
           >
             ×
           </button>
 
+          {/* BRAND */}
+          <p className="text-gray-400 text-sm tracking-widest uppercase mb-3">
+            Luxury Fragrance House
+          </p>
+
+          <h1 className="text-white text-5xl font-bold tracking-[0.25em] leading-tight">
+            ANAMYST
+          </h1>
+
+          <p className="text-gray-400 mt-4 text-sm leading-6">
+            Crafted premium fragrances
+            for elegance, identity and presence.
+          </p>
+
         </div>
 
         {/* MENU */}
+        <div className="flex flex-col py-4">
 
-                    <div className="p-5 space-y-5 text-lg font-medium pb-20">
+          <Link
+            href="/"
+            onClick={() => setIsOpen(false)}
+            className="group px-6 py-5 flex items-center justify-between border-b border-white/5 hover:bg-white/5 transition-all duration-300"
+          >
 
-                <Link
-                    href="/"
-                    onClick={() => setIsOpen(false)}
-                    className="block hover:text-[#D4AF37] transition"
-                >
-                    Home
-                </Link>
+            <span className="text-white text-xl tracking-wide">
+              Home
+            </span>
 
-                <Link
-                    href="/shop"
-                    onClick={() => setIsOpen(false)}
-                    className="block hover:text-[#D4AF37] transition"
-                >
-                    Shop
-                </Link>
+            <span className="text-[#D4AF37] opacity-0 group-hover:opacity-100 transition">
+              →
+            </span>
 
-                <Link
-                    href="/about"
-                    onClick={() => setIsOpen(false)}
-                    className="block hover:text-[#D4AF37] transition"
-                >
-                    About
-                </Link>
+          </Link>
 
-                <Link
-                    href="/faq"
-                    onClick={() => setIsOpen(false)}
-                    className="block hover:text-[#D4AF37] transition"
-                >
-                    FAQ
-                </Link>
+          <Link
+            href="/shop"
+            onClick={() => setIsOpen(false)}
+            className="group px-6 py-5 flex items-center justify-between border-b border-white/5 hover:bg-white/5 transition-all duration-300"
+          >
 
-                <Link
-                    href="/cart"
-                    onClick={() => setIsOpen(false)}
-                    className="block hover:text-[#D4AF37] transition"
-                >
-                    Cart
-                </Link>
+            <span className="text-white text-xl tracking-wide">
+              Shop
+            </span>
 
-                {/* CATEGORY SECTION */}
+            <span className="text-[#D4AF37] opacity-0 group-hover:opacity-100 transition">
+              →
+            </span>
 
-                <div className="border-t pt-5">
+          </Link>
 
-                    <p className="text-gray-400 text-sm uppercase mb-4 tracking-wider">
-                    Categories
-                    </p>
+          <Link
+            href="/about"
+            onClick={() => setIsOpen(false)}
+            className="group px-6 py-5 flex items-center justify-between border-b border-white/5 hover:bg-white/5 transition-all duration-300"
+          >
 
-                    <div className="space-y-4 text-base">
+            <span className="text-white text-xl tracking-wide">
+              About
+            </span>
 
-                    <p className="hover:text-[#D4AF37] cursor-pointer transition">
-                        Luxury Perfumes
-                    </p>
+            <span className="text-[#D4AF37] opacity-0 group-hover:opacity-100 transition">
+              →
+            </span>
 
-                    <p className="hover:text-[#D4AF37] cursor-pointer transition">
-                        Men Collection
-                    </p>
+          </Link>
 
-                    <p className="hover:text-[#D4AF37] cursor-pointer transition">
-                        Women Collection
-                    </p>
+          <Link
+            href="/faq"
+            onClick={() => setIsOpen(false)}
+            className="group px-6 py-5 flex items-center justify-between border-b border-white/5 hover:bg-white/5 transition-all duration-300"
+          >
 
-                    <p className="hover:text-[#D4AF37] cursor-pointer transition">
-                        Unisex Collection
-                    </p>
+            <span className="text-white text-xl tracking-wide">
+              FAQ
+            </span>
 
-                    </div>
+            <span className="text-[#D4AF37] opacity-0 group-hover:opacity-100 transition">
+              →
+            </span>
 
-                </div>
+          </Link>
 
-                </div>
+          <Link
+            href="/cart"
+            onClick={() => setIsOpen(false)}
+            className="group px-6 py-5 flex items-center justify-between border-b border-white/5 hover:bg-white/5 transition-all duration-300"
+          >
+
+            <span className="text-white text-xl tracking-wide">
+              Cart
+            </span>
+
+            <span className="text-[#D4AF37] opacity-0 group-hover:opacity-100 transition">
+              →
+            </span>
+
+          </Link>
+
+        </div>
+
+        {/* COLLECTIONS */}
+        <div className="px-6 py-8 border-t border-white/10 mt-auto">
+
+          <p className="text-[#D4AF37] uppercase tracking-[0.3em] text-xs mb-6">
+            Collections
+          </p>
+
+          <div className="space-y-4">
+
+            <div className="bg-white/5 rounded-2xl px-5 py-4 border border-white/5">
+              <p className="text-white text-lg">
+                Luxury Perfumes
+              </p>
+            </div>
+
+            <div className="bg-white/5 rounded-2xl px-5 py-4 border border-white/5">
+              <p className="text-white text-lg">
+                Men Collection
+              </p>
+            </div>
+
+            <div className="bg-white/5 rounded-2xl px-5 py-4 border border-white/5">
+              <p className="text-white text-lg">
+                Women Collection
+              </p>
+            </div>
+
+          </div>
+
+        </div>
 
       </div>
-
     </>
 
   );
