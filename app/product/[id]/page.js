@@ -30,13 +30,13 @@ export default function ProductPage() {
 
     <div className="max-w-7xl mx-auto px-4 py-6 md:py-10">
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-12 items-start">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 lg:gap-8 items-start max-w-5xl mx-auto">
 
         {/* PRODUCT IMAGE */}
 
-        <div className="bg-white rounded-3xl shadow-xl p-4">
+        <div className="bg-white rounded-3xl shadow-lg p-3 md:p-4">
 
-          <div className="relative w-full h-[320px] sm:h-[420px] md:h-[520px] overflow-hidden rounded-2xl bg-[#f8f8f8]">
+          <div className="relative w-full h-[260px] sm:h-[340px] md:h-[520px] overflow-hidden rounded-2xl bg-[#f8f8f8]">
 
             <Image
               src={product.image}
@@ -60,9 +60,9 @@ export default function ProductPage() {
 
         {/* PRODUCT DETAILS */}
 
-        <div className="bg-white rounded-3xl shadow-xl p-4 sm:p-6 md:p-8">
+        <div className="bg-white rounded-3xl shadow-lg p-4 sm:p-5 md:p-6">
 
-          <h1 className="text-2xl sm:text-3xl md:text-5xl font-bold mb-3">
+          <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-2">
             {product.name}
           </h1>
 
@@ -129,7 +129,7 @@ export default function ProductPage() {
 
             <div className="flex items-center gap-4 flex-wrap">
 
-              <span className="text-3xl sm:text-4xl font-bold text-black">
+              <span className="text-2xl sm:text-3xl font-bold text-black">
                 ₹{product.price}
               </span>
 
@@ -147,7 +147,7 @@ export default function ProductPage() {
 
           {/* SHIPPING */}
 
-          <div className="bg-gray-50 rounded-2xl p-4 mb-6 border">
+          <div className="bg-gray-50 rounded-2xl p-3 mb-5 border">
 
             <div className="space-y-3 text-sm sm:text-base text-gray-700">
 
@@ -199,7 +199,7 @@ export default function ProductPage() {
 
           {/* BUTTONS */}
 
-          <div className="flex flex-col sm:flex-row gap-4">
+          <div className="flex flex-col sm:flex-row gap-3">
 
             <button
               onClick={() => {
