@@ -5,6 +5,8 @@ import Image from "next/image";
 import { useEffect, useState } from "react";
 import { getCart } from "../lib/cart";
 import { useRouter } from "next/navigation";
+import { Menu } from "lucide-react";
+import MobileMenu from "./MobileMenu";
 
 export default function Navbar() {
 
@@ -12,6 +14,7 @@ export default function Navbar() {
 
   const [search, setSearch] = useState("");
   const [cartCount, setCartCount] = useState(0);
+  const [menuOpen, setMenuOpen] = useState(false);
 
   useEffect(() => {
 
@@ -31,9 +34,17 @@ export default function Navbar() {
     <nav className="sticky top-0 z-50 bg-black/90 backdrop-blur-xl border-b border-white/10 w-full overflow-hidden">
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3 flex flex-col gap-4">
-
+      
         {/* TOP BAR */}
         <div className="flex items-center justify-between w-full">
+          {/* MOBILE MENU BUTTON */}
+
+      <button
+        onClick={() => setMenuOpen(true)}
+        className="lg:hidden text-white"
+      >
+        <Menu size={32} />
+      </button>
 
           {/* LOGO */}
           <Link
@@ -134,61 +145,13 @@ export default function Navbar() {
 
         </div>
 
-        {/* MOBILE MENU */}
-        <div className="flex lg:hidden justify-center flex-wrap gap-6 text-white text-sm uppercase font-medium pb-2">
-
-          <Link
-            href="/"
-            className="active:text-[#D4AF37] transition duration-300"
-          >
-            Home
-          </Link>
-
-          <Link
-            href="/shop"
-            className="active:text-[#D4AF37] transition duration-300"
-          >
-            Shop
-          </Link>
-
-          <Link
-            href="/about"
-            className="active:text-[#D4AF37] transition duration-300"
-          >
-            About
-          </Link>
-
-          <Link
-            href="/faq"
-            className="active:text-[#D4AF37] transition duration-300"
-          >
-            FAQ
-          </Link>
-
-          {/* MOBILE CART */}
-          <Link
-            href="/cart"
-            className="relative inline-flex items-center active:text-[#D4AF37] transition duration-300"
-          >
-
-            Cart
-
-            {cartCount > 0 && (
-
-              <span className="absolute -top-3 -right-4 bg-[#D4AF37] text-black text-[10px] font-bold w-5 h-5 rounded-full flex items-center justify-center shadow-md">
-
-                {cartCount}
-
-              </span>
-
-            )}
-
-          </Link>
-
-        </div>
+        
 
       </div>
-
+            <MobileMenu
+          isOpen={menuOpen}
+          setIsOpen={setMenuOpen}
+        />
     </nav>
   );
 }
