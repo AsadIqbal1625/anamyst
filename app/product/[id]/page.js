@@ -1,7 +1,7 @@
 "use client";
 
-import { useState } from "react";
 import { useParams } from "next/navigation";
+import { useState } from "react";
 
 import { products } from "../../../data/products";
 import { addToCart } from "../../../lib/cart";
@@ -17,43 +17,46 @@ export default function ProductPage() {
   const [qty, setQty] = useState(1);
 
   if (!product) {
+
     return (
       <div className="p-10 text-center">
         Product not found
       </div>
     );
+
   }
 
   return (
 
-    <div className="bg-[#f8f8f8] min-h-screen py-4 lg:py-10">
+    <div className="bg-[#f8f8f8] min-h-screen py-6">
 
       <div className="max-w-6xl mx-auto px-4">
 
-        {/* MAIN CARD */}
         <div className="bg-white rounded-3xl shadow-xl overflow-hidden">
 
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-10 p-4 lg:p-10 items-start">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 p-4 lg:p-10 items-start">
 
-            {/* IMAGE SECTION */}
+            {/* IMAGE */}
             <div className="flex justify-center">
 
               <div className="relative w-full max-w-[320px] lg:max-w-[500px]">
 
-                {/* TAGS */}
                 <div className="absolute top-3 left-3 z-20 flex gap-2">
 
                   <span className="bg-black text-white text-xs px-3 py-1 rounded-full">
+
                     {product.tag}
+
                   </span>
 
-                  <span className="bg-[#D4AF37] text-black text-xs font-semibold px-3 py-1 rounded-full">
+                  <span className="bg-[#D4AF37] text-black text-xs px-3 py-1 rounded-full font-semibold">
+
                     {product.badge}
+
                   </span>
 
                 </div>
 
-                {/* IMAGE */}
                 <img
                   src={product.image}
                   alt={product.name}
@@ -65,43 +68,45 @@ export default function ProductPage() {
             </div>
 
             {/* CONTENT */}
-            <div className="flex flex-col justify-start">
+            <div>
 
-              {/* TITLE */}
-              <h1 className="text-3xl lg:text-5xl font-bold leading-tight mb-3">
+              <h1 className="text-3xl lg:text-5xl font-bold mb-4">
 
                 {product.name}
 
               </h1>
 
-              {/* DESCRIPTION */}
-              <p className="text-gray-600 text-base lg:text-lg mb-4">
+              <p className="text-gray-600 text-lg mb-4">
 
                 Premium Luxury Fragrance Collection
 
               </p>
 
-              {/* RATINGS */}
-              <div className="flex items-center gap-3 mb-5 flex-wrap">
+              <div className="flex items-center gap-3 flex-wrap mb-5">
 
                 <div className="text-yellow-500 text-xl">
+
                   ★★★★★
+
                 </div>
 
                 <span className="text-gray-600">
+
                   {product.rating} ({product.reviews} reviews)
+
                 </span>
 
                 <span className="text-green-600 font-medium">
+
                   In Stock
+
                 </span>
 
               </div>
 
-              {/* NOTES */}
-              <p className="text-gray-700 mb-5 text-base lg:text-lg">
+              <p className="text-gray-700 mb-6 text-lg">
 
-                Luxury oud fragrance for men
+                {product.description}
 
               </p>
 
@@ -113,32 +118,25 @@ export default function ProductPage() {
 
               <div className="flex flex-wrap gap-3 mb-8">
 
-                <span className="bg-gray-100 px-4 py-2 rounded-full">
-                  Citrus
-                </span>
+                {product.notesTags.map((note, index) => (
 
-                <span className="bg-gray-100 px-4 py-2 rounded-full">
-                  Rose
-                </span>
+                  <span
+                    key={index}
+                    className="bg-gray-100 px-4 py-2 rounded-full"
+                  >
 
-                <span className="bg-gray-100 px-4 py-2 rounded-full">
-                  Oud
-                </span>
+                    {note}
 
-                <span className="bg-gray-100 px-4 py-2 rounded-full">
-                  Musk
-                </span>
+                  </span>
 
-                <span className="bg-gray-100 px-4 py-2 rounded-full">
-                  Long Lasting
-                </span>
+                ))}
 
               </div>
 
               {/* PRICE */}
-              <div className="flex items-center gap-4 mb-8 flex-wrap">
+              <div className="flex items-center gap-4 flex-wrap mb-8">
 
-                <h2 className="text-4xl lg:text-6xl font-bold">
+                <h2 className="text-5xl font-bold">
 
                   ₹{product.price}
 
@@ -150,18 +148,12 @@ export default function ProductPage() {
 
                 </span>
 
-                <span className="text-green-600 text-xl font-semibold">
-
-                  Save ₹500
-
-                </span>
-
               </div>
 
               {/* FEATURES */}
-              <div className="bg-[#fafafa] border rounded-2xl p-5 mb-8">
+              <div className="border rounded-2xl p-5 mb-8 bg-[#fafafa]">
 
-                <div className="space-y-4 text-gray-700 text-base">
+                <div className="space-y-3 text-gray-700">
 
                   <p>🚚 Shipping Across India • T&C Apply</p>
 
@@ -178,7 +170,7 @@ export default function ProductPage() {
               {/* QUANTITY */}
               <div className="flex items-center gap-4 mb-8">
 
-                <div className="flex items-center bg-[#f4f4f4] rounded-2xl overflow-hidden">
+                <div className="flex items-center bg-[#f3f3f3] rounded-2xl overflow-hidden">
 
                   <button
                     onClick={() =>
@@ -186,7 +178,9 @@ export default function ProductPage() {
                     }
                     className="px-5 py-3 text-2xl"
                   >
+
                     -
+
                   </button>
 
                   <span className="px-6 text-xl font-semibold">
@@ -201,7 +195,9 @@ export default function ProductPage() {
                     }
                     className="px-5 py-3 text-2xl"
                   >
+
                     +
+
                   </button>
 
                 </div>
@@ -253,5 +249,6 @@ export default function ProductPage() {
       </div>
 
     </div>
+
   );
 }
