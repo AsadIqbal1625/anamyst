@@ -33,81 +33,52 @@ export default function ProductPage() {
         {/* PRODUCT SECTION */}
         <div className="bg-white rounded-[30px] shadow-xl overflow-hidden">
 
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 p-4 sm:p-6 lg:p-10">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-10 p-4 sm:p-6 lg:p-10 items-start">
 
             
-           {/* IMAGE + BASIC INFO */}
-              <div className="flex flex-col items-center justify-center">
+           {/* IMAGE SIDE */}
+                <div className="flex items-start justify-center">
 
-                {/* IMAGE */}
-                <div className="relative">
+                  <div className="relative w-full max-w-[280px] sm:max-w-[360px] lg:max-w-[500px]">
 
-                  {/* TAGS */}
-                  <div className="absolute top-2 left-2 z-20 flex gap-2">
+                    {/* TAGS */}
+                    <div className="absolute top-3 left-3 z-20 flex gap-2">
 
-                    <span className="bg-black text-white text-[10px] px-2 py-1 rounded-full">
-                      {product.tag}
-                    </span>
+                      <span className="bg-black text-white text-xs px-3 py-1 rounded-full">
+                        {product.tag}
+                      </span>
 
-                    <span className="bg-[#D4AF37] text-black text-[10px] font-semibold px-2 py-1 rounded-full">
-                      {product.badge}
-                    </span>
+                      <span className="bg-[#D4AF37] text-black text-xs font-semibold px-3 py-1 rounded-full">
+                        {product.badge}
+                      </span>
 
-                  </div>
+                    </div>
 
-                  <img
-                    src={product.image}
-                    alt={product.name}
-                    className="
-                      w-full
-                      max-w-[140px]
-                      sm:max-w-[180px]
-                      md:max-w-[260px]
-                      lg:max-w-[420px]
-                      h-auto
-                      object-contain
-                      mx-auto
-                    "
-                  />
-
-                </div>
-
-                {/* MOBILE QUICK INFO */}
-                <div className="lg:hidden text-center mt-4">
-
-                  <h1 className="text-2xl font-bold">
-                    {product.name}
-                  </h1>
-
-                  <p className="text-gray-500 mt-1">
-                    Premium Luxury Fragrance
-                  </p>
-
-                  <div className="flex items-center justify-center gap-2 mt-3">
-
-                    <span className="text-2xl font-bold">
-                      ₹{product.price}
-                    </span>
-
-                    <span className="line-through text-gray-400">
-                      ₹{product.price + 500}
-                    </span>
+                    {/* IMAGE */}
+                    <img
+                      src={product.image}
+                      alt={product.name}
+                      className="
+                        w-full
+                        h-auto
+                        object-contain
+                        rounded-3xl
+                      "
+                    />
 
                   </div>
 
                 </div>
-
-              </div>
             {/* DETAILS SIDE */}
-            <div className="flex flex-col justify-center">
+            <div className="flex flex-col justify-start pt-2 lg:pt-10">
 
               {/* TITLE */}
-              <h1 className="hidden lg:block text-5xl font-bold mb-4 leading-tight">
+              <h1 className="text-3xl lg:text-5xl font-bold mb-4 leading-tight">
                 {product.name}
               </h1>
 
               {/* SUBTITLE */}
-              <p className="text-gray-600 text-lg mb-4">
+             <p className="text-gray-600 text-base lg:text-lg mb-4">
                 Premium Luxury Fragrance Collection
               </p>
 
