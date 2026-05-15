@@ -1,9 +1,10 @@
 "use client";
 
+import { useState } from "react";
 import { useParams } from "next/navigation";
+
 import { products } from "../../../data/products";
 import { addToCart } from "../../../lib/cart";
-import { useState } from "react";
 
 export default function ProductPage() {
 
