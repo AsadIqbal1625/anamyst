@@ -10,10 +10,13 @@ export default function ProductPage() {
 
   const params = useParams();
 
-  const product = products.find(
-    (p) => p.id === Number(params.id)
-  );
+   const product = products.find(
+        (p) => p.id === Number(params.id)
+      );
 
+      const relatedProducts = products.filter(
+        (p) => p.id !== product.id
+      );
   const [qty, setQty] = useState(1);
 
   if (!product) {
@@ -216,8 +219,12 @@ export default function ProductPage() {
               Add to Cart
             </button>
 
-            <button
-              className="flex-1 border-2 border-black py-3 rounded-2xl text-base sm:text-lg font-medium hover:bg-black hover:text-white transition"
+          <button
+              onClick={() => {
+                addToCart(product);
+                window.location.href = "/checkout";
+              }}
+              className="flex-1 border-2 border-black text-black py-3 rounded-2xl font-semibold hover:bg-black hover:text-white transition"
             >
               Buy Now
             </button>
@@ -227,7 +234,68 @@ export default function ProductPage() {
         </div>
 
       </div>
+         {/* RELATED PRODUCTS */}
 
+<div className="mt-16">
+
+  <h2 className="text-2xl sm:text-3xl font-bold mb-8 text-center">
+    You May Also Like
+  </h2>
+
+  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+
+    {relatedProducts.map((item) => (
+
+      <Link
+        key={item.id}
+        href={`/product/${item.id}`}
+      >
+
+        <div className="bg-white rounded-3xl shadow-lg overflow-hidden hover:shadow-2xl transition duration-300">
+
+          <div className="relative h-64 overflow-hidden">
+
+            <img
+              src={item.image}
+              alt={item.name}
+              className="w-full h-full object-cover hover:scale-105 transition duration-500"
+            />
+
+          </div>
+
+          <div className="p-5">
+
+            <h3 className="text-xl font-semibold mb-2">
+              {item.name}
+            </h3>
+
+            <p className="text-gray-500 text-sm mb-3">
+              {item.description}
+            </p>
+
+            <div className="flex items-center justify-between">
+
+              <span className="text-2xl font-bold">
+                ₹{item.price}
+              </span>
+
+              <span className="text-green-600 font-medium">
+                In Stock
+              </span>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </Link>
+
+    ))}
+
+  </div>
+
+    </div>       
     </div>
 
   );
