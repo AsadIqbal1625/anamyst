@@ -59,69 +59,79 @@ export default function MobileMenu({
 
         {/* MENU */}
 
-        <div className="p-5 space-y-5 text-lg font-medium pb-20">
+                    <div className="p-5 space-y-5 text-lg font-medium pb-20">
 
-          <Link
-            href="/"
-            onClick={() => setIsOpen(false)}
-            className="block hover:text-[#D4AF37]"
-          >
-            Home
-          </Link>
+                <Link
+                    href="/"
+                    onClick={() => setIsOpen(false)}
+                    className="block hover:text-[#D4AF37] transition"
+                >
+                    Home
+                </Link>
 
-          <Link
-            href="/shop"
-            onClick={() => setIsOpen(false)}
-            className="block hover:text-[#D4AF37]"
-          >
-            Shop
-          </Link>
+                <Link
+                    href="/shop"
+                    onClick={() => setIsOpen(false)}
+                    className="block hover:text-[#D4AF37] transition"
+                >
+                    Shop
+                </Link>
 
-          <Link
-            href="/about"
-            onClick={() => setIsOpen(false)}
-            className="block hover:text-[#D4AF37]"
-          >
-            About
-          </Link>
+                <Link
+                    href="/about"
+                    onClick={() => setIsOpen(false)}
+                    className="block hover:text-[#D4AF37] transition"
+                >
+                    About
+                </Link>
 
-          <Link
-            href="/faq"
-            onClick={() => setIsOpen(false)}
-            className="block hover:text-[#D4AF37]"
-          >
-            FAQ
-          </Link>
+                <Link
+                    href="/faq"
+                    onClick={() => setIsOpen(false)}
+                    className="block hover:text-[#D4AF37] transition"
+                >
+                    FAQ
+                </Link>
 
-          <Link
-            href="/cart"
-            onClick={() => setIsOpen(false)}
-            className="block hover:text-[#D4AF37]"
-          >
-            Cart
-          </Link>
+                <Link
+                    href="/cart"
+                    onClick={() => setIsOpen(false)}
+                    className="block hover:text-[#D4AF37] transition"
+                >
+                    Cart
+                </Link>
 
-          <div className="border-t pt-5">
+                {/* CATEGORY SECTION */}
 
-            <p className="text-gray-500 text-sm mb-3">
-              Categories
-            </p>
+                <div className="border-t pt-5">
 
-            <div className="space-y-3 text-base">
+                    <p className="text-gray-400 text-sm uppercase mb-4 tracking-wider">
+                    Categories
+                    </p>
 
-              <p>Luxury Perfumes</p>
+                    <div className="space-y-4 text-base">
 
-              <p>Men Collection</p>
+                    <p className="hover:text-[#D4AF37] cursor-pointer transition">
+                        Luxury Perfumes
+                    </p>
 
-              <p>Women Collection</p>
+                    <p className="hover:text-[#D4AF37] cursor-pointer transition">
+                        Men Collection
+                    </p>
 
-              <p>Unisex</p>
+                    <p className="hover:text-[#D4AF37] cursor-pointer transition">
+                        Women Collection
+                    </p>
 
-            </div>
+                    <p className="hover:text-[#D4AF37] cursor-pointer transition">
+                        Unisex Collection
+                    </p>
 
-          </div>
+                    </div>
 
-        </div>
+                </div>
+
+                </div>
 
       </div>
 
