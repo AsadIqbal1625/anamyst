@@ -25,7 +25,7 @@ export default function MobileMenu({
       {/* SIDEBAR */}
 
       <div
-        className={`fixed top-0 left-0 h-full w-[280px] bg-white z-50 shadow-2xl transition-transform duration-300 ${
+    className={`fixed top-0 left-0 h-screen overflow-y-auto w-[280px] bg-white z-50 shadow-2xl transition-transform duration-300 ${
           isOpen
             ? "translate-x-0"
             : "-translate-x-full"
@@ -59,7 +59,7 @@ export default function MobileMenu({
 
         {/* MENU */}
 
-        <div className="p-5 space-y-5 text-lg font-medium">
+        <div className="p-5 space-y-5 text-lg font-medium pb-20">
 
           <Link
             href="/"
