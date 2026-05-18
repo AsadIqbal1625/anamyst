@@ -45,12 +45,12 @@ const product = products.find(
           <div className="relative w-full h-[260px] sm:h-[340px] md:h-[520px] overflow-hidden rounded-2xl bg-[#f8f8f8]">
 
             <Image
-              src={product.image}
-              alt={product.name}
-              fill
-              priority
-              className="object-contain"
-            />
+                src={product.image}
+                alt={product.name}
+                fill
+                sizes="100vw"
+                className="object-cover"
+              />
 
             <span className="absolute top-4 left-4 bg-black text-white text-xs px-4 py-2 rounded-full z-10">
               {product.tag}

@@ -45,7 +45,7 @@ export default function MobileMenu({ isOpen, setIsOpen }) {
           </p>
 
           {/* LOGO TEXT */}
-          <h1 className="text-white text-5xl font-bold tracking-[0.18em] leading-none break-words">
+          <h1 className="text-white text-[52px] font-bold tracking-[0.12em] leading-none">
 
             ANAMYST
 
