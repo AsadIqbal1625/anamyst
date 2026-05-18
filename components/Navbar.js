@@ -161,7 +161,30 @@ export default function Navbar() {
         </div>
 
       </nav>
-    </>
+      {/* MOBILE FLOATING CART */}
+        <Link
+          href="/cart"
+          className="md:hidden fixed bottom-6 right-5 z-[9999]"
+        >
 
+          <div className="relative bg-black text-white w-16 h-16 rounded-full flex items-center justify-center shadow-2xl border border-[#D4AF37]">
+
+            🛒
+
+            {cartCount > 0 && (
+
+              <span className="absolute -top-2 -right-2 bg-[#D4AF37] text-black text-xs font-bold w-6 h-6 rounded-full flex items-center justify-center">
+
+                {cartCount}
+
+              </span>
+
+            )}
+
+          </div>
+
+        </Link>
+    </>
+    
   );
 }
