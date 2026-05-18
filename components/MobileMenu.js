@@ -4,57 +4,72 @@ import Link from "next/link";
 
 export default function MobileMenu({ isOpen, setIsOpen }) {
 
-  if (!isOpen) return null;
-
   return (
 
     <>
-      {/* BACKDROP */}
+      {/* OVERLAY */}
       <div
-        className="fixed inset-0 bg-black/70 backdrop-blur-sm z-[998]"
         onClick={() => setIsOpen(false)}
+        className={`fixed inset-0 bg-black/60 backdrop-blur-sm z-[998] transition-all duration-300 ${
+          isOpen
+            ? "opacity-100 visible"
+            : "opacity-0 invisible"
+        }`}
       />
 
       {/* SIDEBAR */}
-      <div className="fixed top-0 left-0 h-screen w-[82%] max-w-[340px] bg-[#0d0d0d] z-[999] shadow-2xl overflow-y-auto flex flex-col">
+      <div
+        className={`fixed top-0 left-0 h-screen w-[88%] max-w-[360px] bg-[#0a0a0a] z-[999] shadow-2xl transform transition-transform duration-300 ease-in-out overflow-y-auto ${
+          isOpen
+            ? "translate-x-0"
+            : "-translate-x-full"
+        }`}
+      >
 
-        {/* TOP SECTION */}
-        <div className="relative px-6 pt-8 pb-10 border-b border-white/10">
+        {/* HEADER */}
+        <div className="relative px-6 pt-10 pb-8 border-b border-white/10">
 
-          {/* CLOSE */}
+          {/* CLOSE BUTTON */}
           <button
             onClick={() => setIsOpen(false)}
-            className="absolute top-5 right-5 text-white text-4xl font-light"
+            className="absolute top-6 right-6 text-white text-4xl font-light"
           >
             ×
           </button>
 
-          {/* BRAND */}
-          <p className="text-gray-400 text-sm tracking-widest uppercase mb-3">
-            Luxury Fragrance House
+          {/* SMALL TEXT */}
+          <p className="text-gray-400 text-sm tracking-[0.25em] uppercase mb-4">
+
+            Welcome To
+
           </p>
 
-          <h1 className="text-white text-5xl font-bold tracking-[0.25em] leading-tight">
+          {/* LOGO TEXT */}
+          <h1 className="text-white text-5xl font-bold tracking-[0.18em] leading-none break-words">
+
             ANAMYST
+
           </h1>
 
-          <p className="text-gray-400 mt-4 text-sm leading-6">
-            Crafted premium fragrances
-            for elegance, identity and presence.
+          {/* SUBTEXT */}
+          <p className="text-gray-400 text-sm mt-5 leading-7 max-w-[260px]">
+
+            Discover premium fragrances crafted for elegance and presence.
+
           </p>
 
         </div>
 
-        {/* MENU */}
-        <div className="flex flex-col py-4">
+        {/* MENU ITEMS */}
+        <div className="py-3">
 
           <Link
             href="/"
             onClick={() => setIsOpen(false)}
-            className="group px-6 py-5 flex items-center justify-between border-b border-white/5 hover:bg-white/5 transition-all duration-300"
+            className="flex items-center justify-between px-6 py-5 border-b border-white/5 hover:bg-white/5 transition-all duration-300 group"
           >
 
-            <span className="text-white text-xl tracking-wide">
+            <span className="text-white text-2xl font-light">
               Home
             </span>
 
@@ -67,10 +82,10 @@ export default function MobileMenu({ isOpen, setIsOpen }) {
           <Link
             href="/shop"
             onClick={() => setIsOpen(false)}
-            className="group px-6 py-5 flex items-center justify-between border-b border-white/5 hover:bg-white/5 transition-all duration-300"
+            className="flex items-center justify-between px-6 py-5 border-b border-white/5 hover:bg-white/5 transition-all duration-300 group"
           >
 
-            <span className="text-white text-xl tracking-wide">
+            <span className="text-white text-2xl font-light">
               Shop
             </span>
 
@@ -83,10 +98,10 @@ export default function MobileMenu({ isOpen, setIsOpen }) {
           <Link
             href="/about"
             onClick={() => setIsOpen(false)}
-            className="group px-6 py-5 flex items-center justify-between border-b border-white/5 hover:bg-white/5 transition-all duration-300"
+            className="flex items-center justify-between px-6 py-5 border-b border-white/5 hover:bg-white/5 transition-all duration-300 group"
           >
 
-            <span className="text-white text-xl tracking-wide">
+            <span className="text-white text-2xl font-light">
               About
             </span>
 
@@ -99,10 +114,10 @@ export default function MobileMenu({ isOpen, setIsOpen }) {
           <Link
             href="/faq"
             onClick={() => setIsOpen(false)}
-            className="group px-6 py-5 flex items-center justify-between border-b border-white/5 hover:bg-white/5 transition-all duration-300"
+            className="flex items-center justify-between px-6 py-5 border-b border-white/5 hover:bg-white/5 transition-all duration-300 group"
           >
 
-            <span className="text-white text-xl tracking-wide">
+            <span className="text-white text-2xl font-light">
               FAQ
             </span>
 
@@ -115,10 +130,10 @@ export default function MobileMenu({ isOpen, setIsOpen }) {
           <Link
             href="/cart"
             onClick={() => setIsOpen(false)}
-            className="group px-6 py-5 flex items-center justify-between border-b border-white/5 hover:bg-white/5 transition-all duration-300"
+            className="flex items-center justify-between px-6 py-5 border-b border-white/5 hover:bg-white/5 transition-all duration-300 group"
           >
 
-            <span className="text-white text-xl tracking-wide">
+            <span className="text-white text-2xl font-light">
               Cart
             </span>
 
@@ -130,31 +145,39 @@ export default function MobileMenu({ isOpen, setIsOpen }) {
 
         </div>
 
-        {/* COLLECTIONS */}
-        <div className="px-6 py-8 border-t border-white/10 mt-auto">
+        {/* FOOTER */}
+        <div className="mt-auto px-6 py-8 border-t border-white/10">
 
-          <p className="text-[#D4AF37] uppercase tracking-[0.3em] text-xs mb-6">
+          <p className="text-[#D4AF37] text-xs tracking-[0.3em] uppercase mb-6">
+
             Collections
+
           </p>
 
           <div className="space-y-4">
 
-            <div className="bg-white/5 rounded-2xl px-5 py-4 border border-white/5">
+            <div className="bg-white/5 border border-white/10 rounded-2xl px-5 py-4">
+
               <p className="text-white text-lg">
                 Luxury Perfumes
               </p>
+
             </div>
 
-            <div className="bg-white/5 rounded-2xl px-5 py-4 border border-white/5">
+            <div className="bg-white/5 border border-white/10 rounded-2xl px-5 py-4">
+
               <p className="text-white text-lg">
                 Men Collection
               </p>
+
             </div>
 
-            <div className="bg-white/5 rounded-2xl px-5 py-4 border border-white/5">
+            <div className="bg-white/5 border border-white/10 rounded-2xl px-5 py-4">
+
               <p className="text-white text-lg">
                 Women Collection
               </p>
+
             </div>
 
           </div>
@@ -162,6 +185,7 @@ export default function MobileMenu({ isOpen, setIsOpen }) {
         </div>
 
       </div>
+
     </>
 
   );
