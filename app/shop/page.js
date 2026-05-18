@@ -51,23 +51,27 @@ function ShopContent() {
 
   return (
 
-    <div className="min-h-screen bg-gradient-to-br from-[#f5f5f5] via-[#faf7f2] to-[#f3f3f3] px-4 sm:px-6 md:px-10 py-10">
+    <div className="min-h-screen bg-[#f7f7f7] px-4 sm:px-6 md:px-10 py-14">
 
       {/* TITLE */}
-      <div className="text-center mb-12">
+      <div className="text-center mb-14">
 
-        <h1 className="text-5xl font-bold tracking-wide mb-4">
+        <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold text-black tracking-wide">
+
           Our Collection
+
         </h1>
 
-        <p className="text-gray-600 text-lg">
+        <p className="text-gray-700 text-lg mt-5 max-w-2xl mx-auto">
+
           Discover premium luxury fragrances crafted for elegance
+
         </p>
 
       </div>
 
       {/* CATEGORY FILTER */}
-      <div className="flex justify-center gap-4 mb-12 flex-wrap">
+      <div className="flex justify-center gap-4 mb-14 flex-wrap">
 
         {["All", "Men", "Women", "Unisex"].map((cat) => (
 
@@ -94,12 +98,12 @@ function ShopContent() {
 
       </div>
 
-      {/* SEARCH TEXT */}
+      {/* SEARCH RESULT */}
       {search && (
 
         <div className="text-center mb-10">
 
-          <p className="text-gray-600 text-2xl">
+          <p className="text-gray-700 text-xl">
 
             Showing results for:
             <span className="font-bold text-black ml-2">
@@ -112,10 +116,10 @@ function ShopContent() {
 
       )}
 
-      {/* PRODUCTS */}
-      <div className="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 items-stretch">
+      {/* PRODUCTS GRID */}
+      <div className="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
 
-      {filteredProducts.map((product) => (
+        {filteredProducts.map((product) => (
 
           <ProductCard
             key={product.id}
@@ -131,7 +135,7 @@ function ShopContent() {
 
         <div className="text-center mt-20">
 
-          <h2 className="text-3xl font-semibold mb-4">
+          <h2 className="text-3xl font-semibold text-black mb-4">
 
             No perfumes found 😔
 
@@ -156,7 +160,7 @@ export default function ShopPage() {
 
   return (
 
-    <Suspense fallback={<div>Loading...</div>}>
+    <Suspense fallback={<div className="text-center py-20">Loading...</div>}>
 
       <ShopContent />
 

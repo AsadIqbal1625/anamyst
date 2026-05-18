@@ -11,46 +11,46 @@ export default function ProductPage() {
 
   const params = useParams();
 
-const product = products.find(
-        (p) => p.id === Number(params.id)
-      );
+  const product = products.find(
+    (p) => p.id === Number(params.id)
+  );
 
-      if (!product) {
-
-        return (
-          <div className="min-h-screen flex items-center justify-center text-3xl font-bold">
-            Product not found
-          </div>
-        );
-
-      }
-
-      const relatedProducts = products.filter(
-        (p) => p.id !== product.id
-      );
   const [qty, setQty] = useState(1);
 
- 
+  if (!product) {
+
+    return (
+      <div className="min-h-screen flex items-center justify-center text-3xl font-bold text-black">
+        Product not found
+      </div>
+    );
+
+  }
+
+  const relatedProducts = products.filter(
+    (p) => p.id !== product.id
+  );
 
   return (
 
-    <div className="max-w-7xl mx-auto px-4 py-6 md:py-10">
+    <div className="min-h-screen bg-gradient-to-br from-[#f5f5f5] via-[#faf7f2] to-[#f3f3f3] px-4 py-6 md:py-10">
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 lg:gap-8 items-start max-w-5xl mx-auto">
+      {/* MAIN PRODUCT SECTION */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-10 items-start max-w-6xl mx-auto">
 
         {/* PRODUCT IMAGE */}
-
         <div className="bg-white rounded-3xl shadow-lg p-3 md:p-4">
 
-          <div className="relative w-full h-[260px] sm:h-[340px] md:h-[520px] overflow-hidden rounded-2xl bg-[#f8f8f8]">
+          <div className="flex items-center justify-center bg-[#f8f8f8] rounded-2xl overflow-hidden relative">
 
             <Image
-                src={product.image}
-                alt={product.name}
-                fill
-                sizes="100vw"
-                className="object-cover"
-              />
+              src={product.image}
+              alt={product.name}
+              width={700}
+              height={700}
+              priority
+              className="w-full h-[260px] sm:h-[340px] md:h-[520px] object-contain transition-transform duration-700 hover:scale-105"
+            />
 
             <span className="absolute top-4 left-4 bg-black text-white text-xs px-4 py-2 rounded-full z-10">
               {product.tag}
@@ -65,28 +65,26 @@ const product = products.find(
         </div>
 
         {/* PRODUCT DETAILS */}
+        <div className="bg-white rounded-3xl shadow-lg p-5 md:p-7">
 
-        <div className="bg-white rounded-3xl shadow-lg p-4 sm:p-5 md:p-6">
-
-          <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-2">
+          <h1 className="text-3xl md:text-4xl font-bold text-black mb-3">
             {product.name}
           </h1>
 
-          <p className="text-gray-600 text-sm sm:text-base md:text-lg mb-4">
+          <p className="text-gray-600 text-lg mb-5">
             Premium Luxury Fragrance Collection
           </p>
 
           {/* RATING */}
-
-          <div className="flex items-center justify-between mb-5 flex-wrap gap-2">
+          <div className="flex items-center justify-between flex-wrap gap-3 mb-6">
 
             <div className="flex items-center gap-3">
 
-              <div className="text-yellow-500 text-lg">
+              <span className="text-yellow-500 text-xl">
                 ★★★★★
-              </div>
+              </span>
 
-              <span className="text-gray-600 text-sm sm:text-base">
+              <span className="text-gray-600">
                 {product.rating} ({product.reviews} reviews)
               </span>
 
@@ -99,43 +97,32 @@ const product = products.find(
           </div>
 
           {/* DESCRIPTION */}
-
-          <p className="text-gray-700 text-sm sm:text-base leading-relaxed mb-6">
+          <p className="text-gray-700 leading-relaxed mb-6">
             {product.description}
           </p>
 
-          {/* NOTES */}
+       {/* NOTES */}
+          <div className="flex flex-wrap gap-2 mt-5 mb-6">
 
-          <div className="mb-6">
+            {product.notesTags?.map((note, index) => (
 
-            <h3 className="text-xl font-semibold mb-3">
-              Fragrance Notes
-            </h3>
+              <span
+                key={index}
+                className="bg-black text-[#D4AF37] border border-[#D4AF37]/20 px-4 py-1.5 rounded-full text-xs font-medium tracking-wide shadow-sm hover:scale-105 transition duration-300"
+              >
+                {note}
+              </span>
 
-            <div className="flex flex-wrap gap-3">
-
-              {product.notesTags.map((note, index) => (
-
-                <span
-                  key={index}
-                  className="bg-gray-100 px-4 py-2 rounded-full text-sm"
-                >
-                  {note}
-                </span>
-
-              ))}
-
-            </div>
+            ))}
 
           </div>
 
           {/* PRICE */}
-
-          <div className="flex items-center justify-between flex-wrap gap-4 mb-6">
+          <div className="flex items-center justify-between flex-wrap gap-4 mb-8">
 
             <div className="flex items-center gap-4 flex-wrap">
 
-              <span className="text-2xl sm:text-3xl font-bold text-black">
+              <span className="text-3xl font-bold text-black">
                 ₹{product.price}
               </span>
 
@@ -145,17 +132,16 @@ const product = products.find(
 
             </div>
 
-            <span className="text-green-600 text-xl font-semibold">
+            <span className="text-green-600 font-semibold text-lg">
               Save ₹{product.oldPrice - product.price}
             </span>
 
           </div>
 
           {/* SHIPPING */}
+          <div className="bg-gray-50 rounded-2xl p-5 border mb-8">
 
-          <div className="bg-gray-50 rounded-2xl p-3 mb-5 border">
-
-            <div className="space-y-3 text-sm sm:text-base text-gray-700">
+            <div className="space-y-3 text-gray-700">
 
               <p>🚚 Shipping Across India • T&C Apply</p>
 
@@ -170,42 +156,42 @@ const product = products.find(
           </div>
 
           {/* QUANTITY */}
+          <div className="flex items-center justify-between flex-wrap gap-4 mb-8">
 
-          <div className="flex items-center gap-4 mb-6 flex-wrap">
-
-            <div className="flex items-center bg-gray-100 rounded-2xl overflow-hidden">
+            <div className="flex items-center border border-gray-300 rounded-2xl overflow-hidden bg-white shadow-sm">
 
               <button
                 onClick={() =>
                   setQty(qty > 1 ? qty - 1 : 1)
                 }
-                className="px-4 py-2 text-xl"
+                className="w-12 h-12 flex items-center justify-center text-black text-xl font-bold hover:bg-gray-100 transition"
               >
                 -
               </button>
 
-              <span className="px-4 text-lg font-semibold">
+              <span className="w-12 text-center text-black font-semibold text-lg">
                 {qty}
               </span>
 
               <button
-                onClick={() => setQty(qty + 1)}
-                className="px-4 py-2 text-xl"
+                onClick={() =>
+                  setQty(qty + 1)
+                }
+                className="w-12 h-12 flex items-center justify-center text-black text-xl font-bold hover:bg-gray-100 transition"
               >
                 +
               </button>
 
             </div>
 
-            <span className="text-gray-500 text-sm sm:text-base">
+            <span className="text-gray-700 font-medium">
               Quantity
             </span>
 
           </div>
 
           {/* BUTTONS */}
-
-          <div className="flex flex-col sm:flex-row gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
 
             <button
               onClick={() => {
@@ -217,17 +203,20 @@ const product = products.find(
                 alert("Added to cart ✅");
 
               }}
-              className="flex-1 bg-black text-white py-3 rounded-2xl text-base sm:text-lg font-medium hover:bg-[#D4AF37] hover:text-black transition"
+              className="w-full bg-black text-white py-4 rounded-2xl text-lg font-semibold hover:bg-[#D4AF37] hover:text-black transition duration-300"
             >
               Add to Cart
             </button>
 
-          <button
+            <button
               onClick={() => {
+
                 addToCart(product);
+
                 window.location.href = "/checkout";
+
               }}
-              className="flex-1 border-2 border-black text-black py-3 rounded-2xl font-semibold hover:bg-black hover:text-white transition"
+              className="w-full border-2 border-black text-black py-4 rounded-2xl text-lg font-semibold hover:bg-black hover:text-white transition duration-300"
             >
               Buy Now
             </button>
@@ -237,69 +226,73 @@ const product = products.find(
         </div>
 
       </div>
-         {/* RELATED PRODUCTS */}
 
-<div className="mt-16">
+      {/* RELATED PRODUCTS */}
+      <div className="mt-24 max-w-6xl mx-auto">
 
-  <h2 className="text-2xl sm:text-3xl font-bold mb-8 text-center">
-    You May Also Like
-  </h2>
+        <h2 className="text-3xl font-bold mb-10 text-center text-black">
+          You May Also Like
+        </h2>
 
-  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
 
-    {relatedProducts.map((item) => (
+          {relatedProducts.map((item) => (
 
-      <Link
-        key={item.id}
-        href={`/product/${item.id}`}
-      >
+            <Link
+              key={item.id}
+              href={`/product/${item.id}`}
+            >
 
-        <div className="bg-white rounded-3xl shadow-lg overflow-hidden hover:shadow-2xl transition duration-300">
+              <div className="bg-white rounded-3xl shadow-lg overflow-hidden hover:shadow-2xl transition duration-300">
 
-          <div className="relative h-64 overflow-hidden">
+                <div className="bg-[#f8f8f8] overflow-hidden flex items-center justify-center">
 
-            <img
-              src={item.image}
-              alt={item.name}
-              className="w-full h-full object-cover hover:scale-105 transition duration-500"
-            />
+                  <Image
+                    src={item.image}
+                    alt={item.name}
+                    width={500}
+                    height={500}
+                    className="w-full h-72 object-contain hover:scale-105 transition-transform duration-700"
+                  />
 
-          </div>
+                </div>
 
-          <div className="p-5">
+                <div className="p-5">
 
-            <h3 className="text-xl font-semibold mb-2">
-              {item.name}
-            </h3>
+                  <h3 className="text-xl font-semibold mb-2 text-black">
+                    {item.name}
+                  </h3>
 
-            <p className="text-gray-500 text-sm mb-3">
-              {item.description}
-            </p>
+                  <p className="text-gray-500 text-sm mb-4">
+                    {item.description}
+                  </p>
 
-            <div className="flex items-center justify-between">
+                  <div className="flex items-center justify-between">
 
-              <span className="text-2xl font-bold">
-                ₹{item.price}
-              </span>
+                    <span className="text-2xl font-bold text-black">
+                      ₹{item.price}
+                    </span>
 
-              <span className="text-green-600 font-medium">
-                In Stock
-              </span>
+                    <span className="text-green-600 font-medium">
+                      In Stock
+                    </span>
 
-            </div>
+                  </div>
 
-          </div>
+                </div>
+
+              </div>
+
+            </Link>
+
+          ))}
 
         </div>
 
-      </Link>
+      </div>
 
-    ))}
-
-  </div>
-
-    </div>       
     </div>
 
   );
+
 }
