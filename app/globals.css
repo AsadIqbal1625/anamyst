@@ -1,8 +1,8 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #000000;
+  --foreground: #ffffff;
 }
 
 @theme inline {
@@ -12,51 +12,28 @@
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-
-}
-
 html,
 body {
-
+  margin: 0;
+  padding: 0;
   overflow-x: hidden;
   scroll-behavior: smooth;
-
-}
-
-body {
-
-  background: linear-gradient(
-    135deg,
-    #f8f8f8,
-    #ececec,
-    #f5f5f5
-  );
-
+  background: black;
   color: var(--foreground);
-
   font-family: Arial, Helvetica, sans-serif;
-
 }
 
 /* Disable text selection */
 .no-select {
-
   user-select: none;
-
 }
 
 * {
-
   -webkit-user-select: none;
   -moz-user-select: none;
   user-select: none;
 
   -webkit-tap-highlight-color: transparent;
 
+  box-sizing: border-box;
 }

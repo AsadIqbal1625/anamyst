@@ -4,10 +4,10 @@ export default function Home() {
 
   return (
 
-    <main className="w-full overflow-hidden">
+    <main className="w-full bg-black overflow-hidden">
 
       {/* HERO SECTION */}
-      <section className="relative w-full h-[100vh] overflow-hidden">
+      <section className="relative w-full min-h-[100dvh] overflow-hidden">
 
         {/* VIDEO */}
         <video
@@ -15,26 +15,26 @@ export default function Home() {
           muted
           loop
           playsInline
-           className="absolute top-0 left-0 w-full h-full object-cover"
+          className="absolute inset-0 w-full h-full object-cover"
         >
           <source src="/perfume.mp4" type="video/mp4" />
         </video>
 
-        {/* OVERLAY */}
-        <div className="absolute inset-0 bg-black/50" />
+        {/* DARK OVERLAY */}
+        <div className="absolute inset-0 bg-black/50 z-0"></div>
 
         {/* CONTENT */}
-        <div className="relative z-10 flex flex-col items-center justify-center h-full text-center px-6">
+        <div className="relative z-10 flex flex-col items-center justify-center min-h-[100dvh] px-6 text-center">
 
           {/* TITLE */}
-          <h1 className="text-white text-5xl sm:text-7xl font-bold tracking-[0.15em]">
+          <h1 className="text-white text-5xl sm:text-7xl md:text-8xl font-bold tracking-[0.15em] leading-tight">
 
             ANAMYST
 
           </h1>
 
           {/* SUBTITLE */}
-          <p className="text-white/90 text-lg sm:text-2xl mt-5 max-w-2xl leading-8">
+          <p className="text-white/90 text-lg sm:text-2xl mt-6 max-w-2xl leading-relaxed">
 
             Discover fragrances that define your presence
 
@@ -43,7 +43,7 @@ export default function Home() {
           {/* BUTTON */}
           <Link href="/shop">
 
-            <button className="mt-10 bg-[#D4AF37] hover:bg-[#c19b2e] text-white text-xl px-10 py-5 rounded-2xl shadow-2xl transition-all duration-300 hover:scale-105">
+            <button className="mt-10 bg-[#D4AF37] hover:bg-[#c19b2e] text-white text-lg sm:text-xl px-8 sm:px-10 py-4 sm:py-5 rounded-2xl shadow-2xl transition-all duration-300 hover:scale-105">
 
               Explore Collection
 
@@ -54,8 +54,6 @@ export default function Home() {
         </div>
 
       </section>
-
-      
 
     </main>
 
