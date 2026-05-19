@@ -128,7 +128,7 @@ export default function CartPage() {
                               border border-[#D4AF37]/30
                               px-4 py-2
                               rounded-full
-                              text-xs
+                              text-xs 
                               font-semibold
                               tracking-wide
                               shadow-md
