@@ -510,7 +510,7 @@ export default function CartPage() {
 
                   <p>
 
-                    🚚 Free Shipping Across India
+                    🚚 Shipping Across India
 
                   </p>
 

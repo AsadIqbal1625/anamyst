@@ -1,14 +1,10 @@
 "use client";
 
-import {
-  useEffect,
-  useState,
-} from "react";
-
-import { useRouter }
-from "next/navigation";
+import { useEffect, useState } from "react";
 
 import Image from "next/image";
+
+import { useRouter } from "next/navigation";
 
 import {
   getCart,
@@ -22,44 +18,40 @@ export default function CheckoutPage() {
   const [cart, setCart] =
     useState([]);
 
-  const [loading,
-    setLoading] =
+  const [loading, setLoading] =
     useState(false);
 
   const [form, setForm] =
     useState({
-
       name: "",
-      phone: "",
       email: "",
+      phone: "",
       address: "",
       city: "",
       state: "",
       pincode: "",
-
     });
 
   /* LOAD CART */
   useEffect(() => {
 
-    setCart(getCart());
+    const cartItems =
+      getCart();
 
-  }, []);
+    if (
+      !cartItems ||
+      cartItems.length === 0
+    ) {
 
-  /* TOTAL */
-  const total = cart.reduce(
+      router.push("/cart");
 
-    (sum, item) =>
+    }
 
-      sum +
-      item.price *
-        item.quantity,
+    setCart(cartItems);
 
-    0
+  }, [router]);
 
-  );
-
-  /* HANDLE CHANGE */
+  /* HANDLE INPUT */
   const handleChange = (e) => {
 
     setForm({
@@ -73,387 +65,387 @@ export default function CheckoutPage() {
 
   };
 
+  /* TOTAL */
+  const total = cart.reduce(
+
+    (sum, item) =>
+
+      sum +
+      item.price *
+      item.quantity,
+
+    0
+
+  );
+
   /* PLACE ORDER */
-  const placeOrder =
-    async () => {
+  const placeOrder = async () => {
 
-      if (
+    if (
 
-        !form.name ||
-        !form.phone ||
-        !form.address ||
-        !form.city ||
-        !form.state ||
-        !form.pincode
+      !form.name ||
+      !form.phone ||
+      !form.address ||
+      !form.city ||
+      !form.state ||
+      !form.pincode
 
-      ) {
+    ) {
 
-        alert(
-          "Please fill all required fields"
-        );
+      alert(
+        "Please fill all required fields"
+      );
 
-        return;
+      return;
 
-      }
+    }
 
-      if (cart.length === 0) {
-
-        alert(
-          "Your cart is empty"
-        );
-
-        return;
-
-      }
+    try {
 
       setLoading(true);
 
-      try {
+      const orderData = {
 
-        const orderData = {
+        customer: form,
 
-          customerName:
-            form.name,
+        products: cart,
 
-          email:
-            form.email,
+        totalAmount: total,
 
-          phone:
-            form.phone,
+        paymentMethod:
+          "Cash on Delivery",
 
-          address:
-            form.address,
+        paymentStatus:
+          "Pending",
 
-          city:
-            form.city,
+        orderStatus:
+          "Pending",
 
-          state:
-            form.state,
+      };
 
-          pincode:
-            form.pincode,
+      const res =
+        await fetch(
+          "/api/orders",
+          {
+            method: "POST",
 
-          products:
-            cart.map(
-              (item) => ({
+            headers: {
+              "Content-Type":
+                "application/json",
+            },
 
-                productId:
-                  item._id,
-
-                name:
-                  item.name,
-
-                image:
-                  item.image,
-
-                quantity:
-                  item.quantity,
-
-                price:
-                  item.price,
-
-              })
+            body: JSON.stringify(
+              orderData
             ),
-
-          totalAmount:
-            total,
-
-          paymentMethod:
-            "COD",
-
-        };
-
-        const res =
-          await fetch(
-            "/api/orders",
-            {
-
-              method: "POST",
-
-              headers: {
-
-                "Content-Type":
-                  "application/json",
-
-              },
-
-              body: JSON.stringify(
-                orderData
-              ),
-
-            }
-          );
-
-        const data =
-          await res.json();
-
-        if (data.success) {
-
-          clearCart();
-
-          router.push(
-            "/order-success"
-          );
-
-        } else {
-
-          alert(
-            data.error
-          );
-
-        }
-
-      } catch (error) {
-
-        console.log(error);
-
-        alert(
-          "Something went wrong"
+          }
         );
 
-      } finally {
+      const data =
+        await res.json();
 
-        setLoading(false);
+      if (data.success) {
+
+        clearCart();
+
+        router.push(
+          "/order-success"
+        );
+
+      } else {
+
+        alert(
+          "Order failed"
+        );
 
       }
 
-    };
+    } catch (error) {
+
+      console.log(error);
+
+      alert(
+        "Something went wrong"
+      );
+
+    } finally {
+
+      setLoading(false);
+
+    }
+
+  };
 
   return (
 
-    <div className="min-h-screen bg-gradient-to-br from-[#f5f5f5] via-[#faf7f2] to-[#f3f3f3] px-4 py-10">
+    <div className="min-h-screen bg-black text-white overflow-hidden">
 
-      <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-8">
+      {/* HERO */}
+      <section className="relative px-6 py-16 border-b border-[#D4AF37]/20">
 
-        {/* LEFT */}
-        <div className="lg:col-span-2 bg-white rounded-3xl shadow-lg p-6 md:p-8">
+        <div className="absolute inset-0 bg-gradient-to-b from-[#D4AF37]/10 to-transparent" />
 
-          <h1 className="text-4xl font-bold text-black mb-10">
+        <div className="relative max-w-6xl mx-auto text-center">
 
-            Checkout
+          <p className="uppercase tracking-[6px] text-[#D4AF37] text-xs mb-5">
+
+            ANAMYST Checkout
+
+          </p>
+
+          <h1 className="text-5xl md:text-6xl font-bold mb-6">
+
+            Secure Checkout
 
           </h1>
 
-          {/* FORM */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <p className="text-gray-300 text-lg max-w-2xl mx-auto leading-8">
 
-            <input
-              type="text"
-              name="name"
-              placeholder="Full Name"
-              value={form.name}
-              onChange={handleChange}
-              className="border border-gray-300 rounded-2xl px-5 py-4 outline-none focus:border-black text-black placeholder:text-gray-500"
-            />
+            Complete your luxury fragrance order
+            with confidence and secure checkout.
 
-            <input
-              type="text"
-              name="phone"
-              placeholder="Phone Number"
-              value={form.phone}
-              onChange={handleChange}
-              className="border border-gray-300 rounded-2xl px-5 py-4 outline-none focus:border-black text-black placeholder:text-gray-500"
-            />
+          </p>
 
-            <input
-              type="email"
-              name="email"
-              placeholder="Email Address"
-              value={form.email}
-              onChange={handleChange}
-              className="border border-gray-300 rounded-2xl px-5 py-4 outline-none focus:border-black text-black placeholder:text-gray-500"
-            />
+        </div>
 
-            <input
-              type="text"
-              name="city"
-              placeholder="City"
-              value={form.city}
-              onChange={handleChange}
-              className="border border-gray-300 rounded-2xl px-5 py-4 outline-none focus:border-black text-black placeholder:text-gray-500"
-            />
+      </section>
 
-            <input
-              type="text"
-              name="state"
-              placeholder="State"
-              value={form.state}
-              onChange={handleChange}
-              className="border border-gray-300 rounded-2xl px-5 py-4 outline-none focus:border-black text-black placeholder:text-gray-500"
-            />
+      {/* CONTENT */}
+      <section className="px-4 md:px-6 py-14">
 
-            <input
-              type="text"
-              name="pincode"
-              placeholder="Pincode"
-              value={form.pincode}
-              onChange={handleChange}
-              className="border border-gray-300 rounded-2xl px-5 py-4 outline-none focus:border-black text-black placeholder:text-gray-500"
-            />
+        <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-8">
 
-          </div>
+          {/* LEFT */}
+          <div className="lg:col-span-2 bg-white/5 border border-white/10 rounded-[36px] backdrop-blur-xl p-6 md:p-8">
 
-          {/* ADDRESS */}
-          <textarea
-            name="address"
-            placeholder="Full Address"
-            value={form.address}
-            onChange={handleChange}
-            rows={5}
-            className="w-full border border-gray-300 rounded-2xl px-5 py-4 outline-none focus:border-black text-black placeholder:text-gray-500 mt-6"
-          />
+            <h2 className="text-4xl font-bold text-white mb-10">
 
-          {/* PAYMENT */}
-          <div className="mt-10">
-
-            <h2 className="text-2xl font-bold text-black mb-5">
-
-              Payment Method
+              Billing Details
 
             </h2>
 
-            <label className="flex items-center gap-3 border border-gray-300 rounded-2xl p-4">
+            {/* FORM */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
 
               <input
-                type="radio"
-                checked
-                readOnly
+                type="text"
+                name="name"
+                placeholder="Full Name"
+                value={form.name}
+                onChange={handleChange}
+                className="bg-black/40 border border-white/10 rounded-2xl px-5 py-4 outline-none focus:border-[#D4AF37] text-white placeholder:text-gray-500 transition"
               />
 
-              <span className="text-black font-medium">
+              <input
+                type="text"
+                name="phone"
+                placeholder="Phone Number"
+                value={form.phone}
+                onChange={handleChange}
+                className="bg-black/40 border border-white/10 rounded-2xl px-5 py-4 outline-none focus:border-[#D4AF37] text-white placeholder:text-gray-500 transition"
+              />
 
-                Cash on Delivery
+              <input
+                type="email"
+                name="email"
+                placeholder="Email Address"
+                value={form.email}
+                onChange={handleChange}
+                className="bg-black/40 border border-white/10 rounded-2xl px-5 py-4 outline-none focus:border-[#D4AF37] text-white placeholder:text-gray-500 transition"
+              />
 
-              </span>
+              <input
+                type="text"
+                name="city"
+                placeholder="City"
+                value={form.city}
+                onChange={handleChange}
+                className="bg-black/40 border border-white/10 rounded-2xl px-5 py-4 outline-none focus:border-[#D4AF37] text-white placeholder:text-gray-500 transition"
+              />
 
-            </label>
+              <input
+                type="text"
+                name="state"
+                placeholder="State"
+                value={form.state}
+                onChange={handleChange}
+                className="bg-black/40 border border-white/10 rounded-2xl px-5 py-4 outline-none focus:border-[#D4AF37] text-white placeholder:text-gray-500 transition"
+              />
 
-          </div>
-
-        </div>
-
-        {/* RIGHT */}
-        <div>
-
-          <div className="bg-white rounded-3xl shadow-lg p-6 sticky top-24">
-
-            <h2 className="text-3xl font-bold text-black mb-8">
-
-              Order Summary
-
-            </h2>
-
-            {/* ITEMS */}
-            <div className="space-y-5">
-
-              {cart.map(
-                (
-                  item,
-                  index
-                ) => (
-
-                  <div
-                    key={`${item._id}-${index}`}
-                    className="flex gap-4 border-b pb-5"
-                  >
-
-                    <div className="bg-[#f8f8f8] rounded-2xl overflow-hidden">
-
-                      <Image
-                    src={item.image}
-                    alt={item.name}
-                    width={90}
-                    height={90}
-                    className="object-contain w-auto h-auto"
-                  />
-
-                    </div>
-
-                    <div className="flex-1">
-
-                      <h3 className="text-black font-semibold text-lg">
-
-                        {item.name}
-
-                      </h3>
-
-                      <p className="text-gray-500 text-sm">
-
-                        Qty:
-                        {" "}
-                        {item.quantity}
-
-                      </p>
-
-                      <p className="text-black font-bold mt-2">
-
-                        ₹
-                        {item.price *
-                          item.quantity}
-
-                      </p>
-
-                    </div>
-
-                  </div>
-
-                )
-              )}
+              <input
+                type="text"
+                name="pincode"
+                placeholder="Pincode"
+                value={form.pincode}
+                onChange={handleChange}
+                className="bg-black/40 border border-white/10 rounded-2xl px-5 py-4 outline-none focus:border-[#D4AF37] text-white placeholder:text-gray-500 transition"
+              />
 
             </div>
 
-            {/* TOTAL */}
-            <div className="flex items-center justify-between mt-8">
+            {/* ADDRESS */}
+            <textarea
+              name="address"
+              placeholder="Full Address"
+              value={form.address}
+              onChange={handleChange}
+              rows={5}
+              className="w-full bg-black/40 border border-white/10 rounded-2xl px-5 py-4 outline-none focus:border-[#D4AF37] text-white placeholder:text-gray-500 transition mt-6"
+            />
 
-              <span className="text-2xl font-bold text-black">
+            {/* PAYMENT */}
+            <div className="mt-10">
 
-                Total
+              <h2 className="text-3xl font-bold text-white mb-5">
 
-              </span>
+                Payment Method
 
-              <span className="text-3xl font-bold text-black">
+              </h2>
 
-                ₹{total}
+              <label className="flex items-center gap-4 bg-black/40 border border-white/10 rounded-2xl p-5">
 
-              </span>
+                <input
+                  type="radio"
+                  checked
+                  readOnly
+                  className="accent-[#D4AF37]"
+                />
 
-            </div>
+                <span className="text-white font-medium text-lg">
 
-            {/* BUTTON */}
-            <button
-              onClick={placeOrder}
-              disabled={loading}
-              className="w-full mt-8 bg-black text-white py-4 rounded-2xl text-lg font-semibold hover:bg-[#D4AF37] hover:text-black transition duration-300"
-            >
+                  Cash on Delivery
 
-              {loading
-                ? "Placing Order..."
-                : "Place Order"}
+                </span>
 
-            </button>
-
-            {/* TRUST */}
-            <div className="mt-8 space-y-3 text-gray-600">
-
-              <p>
-                🚚 Shipping Across India
-              </p>
-
-              <p>
-                🔒 Secure Checkout
-              </p>
-
-              <p>
-                💯 Authentic Luxury Fragrance
-              </p>
+              </label>
 
             </div>
 
           </div>
 
+          {/* RIGHT */}
+          <div>
+
+            <div className="bg-white/5 border border-white/10 rounded-[36px] backdrop-blur-xl p-6 sticky top-24">
+
+              <h2 className="text-3xl font-bold text-white mb-8">
+
+                Order Summary
+
+              </h2>
+
+              {/* ITEMS */}
+              <div className="space-y-5">
+
+                {cart.map(
+                  (
+                    item,
+                    index
+                  ) => (
+
+                    <div
+                      key={`${item._id}-${index}`}
+                      className="flex gap-4 border-b border-white/10 pb-5"
+                    >
+
+                      <div className="bg-black/40 rounded-2xl overflow-hidden">
+
+                        <Image
+                          src={item.image}
+                          alt={item.name}
+                          width={90}
+                          height={90}
+                          className="object-contain w-auto h-auto"
+                        />
+
+                      </div>
+
+                      <div className="flex-1">
+
+                        <h3 className="text-white font-semibold text-lg">
+
+                          {item.name}
+
+                        </h3>
+
+                        <p className="text-gray-400 text-sm">
+
+                          Qty:
+                          {" "}
+                          {item.quantity}
+
+                        </p>
+
+                        <p className="text-[#D4AF37] font-bold mt-2 text-lg">
+
+                          ₹
+                          {item.price *
+                            item.quantity}
+
+                        </p>
+
+                      </div>
+
+                    </div>
+
+                  )
+                )}
+
+              </div>
+
+              {/* TOTAL */}
+              <div className="flex items-center justify-between mt-8">
+
+                <span className="text-2xl font-bold text-white">
+
+                  Total
+
+                </span>
+
+                <span className="text-4xl font-bold text-[#D4AF37]">
+
+                  ₹{total}
+
+                </span>
+
+              </div>
+
+              {/* BUTTON */}
+              <button
+                onClick={placeOrder}
+                disabled={loading}
+                className="w-full mt-8 bg-[#D4AF37] text-black py-5 rounded-2xl text-lg font-bold hover:opacity-90 transition duration-300"
+              >
+
+                {loading
+                  ? "Placing Order..."
+                  : "Place Order"}
+
+              </button>
+
+              {/* TRUST */}
+              <div className="mt-8 bg-black/40 border border-white/10 rounded-[24px] p-5 space-y-4 text-gray-300">
+
+                <p>
+                  🚚 Shipping Across India
+                </p>
+
+                <p>
+                  🔒 Secure Checkout
+                </p>
+
+                <p>
+                  💯 Authentic Luxury Fragrance
+                </p>
+
+              </div>
+
+            </div>
+
+          </div>
+
         </div>
 
-      </div>
+      </section>
 
     </div>
 
