@@ -1,113 +1,214 @@
 "use client";
 
-import { Suspense, useMemo, useState } from "react";
-import { useSearchParams } from "next/navigation";
+import {
+  Suspense,
+  useMemo,
+  useState,
+  useEffect,
+} from "react";
 
-import { products } from "../../data/products";
-import ProductCard from "../../components/ProductCard";
+import { useSearchParams }
+from "next/navigation";
+
+import ProductCard
+from "../../components/ProductCard";
 
 function ShopContent() {
 
-  const searchParams = useSearchParams();
+  const searchParams =
+    useSearchParams();
 
   const search =
-    searchParams.get("search")?.toLowerCase() || "";
 
-  const [selectedCategory, setSelectedCategory] =
+    searchParams
+      .get("search")
+      ?.toLowerCase() || "";
+
+  const [selectedCategory,
+    setSelectedCategory] =
     useState("All");
 
-  const filteredProducts = useMemo(() => {
+  const [products,
+    setProducts] =
+    useState([]);
 
-    return products.filter((product) => {
+  /* FETCH PRODUCTS */
+  useEffect(() => {
 
-      const matchesCategory =
+    async function fetchProducts() {
 
-        selectedCategory === "All" ||
+      try {
 
-        product.category.toLowerCase() ===
-          selectedCategory.toLowerCase();
+        const res =
+          await fetch(
+            "/api/products"
+          );
 
-      const matchesSearch =
+        const data =
+          await res.json();
 
-        product.name.toLowerCase().includes(search) ||
+        if (data.success) {
 
-        product.description
-          .toLowerCase()
-          .includes(search) ||
+          setProducts(
+            data.products
+          );
 
-        product.category
-          .toLowerCase()
-          .includes(search) ||
+        }
 
-        product.notesTags.some((tag) =>
-          tag.toLowerCase().includes(search)
-        );
+      } catch (error) {
 
-      return matchesCategory && matchesSearch;
+        console.log(error);
 
-    });
+      }
 
-  }, [search, selectedCategory]);
+    }
+
+    fetchProducts();
+
+  }, []);
+
+  /* FILTER */
+  const filteredProducts =
+    useMemo(() => {
+
+      return products.filter(
+        (product) => {
+
+          const matchesCategory =
+
+            selectedCategory ===
+              "All" ||
+
+            product.category
+              .toLowerCase() ===
+            selectedCategory
+              .toLowerCase();
+
+          const matchesSearch =
+
+            product.name
+              .toLowerCase()
+              .includes(search) ||
+
+            product.description
+              .toLowerCase()
+              .includes(search) ||
+
+            product.category
+              .toLowerCase()
+              .includes(search) ||
+
+            product.notesTags.some(
+              (tag) =>
+                tag
+                  .toLowerCase()
+                  .includes(search)
+            );
+
+          return (
+            matchesCategory &&
+            matchesSearch
+          );
+
+        }
+      );
+
+    }, [
+      products,
+      search,
+      selectedCategory,
+    ]);
 
   return (
 
-    <div className="min-h-screen bg-[#f7f7f7] px-4 sm:px-6 md:px-10 py-14">
+    <div className="min-h-screen bg-black text-white overflow-hidden">
 
-      {/* TITLE */}
-      <div className="text-center mb-14">
+      {/* HERO */}
+      <section className="relative px-6 py-20 border-b border-[#D4AF37]/20">
 
-        <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold text-black tracking-wide">
+        <div className="absolute inset-0 bg-gradient-to-b from-[#D4AF37]/10 to-transparent" />
 
-          Our Collection
+        <div className="relative max-w-6xl mx-auto text-center">
 
-        </h1>
+          <p className="uppercase tracking-[6px] text-[#D4AF37] text-xs mb-5">
 
-        <p className="text-gray-700 text-lg mt-5 max-w-2xl mx-auto">
+            ANAMYST Collection
 
-          Discover premium luxury fragrances crafted for elegance
+          </p>
 
-        </p>
+          <h1 className="text-5xl md:text-7xl font-bold mb-8">
 
-      </div>
+            Luxury Fragrances
 
-      {/* CATEGORY FILTER */}
-      <div className="flex justify-center gap-4 mb-14 flex-wrap">
+          </h1>
 
-        {["All", "Men", "Women", "Unisex"].map((cat) => (
+          <p className="text-gray-300 text-lg max-w-3xl mx-auto leading-9">
 
-          <button
-            key={cat}
-            onClick={() =>
-              setSelectedCategory(cat)
-            }
-            className={`px-6 py-3 rounded-full text-sm uppercase tracking-wide transition duration-300 border
+            Discover premium perfumes crafted
+            for elegance, confidence,
+            and timeless sophistication.
 
-            ${
-              selectedCategory === cat
-                ? "bg-black text-white border-black shadow-lg"
-                : "bg-white text-black border-gray-300 hover:border-black hover:bg-black hover:text-white"
-            }
-          `}
-          >
+          </p>
 
-            {cat}
+        </div>
 
-          </button>
+      </section>
 
-        ))}
+      {/* FILTERS */}
+      <section className="px-6 py-10">
 
-      </div>
+        <div className="max-w-6xl mx-auto flex flex-wrap justify-center gap-4">
+
+          {[
+            "All",
+            "Men",
+            "Women",
+            "Unisex",
+          ].map((cat) => (
+
+            <button
+              key={cat}
+              onClick={() =>
+                setSelectedCategory(
+                  cat
+                )
+              }
+              className={`px-7 py-3 rounded-full border transition duration-300 text-sm uppercase tracking-wide
+
+              ${
+                selectedCategory ===
+                cat
+
+                  ? "bg-[#D4AF37] text-black border-[#D4AF37]"
+
+                  : "bg-white/5 text-white border-white/10 hover:border-[#D4AF37]"
+              }
+              `}
+            >
+
+              {cat}
+
+            </button>
+
+          ))}
+
+        </div>
+
+      </section>
 
       {/* SEARCH RESULT */}
       {search && (
 
         <div className="text-center mb-10">
 
-          <p className="text-gray-700 text-xl">
+          <p className="text-gray-300 text-lg">
 
             Showing results for:
-            <span className="font-bold text-black ml-2">
+
+            <span className="text-[#D4AF37] font-semibold ml-2">
+
               "{search}"
+
             </span>
 
           </p>
@@ -116,34 +217,41 @@ function ShopContent() {
 
       )}
 
-      {/* PRODUCTS GRID */}
-      <div className="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+      {/* PRODUCTS */}
+      <section className="px-6 pb-20">
 
-        {filteredProducts.map((product) => (
+        <div className="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
 
-          <ProductCard
-            key={product.id}
-            product={product}
-          />
+          {filteredProducts.map(
+            (product) => (
 
-        ))}
+              <ProductCard
+                key={product._id}
+                product={product}
+              />
 
-      </div>
+            )
+          )}
 
-      {/* NO RESULTS */}
+        </div>
+
+      </section>
+
+      {/* EMPTY */}
       {filteredProducts.length === 0 && (
 
-        <div className="text-center mt-20">
+        <div className="text-center pb-24">
 
-          <h2 className="text-3xl font-semibold text-black mb-4">
+          <h2 className="text-4xl font-bold mb-5">
 
-            No perfumes found 😔
+            No Products Found
 
           </h2>
 
-          <p className="text-gray-500">
+          <p className="text-gray-400">
 
-            Try another search keyword
+            Try another search
+            or category.
 
           </p>
 
@@ -154,17 +262,29 @@ function ShopContent() {
     </div>
 
   );
+
 }
 
 export default function ShopPage() {
 
   return (
 
-    <Suspense fallback={<div className="text-center py-20">Loading...</div>}>
+    <Suspense
+      fallback={
+
+        <div className="min-h-screen bg-black text-white flex items-center justify-center text-2xl">
+
+          Loading...
+
+        </div>
+
+      }
+    >
 
       <ShopContent />
 
     </Suspense>
 
   );
+
 }

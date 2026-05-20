@@ -1,295 +1,500 @@
 "use client";
 
+import {
+  useEffect,
+  useState,
+} from "react";
+
 import Link from "next/link";
-import { useParams } from "next/navigation";
-import { products } from "../../../data/products";
-import { addToCart } from "../../../lib/cart";
+
+import { useParams }
+from "next/navigation";
+
 import Image from "next/image";
-import { useState } from "react";
+
+import { addToCart }
+from "../../../lib/cart";
 
 export default function ProductPage() {
 
   const params = useParams();
 
-  const product = products.find(
-    (p) => p.id === Number(params.id)
-  );
+  const [product, setProduct] =
+    useState(null);
 
-  const [qty, setQty] = useState(1);
+  const [relatedProducts,
+    setRelatedProducts] =
+    useState([]);
 
-  if (!product) {
+  const [loading, setLoading] =
+    useState(true);
+
+  const [qty, setQty] =
+    useState(1);
+
+  /* FETCH PRODUCT */
+  useEffect(() => {
+
+    async function fetchProduct() {
+
+      try {
+
+        const res =
+          await fetch(
+            `/api/products/${params.id}`
+          );
+
+        const data =
+          await res.json();
+
+        if (data.success) {
+
+          setProduct(
+            data.product
+          );
+
+        }
+
+      } catch (error) {
+
+        console.log(error);
+
+      } finally {
+
+        setLoading(false);
+
+      }
+
+    }
+
+    fetchProduct();
+
+  }, [params.id]);
+
+  /* FETCH RELATED PRODUCTS */
+  useEffect(() => {
+
+    async function fetchProducts() {
+
+      try {
+
+        const res =
+          await fetch(
+            "/api/products"
+          );
+
+        const data =
+          await res.json();
+
+        if (data.success && product) {
+
+          const filtered =
+            data.products.filter(
+              (p) =>
+                p._id !== product._id
+            );
+
+          setRelatedProducts(
+            filtered.slice(0, 3)
+          );
+
+        }
+
+      } catch (error) {
+
+        console.log(error);
+
+      }
+
+    }
+
+    fetchProducts();
+
+  }, [product]);
+
+  /* LOADING */
+  if (loading) {
 
     return (
-      <div className="min-h-screen flex items-center justify-center text-3xl font-bold text-black">
-        Product not found
+
+      <div className="min-h-screen bg-black text-white flex items-center justify-center text-3xl font-bold">
+
+        Loading...
+
       </div>
+
     );
 
   }
 
-  const relatedProducts = products.filter(
-    (p) => p.id !== product.id
-  );
+  /* NOT FOUND */
+  if (!product) {
+
+    return (
+
+      <div className="min-h-screen bg-black text-white flex items-center justify-center text-3xl font-bold">
+
+        Product not found
+
+      </div>
+
+    );
+
+  }
 
   return (
 
-    <div className="min-h-screen bg-gradient-to-br from-[#f5f5f5] via-[#faf7f2] to-[#f3f3f3] px-4 py-6 md:py-10">
+    <div className="min-h-screen bg-black text-white overflow-hidden">
 
-      {/* MAIN PRODUCT SECTION */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-10 items-start max-w-6xl mx-auto">
+      {/* HERO */}
+      <section className="relative px-4 py-10 md:px-6 md:py-16 border-b border-[#D4AF37]/20">
 
-        {/* PRODUCT IMAGE */}
-        <div className="bg-white rounded-3xl shadow-lg p-3 md:p-4">
+        <div className="absolute inset-0 bg-gradient-to-b from-[#D4AF37]/10 to-transparent" />
 
-          <div className="flex items-center justify-center bg-[#f8f8f8] rounded-2xl overflow-hidden relative">
+        <div className="relative grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-10 items-start max-w-7xl mx-auto">
 
-            <Image
-              src={product.image}
-              alt={product.name}
-              width={700}
-              height={700}
-              priority
-              className="w-full h-[260px] sm:h-[340px] md:h-[520px] object-contain transition-transform duration-700 hover:scale-105"
-            />
+          {/* PRODUCT IMAGE */}
+          <div className="bg-white/5 border border-white/10 rounded-[36px] backdrop-blur-xl p-4 md:p-6 relative overflow-hidden">
 
-            <span className="absolute top-4 left-4 bg-black text-white text-xs px-4 py-2 rounded-full z-10">
-              {product.tag}
-            </span>
+            <div className="flex items-center justify-center bg-black/40 rounded-[28px] overflow-hidden relative">
 
-            <span className="absolute top-4 right-4 bg-[#D4AF37] text-black text-xs font-semibold px-4 py-2 rounded-full z-10">
-              {product.badge}
-            </span>
+              <Image
+                src={product.image}
+                alt={product.name}
+                width={700}
+                height={700}
+                priority
+                className="w-full h-[260px] sm:h-[340px] md:h-[520px] object-contain transition-transform duration-700 hover:scale-105"
+              />
 
-          </div>
+              <span className="absolute top-4 left-4 bg-black text-white text-xs px-4 py-2 rounded-full z-10 border border-white/10">
 
-        </div>
+                {product.tag}
 
-        {/* PRODUCT DETAILS */}
-        <div className="bg-white rounded-3xl shadow-lg p-5 md:p-7">
-
-          <h1 className="text-3xl md:text-4xl font-bold text-black mb-3">
-            {product.name}
-          </h1>
-
-          <p className="text-gray-600 text-lg mb-5">
-            Premium Luxury Fragrance Collection
-          </p>
-
-          {/* RATING */}
-          <div className="flex items-center justify-between flex-wrap gap-3 mb-6">
-
-            <div className="flex items-center gap-3">
-
-              <span className="text-yellow-500 text-xl">
-                ★★★★★
               </span>
 
-              <span className="text-gray-600">
-                {product.rating} ({product.reviews} reviews)
+              <span className="absolute top-4 right-4 bg-[#D4AF37] text-black text-xs font-semibold px-4 py-2 rounded-full z-10">
+
+                {product.badge}
+
               </span>
 
             </div>
 
-            <span className="text-green-600 font-semibold">
-              In Stock
-            </span>
-
           </div>
 
-          {/* DESCRIPTION */}
-          <p className="text-gray-700 leading-relaxed mb-6">
-            {product.description}
-          </p>
+          {/* PRODUCT DETAILS */}
+          <div className="bg-white/5 border border-white/10 rounded-[36px] backdrop-blur-xl p-5 md:p-8">
 
-       {/* NOTES */}
-          <div className="flex flex-wrap gap-2 mt-5 mb-6">
+            <p className="uppercase tracking-[5px] text-[#D4AF37] text-xs mb-5">
 
-            {product.notesTags?.map((note, index) => (
+              ANAMYST Luxury Collection
 
-              <span
-                key={index}
-                className="bg-black text-[#D4AF37] border border-[#D4AF37]/20 px-4 py-1.5 rounded-full text-xs font-medium tracking-wide shadow-sm hover:scale-105 transition duration-300"
-              >
-                {note}
-              </span>
+            </p>
 
-            ))}
+            <h1 className="text-4xl md:text-5xl font-bold mb-4">
 
-          </div>
+              {product.name}
 
-          {/* PRICE */}
-          <div className="flex items-center justify-between flex-wrap gap-4 mb-8">
+            </h1>
 
-            <div className="flex items-center gap-4 flex-wrap">
+            <p className="text-gray-300 text-lg mb-6">
 
-              <span className="text-3xl font-bold text-black">
-                ₹{product.price}
-              </span>
+              Premium Luxury Fragrance Collection
 
-              <span className="text-xl text-gray-400 line-through">
-                ₹{product.oldPrice}
-              </span>
+            </p>
 
-            </div>
+            {/* RATING */}
+            <div className="flex items-center justify-between flex-wrap gap-3 mb-7">
 
-            <span className="text-green-600 font-semibold text-lg">
-              Save ₹{product.oldPrice - product.price}
-            </span>
+              <div className="flex items-center gap-3">
 
-          </div>
+                <span className="text-[#D4AF37] text-xl">
 
-          {/* SHIPPING */}
-          <div className="bg-gray-50 rounded-2xl p-5 border mb-8">
+                  ★★★★★
 
-            <div className="space-y-3 text-gray-700">
+                </span>
 
-              <p>🚚 Shipping Across India • T&C Apply</p>
+                <span className="text-gray-400">
 
-              <p>🔒 Secure Checkout</p>
+                  {product.rating}
+                  {" "}
+                  (
+                  {product.reviews}
+                  {" "}
+                  reviews)
 
-              <p>💯 Authentic Luxury Fragrance</p>
-
-              <p>📦 Easy WhatsApp Support</p>
-
-            </div>
-
-          </div>
-
-          {/* QUANTITY */}
-          <div className="flex items-center justify-between flex-wrap gap-4 mb-8">
-
-            <div className="flex items-center border border-gray-300 rounded-2xl overflow-hidden bg-white shadow-sm">
-
-              <button
-                onClick={() =>
-                  setQty(qty > 1 ? qty - 1 : 1)
-                }
-                className="w-12 h-12 flex items-center justify-center text-black text-xl font-bold hover:bg-gray-100 transition"
-              >
-                -
-              </button>
-
-              <span className="w-12 text-center text-black font-semibold text-lg">
-                {qty}
-              </span>
-
-              <button
-                onClick={() =>
-                  setQty(qty + 1)
-                }
-                className="w-12 h-12 flex items-center justify-center text-black text-xl font-bold hover:bg-gray-100 transition"
-              >
-                +
-              </button>
-
-            </div>
-
-            <span className="text-gray-700 font-medium">
-              Quantity
-            </span>
-
-          </div>
-
-          {/* BUTTONS */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-
-            <button
-              onClick={() => {
-
-                for (let i = 0; i < qty; i++) {
-                  addToCart(product);
-                }
-
-                alert("Added to cart ✅");
-
-              }}
-              className="w-full bg-black text-white py-4 rounded-2xl text-lg font-semibold hover:bg-[#D4AF37] hover:text-black transition duration-300"
-            >
-              Add to Cart
-            </button>
-
-            <button
-              onClick={() => {
-
-                addToCart(product);
-
-                window.location.href = "/checkout";
-
-              }}
-              className="w-full border-2 border-black text-black py-4 rounded-2xl text-lg font-semibold hover:bg-black hover:text-white transition duration-300"
-            >
-              Buy Now
-            </button>
-
-          </div>
-
-        </div>
-
-      </div>
-
-      {/* RELATED PRODUCTS */}
-      <div className="mt-24 max-w-6xl mx-auto">
-
-        <h2 className="text-3xl font-bold mb-10 text-center text-black">
-          You May Also Like
-        </h2>
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-
-          {relatedProducts.map((item) => (
-
-            <Link
-              key={item.id}
-              href={`/product/${item.id}`}
-            >
-
-              <div className="bg-white rounded-3xl shadow-lg overflow-hidden hover:shadow-2xl transition duration-300">
-
-                <div className="bg-[#f8f8f8] overflow-hidden flex items-center justify-center">
-
-                  <Image
-                    src={item.image}
-                    alt={item.name}
-                    width={500}
-                    height={500}
-                    className="w-full h-72 object-contain hover:scale-105 transition-transform duration-700"
-                  />
-
-                </div>
-
-                <div className="p-5">
-
-                  <h3 className="text-xl font-semibold mb-2 text-black">
-                    {item.name}
-                  </h3>
-
-                  <p className="text-gray-500 text-sm mb-4">
-                    {item.description}
-                  </p>
-
-                  <div className="flex items-center justify-between">
-
-                    <span className="text-2xl font-bold text-black">
-                      ₹{item.price}
-                    </span>
-
-                    <span className="text-green-600 font-medium">
-                      In Stock
-                    </span>
-
-                  </div>
-
-                </div>
+                </span>
 
               </div>
 
-            </Link>
+              <span className="text-green-400 font-semibold">
 
-          ))}
+                In Stock
+
+              </span>
+
+            </div>
+
+            {/* DESCRIPTION */}
+            <p className="text-gray-300 leading-9 mb-8">
+
+              {product.description}
+
+            </p>
+
+            {/* NOTES */}
+            <div className="flex flex-wrap gap-3 mb-8">
+
+              {product.notesTags?.map(
+                (note, index) => (
+
+                  <span
+                    key={index}
+                    className="bg-black text-[#D4AF37] border border-[#D4AF37]/20 px-5 py-2 rounded-full text-sm font-semibold tracking-wide"
+                  >
+
+                    {note}
+
+                  </span>
+
+                )
+              )}
+
+            </div>
+
+            {/* PRICE */}
+            <div className="flex items-center justify-between flex-wrap gap-4 mb-8">
+
+              <div className="flex items-center gap-4 flex-wrap">
+
+                <span className="text-4xl font-bold text-white">
+
+                  ₹{product.price}
+
+                </span>
+
+                <span className="text-2xl text-gray-500 line-through">
+
+                  ₹{product.oldPrice}
+
+                </span>
+
+              </div>
+
+              <span className="text-green-400 font-semibold text-xl">
+
+                Save ₹
+                {product.oldPrice -
+                  product.price}
+
+              </span>
+
+            </div>
+
+            {/* SHIPPING */}
+            <div className="bg-black/40 border border-white/10 rounded-[28px] p-6 mb-8">
+
+              <div className="space-y-4 text-gray-300">
+
+                <p>
+                  🚚 Shipping Across India
+                </p>
+
+                <p>
+                  🔒 Secure Checkout
+                </p>
+
+                <p>
+                  💯 Authentic Luxury Fragrance
+                </p>
+
+                <p>
+                  📦 Easy WhatsApp Support
+                </p>
+
+              </div>
+
+            </div>
+
+            {/* QUANTITY */}
+            <div className="flex items-center justify-between flex-wrap gap-4 mb-8">
+
+              <div className="flex items-center border border-white/10 rounded-2xl overflow-hidden bg-black">
+
+                <button
+                  onClick={() =>
+                    setQty(
+                      qty > 1
+                        ? qty - 1
+                        : 1
+                    )
+                  }
+                  className="w-12 h-12 flex items-center justify-center text-white text-xl font-bold hover:bg-[#D4AF37] hover:text-black transition"
+                >
+
+                  -
+
+                </button>
+
+                <span className="w-12 text-center text-white font-semibold text-lg">
+
+                  {qty}
+
+                </span>
+
+                <button
+                  onClick={() =>
+                    setQty(qty + 1)
+                  }
+                  className="w-12 h-12 flex items-center justify-center text-white text-xl font-bold hover:bg-[#D4AF37] hover:text-black transition"
+                >
+
+                  +
+
+                </button>
+
+              </div>
+
+              <span className="text-gray-400 font-medium">
+
+                Quantity
+
+              </span>
+
+            </div>
+
+            {/* BUTTONS */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+
+              <button
+                onClick={() => {
+
+                  for (
+                    let i = 0;
+                    i < qty;
+                    i++
+                  ) {
+
+                    addToCart(product);
+
+                  }
+
+                  alert(
+                    "Added to cart ✅"
+                  );
+
+                }}
+                className="w-full bg-[#D4AF37] text-black py-4 rounded-2xl text-lg font-semibold hover:opacity-90 transition duration-300"
+              >
+
+                Add to Cart
+
+              </button>
+
+              <button
+                onClick={() => {
+
+                  addToCart(product);
+
+                  window.location.href =
+                    "/checkout";
+
+                }}
+                className="w-full border border-[#D4AF37] text-[#D4AF37] py-4 rounded-2xl text-lg font-semibold hover:bg-[#D4AF37] hover:text-black transition duration-300"
+              >
+
+                Buy Now
+
+              </button>
+
+            </div>
+
+          </div>
 
         </div>
 
-      </div>
+      </section>
+
+      {/* RELATED PRODUCTS */}
+      <section className="px-6 py-20">
+
+        <div className="max-w-7xl mx-auto">
+
+          <h2 className="text-4xl font-bold mb-12 text-center">
+
+            You May Also Like
+
+          </h2>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+
+            {relatedProducts.map(
+              (item) => (
+
+                <Link
+                  key={item._id}
+                  href={`/product/${item._id}`}
+                >
+
+                  <div className="bg-white/5 border border-white/10 rounded-[32px] overflow-hidden hover:border-[#D4AF37]/40 transition duration-300 backdrop-blur-xl">
+
+                    <div className="bg-black/40 overflow-hidden flex items-center justify-center">
+
+                      <Image
+                        src={item.image}
+                        alt={item.name}
+                        width={500}
+                        height={500}
+                        className="w-full h-72 object-contain hover:scale-105 transition-transform duration-700"
+                      />
+
+                    </div>
+
+                    <div className="p-6">
+
+                      <h3 className="text-2xl font-semibold mb-3 text-white">
+
+                        {item.name}
+
+                      </h3>
+
+                      <p className="text-gray-400 text-sm mb-5 leading-7">
+
+                        {item.description}
+
+                      </p>
+
+                      <div className="flex items-center justify-between">
+
+                        <span className="text-3xl font-bold text-white">
+
+                          ₹{item.price}
+
+                        </span>
+
+                        <span className="text-green-400 font-medium">
+
+                          In Stock
+
+                        </span>
+
+                      </div>
+
+                    </div>
+
+                  </div>
+
+                </Link>
+
+              )
+            )}
+
+          </div>
+
+        </div>
+
+      </section>
 
     </div>
 

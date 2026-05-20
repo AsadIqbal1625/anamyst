@@ -2,35 +2,90 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { useEffect, useState } from "react";
-import { getCart } from "../lib/cart";
-import { useRouter } from "next/navigation";
-import MobileMenu from "./MobileMenu";
+
+import {
+  useEffect,
+  useState,
+} from "react";
+
+import { getCart }
+from "../lib/cart";
+
+import {
+  useRouter,
+} from "next/navigation";
+
+import MobileMenu
+from "./MobileMenu";
 
 export default function Navbar() {
 
-  const router = useRouter();
+  const router =
+    useRouter();
 
-  const [search, setSearch] = useState("");
-  const [cartCount, setCartCount] = useState(0);
-  const [isOpen, setIsOpen] = useState(false);
+  const [search,
+    setSearch] =
+    useState("");
 
+  const [cartCount,
+    setCartCount] =
+    useState(0);
+
+  const [isOpen,
+    setIsOpen] =
+    useState(false);
+
+  /* CART COUNT */
   useEffect(() => {
 
-    const cart = getCart();
+    const updateCartCount =
+      () => {
 
-    const totalQty = cart.reduce(
-      (sum, item) => sum + item.qty,
-      0
+        const cart =
+          getCart();
+
+        const totalQty =
+          cart.reduce(
+
+            (sum, item) =>
+
+              sum +
+              item.quantity,
+
+            0
+
+          );
+
+        setCartCount(
+          totalQty
+        );
+
+      };
+
+    /* INITIAL LOAD */
+    updateCartCount();
+
+    /* LIVE UPDATE */
+    window.addEventListener(
+      "cartUpdated",
+      updateCartCount
     );
 
-    setCartCount(totalQty);
+    return () => {
+
+      window.removeEventListener(
+        "cartUpdated",
+        updateCartCount
+      );
+
+    };
 
   }, []);
 
   return (
 
     <>
+
       {/* MOBILE SIDEBAR */}
       <MobileMenu
         isOpen={isOpen}
@@ -42,18 +97,22 @@ export default function Navbar() {
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3">
 
-          {/* TOP BAR */}
+          {/* TOP */}
           <div className="flex items-center justify-between gap-3">
 
-            {/* LEFT SIDE */}
+            {/* LEFT */}
             <div className="flex items-center gap-3">
 
               {/* HAMBURGER */}
               <button
-                onClick={() => setIsOpen(true)}
+                onClick={() =>
+                  setIsOpen(true)
+                }
                 className="lg:hidden text-white text-3xl"
               >
+
                 ☰
+
               </button>
 
               {/* LOGO */}
@@ -85,42 +144,51 @@ export default function Navbar() {
 
               <Link
                 href="/"
-                className="hover:text-[#D4AF37] transition"
+                className="hover:text-[#D4AF37] transition duration-300"
               >
+
                 Home
+
               </Link>
 
               <Link
                 href="/shop"
-                className="hover:text-[#D4AF37] transition"
+                className="hover:text-[#D4AF37] transition duration-300"
               >
+
                 Shop
+
               </Link>
 
               <Link
                 href="/about"
-                className="hover:text-[#D4AF37] transition"
+                className="hover:text-[#D4AF37] transition duration-300"
               >
+
                 About
+
               </Link>
 
               <Link
                 href="/faq"
-                className="hover:text-[#D4AF37] transition"
+                className="hover:text-[#D4AF37] transition duration-300"
               >
+
                 FAQ
+
               </Link>
 
+              {/* CART */}
               <Link
                 href="/cart"
-                className="relative hover:text-[#D4AF37] transition"
+                className="relative hover:text-[#D4AF37] transition duration-300"
               >
 
                 Cart
 
                 {cartCount > 0 && (
 
-                  <span className="absolute -top-2 -right-4 bg-[#D4AF37] text-black text-xs font-bold w-5 h-5 rounded-full flex items-center justify-center">
+                  <span className="absolute -top-2 -right-4 bg-[#D4AF37] text-black text-xs font-bold min-w-[22px] h-[22px] rounded-full flex items-center justify-center px-1">
 
                     {cartCount}
 
@@ -134,20 +202,28 @@ export default function Navbar() {
 
           </div>
 
-          {/* SEARCH BAR */}
+          {/* SEARCH */}
           <div className="mt-4">
 
             <input
               type="text"
               placeholder="Search perfumes..."
               value={search}
-              onChange={(e) => setSearch(e.target.value)}
+              onChange={(e) =>
+                setSearch(
+                  e.target.value
+                )
+              }
               onKeyDown={(e) => {
 
-                if (e.key === "Enter") {
+                if (
+                  e.key === "Enter"
+                ) {
 
                   router.push(
+
                     `/shop?search=${search}`
+
                   );
 
                 }
@@ -161,30 +237,37 @@ export default function Navbar() {
         </div>
 
       </nav>
-      {/* MOBILE FLOATING CART */}
-        <Link
-          href="/cart"
-          className="md:hidden fixed bottom-6 right-5 z-[9999]"
-        >
 
-          <div className="relative bg-black text-white w-16 h-16 rounded-full flex items-center justify-center shadow-2xl border border-[#D4AF37]">
+      {/* MOBILE FLOATING CART */}
+      <Link
+        href="/cart"
+        className="md:hidden fixed bottom-6 right-5 z-[9999]"
+      >
+
+        <div className="relative bg-black text-white w-16 h-16 rounded-full flex items-center justify-center shadow-2xl border border-[#D4AF37]">
+
+          <span className="text-2xl">
 
             🛒
 
-            {cartCount > 0 && (
+          </span>
 
-              <span className="absolute -top-2 -right-2 bg-[#D4AF37] text-black text-xs font-bold w-6 h-6 rounded-full flex items-center justify-center">
+          {cartCount > 0 && (
 
-                {cartCount}
+            <span className="absolute -top-2 -right-2 bg-[#D4AF37] text-black text-xs font-bold w-6 h-6 rounded-full flex items-center justify-center">
 
-              </span>
+              {cartCount}
 
-            )}
+            </span>
 
-          </div>
+          )}
 
-        </Link>
+        </div>
+
+      </Link>
+
     </>
-    
+
   );
+
 }

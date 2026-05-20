@@ -1,53 +1,144 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { getCart, updateQty, removeItem } from "../../lib/cart";
+import {
+  useEffect,
+  useState,
+} from "react";
+
 import Link from "next/link";
-import { products } from "../../data/products";
-import ProductCard from "../../components/ProductCard";
+
 import Image from "next/image";
+
+import ProductCard
+from "../../components/ProductCard";
+
+import {
+  getCart,
+  updateQuantity,
+  removeFromCart,
+} from "../../lib/cart";
 
 export default function CartPage() {
 
-  const [cart, setCart] = useState([]);
+  const [cart, setCart] =
+    useState([]);
 
+  const [products,
+    setProducts] =
+    useState([]);
+
+  /* LOAD CART */
   const loadCart = () => {
+
     setCart(getCart());
+
   };
 
+  /* LOAD PRODUCTS */
+  async function loadProducts() {
+
+    try {
+
+      const res =
+        await fetch(
+          "/api/products"
+        );
+
+      const data =
+        await res.json();
+
+      if (data.success) {
+
+        setProducts(
+          data.products
+        );
+
+      }
+
+    } catch (error) {
+
+      console.log(error);
+
+    }
+
+  }
+
   useEffect(() => {
+
     loadCart();
+
+    loadProducts();
+
   }, []);
 
+  /* TOTAL */
   const total = cart.reduce(
-    (sum, item) => sum + item.price * item.qty,
+
+    (sum, item) =>
+
+      sum +
+      item.price *
+        item.quantity,
+
     0
+
   );
 
   return (
 
-    <div className="bg-gradient-to-b from-[#f8f8f8] to-[#ececec] min-h-screen p-4 md:p-10">
+    <div className="min-h-screen bg-black text-white overflow-hidden">
 
-      {/* TITLE */}
-      <h1 className="text-4xl font-bold mb-10 text-black">
-        Your Cart
-      </h1>
+      {/* HERO */}
+      <section className="relative px-6 py-16 border-b border-[#D4AF37]/20">
 
+        <div className="absolute inset-0 bg-gradient-to-b from-[#D4AF37]/10 to-transparent" />
+
+        <div className="relative max-w-6xl mx-auto text-center">
+
+          <p className="uppercase tracking-[6px] text-[#D4AF37] text-xs mb-5">
+
+            ANAMYST Checkout
+
+          </p>
+
+          <h1 className="text-5xl md:text-6xl font-bold mb-6">
+
+            Your Cart
+
+          </h1>
+
+          <p className="text-gray-300 text-lg max-w-2xl mx-auto leading-8">
+
+            Review your luxury fragrance
+            collection before checkout.
+
+          </p>
+
+        </div>
+
+      </section>
+
+      {/* EMPTY */}
       {cart.length === 0 ? (
 
-        <div className="bg-white rounded-3xl shadow-lg p-10 text-center">
+        <div className="flex flex-col items-center justify-center py-32 px-6 text-center">
 
-          <h2 className="text-3xl font-bold mb-4 text-black">
-            Your cart is empty 😔
+          <h2 className="text-4xl font-bold mb-5">
+
+            Your cart is empty
+
           </h2>
 
-          <p className="text-gray-500 mb-8">
-            Explore premium fragrances from ANAMYST
+          <p className="text-gray-400 mb-10 max-w-xl leading-8">
+
+            Explore premium fragrances
+            from ANAMYST.
+
           </p>
 
           <Link href="/shop">
 
-            <button className="bg-black text-white px-8 py-4 rounded-2xl hover:bg-[#D4AF37] hover:text-black transition duration-300">
+            <button className="bg-[#D4AF37] text-black px-8 py-4 rounded-2xl hover:opacity-90 transition duration-300 font-semibold">
 
               Continue Shopping
 
@@ -59,195 +150,271 @@ export default function CartPage() {
 
       ) : (
 
-        <div className="grid lg:grid-cols-3 gap-8">
+        <section className="px-4 md:px-6 py-14">
 
-          {/* LEFT SIDE */}
-          <div className="lg:col-span-2 space-y-8">
+          <div className="max-w-7xl mx-auto grid lg:grid-cols-3 gap-10">
 
-            {cart.map((item) => (
+            {/* LEFT */}
+            <div className="lg:col-span-2 space-y-8">
 
-              <div
-                key={item.id}
-                className="bg-white rounded-3xl shadow-lg overflow-hidden"
-              >
+              {cart.map(
+                (item, index) => (
 
-                <div className="flex flex-col md:flex-row">
+                  <div
+                    key={`${item._id}-${index}`}
+                    className="bg-white/5 border border-white/10 rounded-[36px] overflow-hidden backdrop-blur-xl"
+                  >
 
-                  {/* IMAGE */}
-                  <div className="relative md:w-[320px] h-[320px] overflow-hidden">
+                    <div className="flex flex-col md:flex-row">
 
-                    <Image
-                    src={item.image}
-                    alt={item.name}
-                    fill
-                    priority
-                    loading="eager"
-                    sizes="(max-width:768px) 100vw, 320px"
-                    className="object-cover hover:scale-105 transition duration-500"
-                  />
+                      {/* IMAGE */}
+                      <div className="relative md:w-[320px] h-[320px] overflow-hidden bg-black/40">
 
-                    {/* TAG */}
-                    <span className="absolute top-4 left-4 bg-black text-white text-xs px-4 py-2 rounded-full z-10">
-                      {item.tag || "Best Seller"}
-                    </span>
+                        <Image
+                          src={item.image}
+                          alt={item.name}
+                          fill
+                          priority
+                          sizes="(max-width:768px) 100vw, 320px"
+                          className="object-contain hover:scale-105 transition duration-700"
+                        />
 
-                    {/* BADGE */}
-                    <span className="absolute top-4 right-4 bg-[#D4AF37] text-black text-xs font-semibold px-4 py-2 rounded-full z-10">
-                      {item.badge || "Premium"}
-                    </span>
+                        <span className="absolute top-4 left-4 bg-black text-white text-xs px-4 py-2 rounded-full z-10 border border-white/10">
 
-                  </div>
+                          {item.tag ||
+                            "Best Seller"}
 
-                  {/* CONTENT */}
-                  <div className="flex-1 p-6 flex flex-col justify-between">
-
-                    <div>
-
-                      {/* NAME */}
-                      <h2 className="text-3xl font-bold text-black mb-3">
-                        {item.name}
-                      </h2>
-
-                      {/* DESC */}
-                      <p className="text-gray-600 text-lg">
-                        Premium Luxury Fragrance
-                      </p>
-
-                      {/* NOTES */}
-                      <div className="flex flex-wrap gap-3 mt-5">
-
-                        {item.notesTags?.map((note, index) => (
-
-                          <span
-                            key={index}
-                            className="
-                              bg-gradient-to-r
-                              from-black
-                              to-[#1a1a1a]
-                              text-[#D4AF37]
-                              border border-[#D4AF37]/30
-                              px-4 py-2
-                              rounded-full
-                              text-xs 
-                              font-semibold
-                              tracking-wide
-                              shadow-md
-                            "
-                          >
-                            {note}
-                          </span>
-
-                        ))}
-
-                      </div>
-
-                      {/* RATINGS */}
-                      <div className="flex items-center gap-3 mt-5">
-
-                        <span className="text-yellow-500 text-lg">
-                          ★★★★★
                         </span>
 
-                        <span className="text-gray-600">
-                          {item.rating || 4.8} ({item.reviews || 120} reviews)
+                        <span className="absolute top-4 right-4 bg-[#D4AF37] text-black text-xs font-semibold px-4 py-2 rounded-full z-10">
+
+                          {item.badge ||
+                            "Premium"}
+
                         </span>
 
                       </div>
 
-                      {/* PRICE */}
-                      <div className="flex items-center gap-4 mt-6 flex-wrap">
+                      {/* CONTENT */}
+                      <div className="flex-1 p-6 flex flex-col justify-between">
 
-                        <p className="text-4xl font-bold text-black">
-                          ₹{item.price}
-                        </p>
+                        <div>
 
-                        <p className="text-gray-400 line-through text-xl">
-                          ₹{item.oldPrice || item.price + 500}
-                        </p>
+                          <p className="uppercase tracking-[5px] text-[#D4AF37] text-xs mb-4">
 
-                        <span className="text-green-600 font-semibold">
-                          In Stock
-                        </span>
+                            ANAMYST Luxury
 
-                      </div>
+                          </p>
 
-                      {/* SHIPPING */}
-                      <p className="mt-5 text-gray-600">
-                        🚚 Shipping Across India • T&C Apply
-                      </p>
+                          <h2 className="text-4xl font-bold text-white mb-4">
 
-                    </div>
+                            {item.name}
 
-                    {/* BOTTOM */}
-                    <div className="flex items-center justify-between flex-wrap gap-5 mt-8">
+                          </h2>
 
-                      {/* QUANTITY */}
-                      <div className="flex items-center gap-4">
+                          <p className="text-gray-400 text-lg">
 
-                        <button
-                          onClick={() => {
+                            Premium Luxury Fragrance
 
-                            if (item.qty === 1) {
+                          </p>
 
-                              const confirmDelete = confirm(
-                                "Remove this item from cart?"
+                          {/* NOTES */}
+                          <div className="flex flex-wrap gap-3 mt-6">
+
+                            {item.notesTags?.map(
+                              (
+                                note,
+                                noteIndex
+                              ) => (
+
+                                <span
+                                  key={`${note}-${noteIndex}`}
+                                  className="bg-black text-[#D4AF37] border border-[#D4AF37]/30 px-4 py-2 rounded-full text-xs font-semibold tracking-wide"
+                                >
+
+                                  {note}
+
+                                </span>
+
+                              )
+                            )}
+
+                          </div>
+
+                          {/* RATING */}
+                          <div className="flex items-center gap-3 mt-6">
+
+                            <span className="text-[#D4AF37] text-lg">
+
+                              ★★★★★
+
+                            </span>
+
+                            <span className="text-gray-400">
+
+                              {item.rating ||
+                                4.8}
+
+                              {" "}
+                              (
+                              {item.reviews ||
+                                120}
+                              {" "}
+                              reviews)
+
+                            </span>
+
+                          </div>
+
+                          {/* PRICE */}
+                          <div className="flex items-center gap-4 mt-6 flex-wrap">
+
+                            <p className="text-4xl font-bold text-white">
+
+                              ₹{item.price}
+
+                            </p>
+
+                            <p className="text-gray-500 line-through text-xl">
+
+                              ₹
+                              {item.oldPrice ||
+                                item.price +
+                                  500}
+
+                            </p>
+
+                            <span className="text-green-400 font-semibold">
+
+                              In Stock
+
+                            </span>
+
+                          </div>
+
+                          <p className="mt-5 text-gray-400">
+
+                            🚚 Shipping Across India
+
+                          </p>
+
+                        </div>
+
+                        {/* BOTTOM */}
+                        <div className="flex items-center justify-between flex-wrap gap-5 mt-10">
+
+                          {/* QUANTITY */}
+                          <div className="flex items-center gap-4">
+
+                            {/* DECREASE */}
+                            <button
+                              onClick={() => {
+
+                                if (
+                                  item.quantity === 1
+                                ) {
+
+                                  const confirmDelete =
+                                    confirm(
+                                      "Remove this item from cart?"
+                                    );
+
+                                  if (
+                                    confirmDelete
+                                  ) {
+
+                                    removeFromCart(
+                                      item._id
+                                    );
+
+                                    loadCart();
+
+                                  }
+
+                                } else {
+
+                                  updateQuantity(
+                                    item._id,
+                                    "decrease"
+                                  );
+
+                                  loadCart();
+
+                                }
+
+                              }}
+                              className="w-12 h-12 rounded-2xl bg-black border border-white/10 text-white hover:bg-[#D4AF37] hover:text-black transition duration-300 text-xl"
+                            >
+
+                              -
+
+                            </button>
+
+                            <span className="text-2xl font-bold text-white">
+
+                              {item.quantity}
+
+                            </span>
+
+                            {/* INCREASE */}
+                            <button
+                              onClick={() => {
+
+                                updateQuantity(
+                                  item._id,
+                                  "increase"
+                                );
+
+                                loadCart();
+
+                              }}
+                              className="w-12 h-12 rounded-2xl bg-black border border-white/10 text-white hover:bg-[#D4AF37] hover:text-black transition duration-300 text-xl"
+                            >
+
+                              +
+
+                            </button>
+
+                          </div>
+
+                          {/* REMOVE */}
+                          <button
+                            onClick={() => {
+
+                              removeFromCart(
+                                item._id
                               );
 
-                              if (confirmDelete) {
-                                removeItem(item.id);
-                                loadCart();
-                              }
-
-                            } else {
-
-                              updateQty(item.id, -1);
                               loadCart();
 
-                            }
+                            }}
+                            className="text-red-400 font-semibold hover:text-red-300 transition duration-300"
+                          >
 
-                          }}
-                          className="w-12 h-12 rounded-xl bg-black text-white hover:bg-[#D4AF37] hover:text-black transition duration-300 text-xl"
-                        >
-                          -
-                        </button>
+                            Remove
 
-                        <span className="text-2xl font-bold text-black">
-                          {item.qty}
-                        </span>
+                          </button>
 
-                        <button
-                          onClick={() => {
-                            updateQty(item.id, 1);
-                            loadCart();
-                          }}
-                          className="w-12 h-12 rounded-xl bg-black text-white hover:bg-[#D4AF37] hover:text-black transition duration-300 text-xl"
-                        >
-                          +
-                        </button>
+                          {/* TOTAL */}
+                          <div className="text-right">
 
-                      </div>
+                            <p className="text-gray-500">
 
-                      {/* REMOVE */}
-                      <button
-                        onClick={() => {
-                          removeItem(item.id);
-                          loadCart();
-                        }}
-                        className="text-red-500 font-semibold hover:text-red-700 transition duration-300"
-                      >
-                        Remove
-                      </button>
+                              Total
 
-                      {/* TOTAL */}
-                      <div className="text-right">
+                            </p>
 
-                        <p className="text-gray-500">
-                          Total
-                        </p>
+                            <p className="text-3xl font-bold text-white">
 
-                        <p className="text-3xl font-bold text-black">
-                          ₹{item.price * item.qty}
-                        </p>
+                              ₹
+                              {item.price *
+                                item.quantity}
+
+                            </p>
+
+                          </div>
+
+                        </div>
 
                       </div>
 
@@ -255,90 +422,121 @@ export default function CartPage() {
 
                   </div>
 
+                )
+              )}
+
+            </div>
+
+            {/* RIGHT */}
+            <div>
+
+              <div className="bg-white/5 border border-white/10 rounded-[36px] p-8 sticky top-24 backdrop-blur-xl">
+
+                <h2 className="text-3xl font-bold mb-8 text-white">
+
+                  Price Details
+
+                </h2>
+
+                <div className="space-y-5">
+
+                  <div className="flex justify-between text-gray-300 text-lg">
+
+                    <span>Total Items</span>
+
+                    <span>
+
+                      {cart.reduce(
+
+                        (sum, i) =>
+
+                          sum +
+                          i.quantity,
+
+                        0
+
+                      )}
+
+                    </span>
+
+                  </div>
+
+                  <div className="flex justify-between text-gray-300 text-lg">
+
+                    <span>Total Price</span>
+
+                    <span>
+
+                      ₹{total}
+
+                    </span>
+
+                  </div>
+
+                  <div className="flex justify-between text-gray-300 text-lg">
+
+                    <span>Shipping</span>
+
+                    <span className="text-green-400">
+
+                      Free
+
+                    </span>
+
+                  </div>
+
                 </div>
 
-              </div>
+                <hr className="my-8 border-white/10" />
 
-            ))}
+                <div className="flex justify-between items-center mb-8">
 
-          </div>
+                  <span className="text-2xl font-bold text-white">
 
-          {/* RIGHT SIDE */}
-          <div>
+                    Total
 
-            <div className="bg-white rounded-3xl shadow-lg p-8 sticky top-24">
+                  </span>
 
-              <h2 className="text-3xl font-bold mb-8 text-black">
-                Price Details
-              </h2>
+                  <span className="text-4xl font-bold text-[#D4AF37]">
 
-              <div className="space-y-5">
+                    ₹{total}
 
-                <div className="flex justify-between text-gray-700 text-lg">
-
-                  <span>Total Items</span>
-
-                  <span>
-                    {cart.reduce((sum, i) => sum + i.qty, 0)}
                   </span>
 
                 </div>
 
-                <div className="flex justify-between text-gray-700 text-lg">
+                {/* FEATURES */}
+                <div className="bg-black/40 border border-white/10 rounded-[24px] p-5 mb-8 space-y-4 text-gray-300">
 
-                  <span>Total Price</span>
+                  <p>
 
-                  <span>₹{total}</span>
+                    🚚 Free Shipping Across India
+
+                  </p>
+
+                  <p>
+
+                    🔒 Secure Checkout
+
+                  </p>
+
+                  <p>
+
+                    💯 Authentic Luxury Fragrances
+
+                  </p>
 
                 </div>
 
-                <div className="flex justify-between text-gray-700 text-lg">
+                <Link href="/checkout">
 
-                  <span>Shipping</span>
+                  <button className="w-full bg-[#D4AF37] text-black py-5 rounded-2xl hover:opacity-90 transition duration-300 text-lg font-semibold">
 
-                  <span className="text-green-600">
-                    Calculated at Checkout
-                  </span>
+                    Proceed to Checkout
 
-                </div>
+                  </button>
 
-              </div>
-
-              <hr className="my-8" />
-
-              <div className="flex justify-between items-center mb-8">
-
-                <span className="text-2xl font-bold text-black">
-                  Total
-                </span>
-
-                <span className="text-4xl font-bold text-black">
-                  ₹{total}
-                </span>
-
-              </div>
-
-              {/* CHECKOUT */}
-              <Link href="/checkout">
-
-                <button className="w-full bg-black text-white py-4 rounded-2xl hover:bg-[#D4AF37] hover:text-black transition duration-300 text-lg font-semibold">
-
-                  Proceed to Checkout
-
-                </button>
-
-              </Link>
-
-              {/* TRUST */}
-              <div className="mt-8 space-y-4 text-gray-600">
-
-                <p>🚚 Shipping Across India • T&C Apply</p>
-
-                <p>🔒 Secure Checkout</p>
-
-                <p>💯 Premium Long Lasting Fragrance</p>
-
-                <p>📦 Easy WhatsApp Support</p>
+                </Link>
 
               </div>
 
@@ -346,31 +544,39 @@ export default function CartPage() {
 
           </div>
 
-        </div>
+        </section>
 
       )}
 
       {/* SUGGESTIONS */}
-      <div className="mt-24">
+      <section className="px-6 pb-24">
 
-        <h2 className="text-4xl font-bold mb-10 text-black">
-          You may also like
-        </h2>
+        <div className="max-w-7xl mx-auto">
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
+          <h2 className="text-4xl font-bold mb-12 text-white text-center">
 
-          {products.slice(0, 4).map((product) => (
+            You May Also Like
 
-            <ProductCard
-              key={product.id}
-              product={product}
-            />
+          </h2>
 
-          ))}
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
+
+            {products
+              .slice(0, 4)
+              .map((product) => (
+
+                <ProductCard
+                  key={product._id}
+                  product={product}
+                />
+
+              ))}
+
+          </div>
 
         </div>
 
-      </div>
+      </section>
 
     </div>
 
