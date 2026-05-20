@@ -2,14 +2,20 @@
 
 import Link from "next/link";
 
-export default function MobileMenu({ isOpen, setIsOpen }) {
+export default function MobileMenu({
+  isOpen,
+  setIsOpen,
+}) {
 
   return (
 
     <>
+
       {/* OVERLAY */}
       <div
-        onClick={() => setIsOpen(false)}
+        onClick={() =>
+          setIsOpen(false)
+        }
         className={`fixed inset-0 bg-black/60 backdrop-blur-sm z-[998] transition-all duration-300 ${
           isOpen
             ? "opacity-100 visible"
@@ -31,10 +37,14 @@ export default function MobileMenu({ isOpen, setIsOpen }) {
 
           {/* CLOSE BUTTON */}
           <button
-            onClick={() => setIsOpen(false)}
+            onClick={() =>
+              setIsOpen(false)
+            }
             className="absolute top-6 right-6 text-white text-4xl font-light"
           >
+
             ×
+
           </button>
 
           {/* SMALL TEXT */}
@@ -44,7 +54,7 @@ export default function MobileMenu({ isOpen, setIsOpen }) {
 
           </p>
 
-          {/* LOGO TEXT */}
+          {/* LOGO */}
           <h1 className="text-white text-[52px] font-bold tracking-[0.12em] leading-none">
 
             ANAMYST
@@ -54,133 +64,340 @@ export default function MobileMenu({ isOpen, setIsOpen }) {
           {/* SUBTEXT */}
           <p className="text-gray-400 text-sm mt-5 leading-7 max-w-[260px]">
 
-            Discover premium fragrances crafted for elegance and presence.
+            Discover premium fragrances
+            crafted for elegance and presence.
 
           </p>
 
         </div>
 
-        {/* MENU ITEMS */}
+        {/* MAIN NAVIGATION */}
         <div className="py-3">
 
+          {/* HOME */}
           <Link
             href="/"
-            onClick={() => setIsOpen(false)}
+            onClick={() =>
+              setIsOpen(false)
+            }
             className="flex items-center justify-between px-6 py-5 border-b border-white/5 hover:bg-white/5 transition-all duration-300 group"
           >
 
             <span className="text-white text-2xl font-light">
+
               Home
+
             </span>
 
             <span className="text-[#D4AF37] opacity-0 group-hover:opacity-100 transition">
+
               →
+
             </span>
 
           </Link>
 
-          <Link
-            href="/shop"
-            onClick={() => setIsOpen(false)}
-            className="flex items-center justify-between px-6 py-5 border-b border-white/5 hover:bg-white/5 transition-all duration-300 group"
-          >
+          {/* COLLECTIONS TITLE */}
+          <div className="px-6 pt-8 pb-4">
 
-            <span className="text-white text-2xl font-light">
-              Shop
-            </span>
+            <p className="text-[#D4AF37] text-xs tracking-[0.3em] uppercase">
 
-            <span className="text-[#D4AF37] opacity-0 group-hover:opacity-100 transition">
-              →
-            </span>
+              Collections
 
-          </Link>
-
-          <Link
-            href="/about"
-            onClick={() => setIsOpen(false)}
-            className="flex items-center justify-between px-6 py-5 border-b border-white/5 hover:bg-white/5 transition-all duration-300 group"
-          >
-
-            <span className="text-white text-2xl font-light">
-              About
-            </span>
-
-            <span className="text-[#D4AF37] opacity-0 group-hover:opacity-100 transition">
-              →
-            </span>
-
-          </Link>
-
-          <Link
-            href="/faq"
-            onClick={() => setIsOpen(false)}
-            className="flex items-center justify-between px-6 py-5 border-b border-white/5 hover:bg-white/5 transition-all duration-300 group"
-          >
-
-            <span className="text-white text-2xl font-light">
-              FAQ
-            </span>
-
-            <span className="text-[#D4AF37] opacity-0 group-hover:opacity-100 transition">
-              →
-            </span>
-
-          </Link>
-
-          <Link
-            href="/cart"
-            onClick={() => setIsOpen(false)}
-            className="flex items-center justify-between px-6 py-5 border-b border-white/5 hover:bg-white/5 transition-all duration-300 group"
-          >
-
-            <span className="text-white text-2xl font-light">
-              Cart
-            </span>
-
-            <span className="text-[#D4AF37] opacity-0 group-hover:opacity-100 transition">
-              →
-            </span>
-
-          </Link>
-
-        </div>
-
-        {/* FOOTER */}
-        <div className="mt-auto px-6 py-8 border-t border-white/10">
-
-          <p className="text-[#D4AF37] text-xs tracking-[0.3em] uppercase mb-6">
-
-            Collections
-
-          </p>
-
-          <div className="space-y-4">
-
-            <div className="bg-white/5 border border-white/10 rounded-2xl px-5 py-4">
-
-              <p className="text-white text-lg">
-                Luxury Perfumes
-              </p>
-
-            </div>
-
-            <div className="bg-white/5 border border-white/10 rounded-2xl px-5 py-4">
-
-              <p className="text-white text-lg">
-                Men Collection
-              </p>
-
-            </div>
-
-            <div className="bg-white/5 border border-white/10 rounded-2xl px-5 py-4">
-
-              <p className="text-white text-lg">
-                Women Collection
-              </p>
-
-            </div>
+            </p>
 
           </div>
+
+          {/* ALL COLLECTIONS */}
+          <Link
+            href="/shop"
+            onClick={() =>
+              setIsOpen(false)
+            }
+            className="block mx-4 mb-4 bg-[#D4AF37]/10 border border-[#D4AF37]/20 rounded-2xl px-5 py-5 hover:bg-[#D4AF37]/20 transition duration-300"
+          >
+
+            <div className="flex items-center justify-between">
+
+              <div>
+
+                <p className="text-[#D4AF37] text-xl font-medium">
+
+                  All Collections
+
+                </p>
+
+                <p className="text-gray-400 text-sm mt-2">
+
+                  Explore every ANAMYST collection
+
+                </p>
+
+              </div>
+
+              <span className="text-[#D4AF37] text-2xl">
+
+                →
+
+              </span>
+
+            </div>
+
+          </Link>
+
+          {/* PERFUMES */}
+          <Link
+            href="/shop/perfumes"
+            onClick={() =>
+              setIsOpen(false)
+            }
+            className="block mx-4 mb-4 bg-white/5 border border-white/10 rounded-2xl px-5 py-5 hover:border-[#D4AF37]/40 hover:bg-[#D4AF37]/5 transition duration-300"
+          >
+
+            <div className="flex items-center justify-between">
+
+              <div>
+
+                <p className="text-white text-xl font-medium">
+
+                  Perfumes
+
+                </p>
+
+                <p className="text-gray-400 text-sm mt-2">
+
+                  Signature luxury fragrances
+
+                </p>
+
+              </div>
+
+              <span className="text-[#D4AF37] text-2xl">
+
+                →
+
+              </span>
+
+            </div>
+
+          </Link>
+
+          {/* ATTARS */}
+          <Link
+            href="/shop/attars"
+            onClick={() =>
+              setIsOpen(false)
+            }
+            className="block mx-4 mb-4 bg-white/5 border border-white/10 rounded-2xl px-5 py-5 hover:border-[#D4AF37]/40 hover:bg-[#D4AF37]/5 transition duration-300"
+          >
+
+            <div className="flex items-center justify-between">
+
+              <div>
+
+                <p className="text-white text-xl font-medium">
+
+                  Attars
+
+                </p>
+
+                <p className="text-gray-400 text-sm mt-2">
+
+                  Traditional premium attars
+
+                </p>
+
+              </div>
+
+              <span className="text-[#D4AF37] text-2xl">
+
+                →
+
+              </span>
+
+            </div>
+
+          </Link>
+
+          {/* FRESHENERS */}
+          <Link
+            href="/shop/fresheners"
+            onClick={() =>
+              setIsOpen(false)
+            }
+            className="block mx-4 mb-4 bg-white/5 border border-white/10 rounded-2xl px-5 py-5 hover:border-[#D4AF37]/40 hover:bg-[#D4AF37]/5 transition duration-300"
+          >
+
+            <div className="flex items-center justify-between">
+
+              <div>
+
+                <p className="text-white text-xl font-medium">
+
+                  Fresheners
+
+                </p>
+
+                <p className="text-gray-400 text-sm mt-2">
+
+                  Refresh your surroundings
+
+                </p>
+
+              </div>
+
+              <span className="text-[#D4AF37] text-2xl">
+
+                →
+
+              </span>
+
+            </div>
+
+          </Link>
+
+          {/* PREMIUM GIFTS */}
+          <Link
+            href="/shop/premium-gifts"
+            onClick={() =>
+              setIsOpen(false)
+            }
+            className="block mx-4 mb-4 bg-white/5 border border-white/10 rounded-2xl px-5 py-5 hover:border-[#D4AF37]/40 hover:bg-[#D4AF37]/5 transition duration-300"
+          >
+
+            <div className="flex items-center justify-between">
+
+              <div>
+
+                <p className="text-white text-xl font-medium">
+
+                  Premium Gifts
+
+                </p>
+
+                <p className="text-gray-400 text-sm mt-2">
+
+                  Elegant gifting collections
+
+                </p>
+
+              </div>
+
+              <span className="text-[#D4AF37] text-2xl">
+
+                →
+
+              </span>
+
+            </div>
+
+          </Link>
+
+          {/* COMBOS */}
+          <Link
+            href="/shop/combos"
+            onClick={() =>
+              setIsOpen(false)
+            }
+            className="block mx-4 mb-4 bg-white/5 border border-white/10 rounded-2xl px-5 py-5 hover:border-[#D4AF37]/40 hover:bg-[#D4AF37]/5 transition duration-300"
+          >
+
+            <div className="flex items-center justify-between">
+
+              <div>
+
+                <p className="text-white text-xl font-medium">
+
+                  Combos
+
+                </p>
+
+                <p className="text-gray-400 text-sm mt-2">
+
+                  Curated fragrance bundles
+
+                </p>
+
+              </div>
+
+              <span className="text-[#D4AF37] text-2xl">
+
+                →
+
+              </span>
+
+            </div>
+
+          </Link>
+
+          {/* ABOUT */}
+          <Link
+            href="/about"
+            onClick={() =>
+              setIsOpen(false)
+            }
+            className="flex items-center justify-between px-6 py-5 border-t border-white/5 hover:bg-white/5 transition-all duration-300 group"
+          >
+
+            <span className="text-white text-2xl font-light">
+
+              About
+
+            </span>
+
+            <span className="text-[#D4AF37] opacity-0 group-hover:opacity-100 transition">
+
+              →
+
+            </span>
+
+          </Link>
+
+          {/* FAQ */}
+          <Link
+            href="/faq"
+            onClick={() =>
+              setIsOpen(false)
+            }
+            className="flex items-center justify-between px-6 py-5 border-b border-white/5 hover:bg-white/5 transition-all duration-300 group"
+          >
+
+            <span className="text-white text-2xl font-light">
+
+              FAQ
+
+            </span>
+
+            <span className="text-[#D4AF37] opacity-0 group-hover:opacity-100 transition">
+
+              →
+
+            </span>
+
+          </Link>
+
+          {/* CART */}
+          <Link
+            href="/cart"
+            onClick={() =>
+              setIsOpen(false)
+            }
+            className="flex items-center justify-between px-6 py-5 border-b border-white/5 hover:bg-white/5 transition-all duration-300 group"
+          >
+
+            <span className="text-white text-2xl font-light">
+
+              Cart
+
+            </span>
+
+            <span className="text-[#D4AF37] opacity-0 group-hover:opacity-100 transition">
+
+              →
+
+            </span>
+
+          </Link>
 
         </div>
 
@@ -189,4 +406,5 @@ export default function MobileMenu({ isOpen, setIsOpen }) {
     </>
 
   );
+
 }

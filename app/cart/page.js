@@ -173,7 +173,7 @@ export default function CartPage() {
                         <Image
                           src={item.image}
                           alt={item.name}
-                          fill
+                        
                           priority
                           sizes="(max-width:768px) 100vw, 320px"
                           className="object-contain hover:scale-105 transition duration-700"

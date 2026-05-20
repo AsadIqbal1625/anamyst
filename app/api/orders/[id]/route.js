@@ -1,15 +1,15 @@
+import { NextResponse }
+from "next/server";
+
 import { connectDB }
 from "../../../../lib/mongodb";
 
 import Order
 from "../../../../models/Order";
 
-import mongoose
-from "mongoose";
-
 /* UPDATE ORDER STATUS */
 export async function PATCH(
-  req,
+  request,
   context
 ) {
 
@@ -17,30 +17,17 @@ export async function PATCH(
 
     await connectDB();
 
+    /* NEXTJS PARAMS FIX */
     const params =
       await context.params;
 
-    const id = params.id;
-
-    if (
-      !mongoose.Types.ObjectId
-        .isValid(id)
-    ) {
-
-      return Response.json({
-        success: false,
-        error: "Invalid Order ID",
-      });
-
-    }
-
     const body =
-      await req.json();
+      await request.json();
 
     const updatedOrder =
       await Order.findByIdAndUpdate(
 
-        id,
+        params.id,
 
         {
           orderStatus:
@@ -48,28 +35,27 @@ export async function PATCH(
         },
 
         {
-          new: true,
+          returnDocument:
+            "after",
         }
 
       );
 
-    return Response.json({
+    return NextResponse.json({
 
       success: true,
 
-      order:
-        updatedOrder,
+      updatedOrder,
 
     });
 
   } catch (error) {
 
-    return Response.json({
+    return NextResponse.json({
 
       success: false,
 
-      error:
-        error.message,
+      error: error.message,
 
     });
 

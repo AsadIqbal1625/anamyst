@@ -62,10 +62,8 @@ export default function Navbar() {
 
       };
 
-    /* INITIAL LOAD */
     updateCartCount();
 
-    /* LIVE UPDATE */
     window.addEventListener(
       "cartUpdated",
       updateCartCount
@@ -86,7 +84,7 @@ export default function Navbar() {
 
     <>
 
-      {/* MOBILE SIDEBAR */}
+      {/* MOBILE MENU */}
       <MobileMenu
         isOpen={isOpen}
         setIsOpen={setIsOpen}
@@ -142,6 +140,7 @@ export default function Navbar() {
             {/* DESKTOP MENU */}
             <div className="hidden lg:flex items-center gap-6 text-white text-sm uppercase font-medium">
 
+              {/* HOME */}
               <Link
                 href="/"
                 className="hover:text-[#D4AF37] transition duration-300"
@@ -151,15 +150,153 @@ export default function Navbar() {
 
               </Link>
 
-              <Link
-                href="/shop"
-                className="hover:text-[#D4AF37] transition duration-300"
-              >
+              {/* COLLECTIONS */}
+              <div className="relative group">
 
-                Shop
+                <button className="flex items-center gap-2 hover:text-[#D4AF37] transition duration-300">
 
-              </Link>
+                  COLLECTIONS
 
+                  <span className="text-xs">
+
+                    ▼
+
+                  </span>
+
+                </button>
+
+                {/* DROPDOWN */}
+                <div className="absolute top-full left-0 mt-5 w-[300px] bg-black/95 backdrop-blur-xl border border-white/10 rounded-3xl p-4 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 shadow-2xl">
+
+                  <div className="space-y-3">
+
+                    {/* ALL COLLECTIONS */}
+                    <Link
+                      href="/shop"
+                      className="block bg-[#D4AF37]/10 border border-[#D4AF37]/20 rounded-2xl p-4 hover:bg-[#D4AF37]/20 transition duration-300"
+                    >
+
+                      <p className="text-[#D4AF37] text-base font-semibold">
+
+                        All Collections
+
+                      </p>
+
+                      <p className="text-gray-400 text-xs mt-1">
+
+                        Explore every ANAMYST collection
+
+                      </p>
+
+                    </Link>
+
+                    {/* PERFUMES */}
+                    <Link
+                      href="/shop/perfumes"
+                      className="block bg-white/5 border border-white/5 rounded-2xl p-4 hover:border-[#D4AF37]/40 hover:bg-[#D4AF37]/5 transition duration-300"
+                    >
+
+                      <p className="text-white text-base font-semibold">
+
+                        Perfumes
+
+                      </p>
+
+                      <p className="text-gray-400 text-xs mt-1">
+
+                        Signature luxury fragrances
+
+                      </p>
+
+                    </Link>
+
+                    {/* ATTARS */}
+                    <Link
+                      href="/shop/attars"
+                      className="block bg-white/5 border border-white/5 rounded-2xl p-4 hover:border-[#D4AF37]/40 hover:bg-[#D4AF37]/5 transition duration-300"
+                    >
+
+                      <p className="text-white text-base font-semibold">
+
+                        Attars
+
+                      </p>
+
+                      <p className="text-gray-400 text-xs mt-1">
+
+                        Traditional premium attars
+
+                      </p>
+
+                    </Link>
+
+                    {/* FRESHENERS */}
+                    <Link
+                      href="/shop/fresheners"
+                      className="block bg-white/5 border border-white/5 rounded-2xl p-4 hover:border-[#D4AF37]/40 hover:bg-[#D4AF37]/5 transition duration-300"
+                    >
+
+                      <p className="text-white text-base font-semibold">
+
+                        Fresheners
+
+                      </p>
+
+                      <p className="text-gray-400 text-xs mt-1">
+
+                        Refresh your surroundings
+
+                      </p>
+
+                    </Link>
+
+                    {/* GIFTS */}
+                    <Link
+                      href="/shop/premium-gifts"
+                      className="block bg-white/5 border border-white/5 rounded-2xl p-4 hover:border-[#D4AF37]/40 hover:bg-[#D4AF37]/5 transition duration-300"
+                    >
+
+                      <p className="text-white text-base font-semibold">
+
+                        Premium Gifts
+
+                      </p>
+
+                      <p className="text-gray-400 text-xs mt-1">
+
+                        Elegant gifting collections
+
+                      </p>
+
+                    </Link>
+
+                    {/* COMBOS */}
+                    <Link
+                      href="/shop/combos"
+                      className="block bg-white/5 border border-white/5 rounded-2xl p-4 hover:border-[#D4AF37]/40 hover:bg-[#D4AF37]/5 transition duration-300"
+                    >
+
+                      <p className="text-white text-base font-semibold">
+
+                        Combos
+
+                      </p>
+
+                      <p className="text-gray-400 text-xs mt-1">
+
+                        Curated fragrance bundles
+
+                      </p>
+
+                    </Link>
+
+                  </div>
+
+                </div>
+
+              </div>
+
+              {/* ABOUT */}
               <Link
                 href="/about"
                 className="hover:text-[#D4AF37] transition duration-300"
@@ -169,6 +306,7 @@ export default function Navbar() {
 
               </Link>
 
+              {/* FAQ */}
               <Link
                 href="/faq"
                 className="hover:text-[#D4AF37] transition duration-300"
@@ -207,7 +345,7 @@ export default function Navbar() {
 
             <input
               type="text"
-              placeholder="Search perfumes..."
+              placeholder="Search luxury collections..."
               value={search}
               onChange={(e) =>
                 setSearch(

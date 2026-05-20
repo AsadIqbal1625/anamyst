@@ -1,5 +1,6 @@
 "use client";
-
+import AdminProtection
+from "../../components/AdminProtection";
 import {
   useEffect,
   useState,
@@ -355,6 +356,7 @@ export default function AdminPage() {
 
   return (
 
+    <AdminProtection>
     <div className="min-h-screen bg-[#f7f7f7] px-4 py-10">
 
       <div className="max-w-7xl mx-auto">
@@ -428,9 +430,11 @@ export default function AdminPage() {
                 <div className="relative w-full h-[220px] rounded-2xl overflow-hidden border border-gray-200">
 
                   <Image
+                  fill
+                    sizes="80px"
                     src={form.image}
                     alt="Preview"
-                    fill
+                    
                     className="object-contain"
                   />
 
@@ -462,14 +466,37 @@ export default function AdminPage() {
             />
 
             {/* CATEGORY */}
-            <input
-              type="text"
+            <div>
+            <label className="block text-black font-semibold mb-3">
+              Product Category
+            </label>
+            <select
               name="category"
-              placeholder="Men / Women / Unisex"
               value={form.category}
               onChange={handleChange}
-              className="w-full border border-gray-300 bg-white text-black placeholder:text-gray-500 rounded-2xl px-5 py-4 outline-none focus:border-black"
-            />
+              className="w-full border border-gray-300 bg-white text-black rounded-2xl px-5 py-4 outline-none focus:border-black"
+              required
+            >
+              <option value="">
+               Select Category
+              </option>
+              <option value="Perfumes">
+                Perfumes
+              </option>
+              <option value="Attars">
+                Attars
+              </option>
+              <option value="Fresheners">
+                Fresheners
+              </option>
+              <option value="Premium Gifts">
+               Premium Gifts
+              </option>
+              <option value="Combos">
+                Combos
+              </option>
+            </select>
+          </div>
 
             {/* NOTES */}
             <input
@@ -662,6 +689,8 @@ export default function AdminPage() {
 
     </div>
 
-  );
+   </AdminProtection>
+
+);
 
 }

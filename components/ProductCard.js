@@ -15,12 +15,13 @@ export default function ProductCard({ product }) {
         {/* IMAGE */}
           <div className="relative w-full aspect-[4/5] overflow-hidden">
 
-            <Image
-              fill
+           <Image
+            fill
+            
               src={product.image}
               alt={product.name}
               loading="eager"
-              sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
               className="object-cover"
             />
 
