@@ -7,22 +7,21 @@ export function middleware(req) {
 
     req.cookies.get(
       "admin-auth"
-    );
+    )?.value;
 
-  const isAdminPage =
+  const pathname =
+    req.nextUrl.pathname;
 
-    req.nextUrl.pathname
-      .startsWith("/admin");
-
-  const isLoginPage =
-
-    req.nextUrl.pathname ===
-    "/admin-login";
-
-  /* NOT LOGGED IN */
+  /* PROTECT ADMIN ROUTES */
   if (
 
-    isAdminPage &&
+    pathname.startsWith(
+      "/admin"
+    ) &&
+
+    pathname !==
+      "/admin-login" &&
+
     !adminAuth
 
   ) {
@@ -31,25 +30,6 @@ export function middleware(req) {
 
       new URL(
         "/admin-login",
-        req.url
-      )
-
-    );
-
-  }
-
-  /* ALREADY LOGGED IN */
-  if (
-
-    isLoginPage &&
-    adminAuth
-
-  ) {
-
-    return NextResponse.redirect(
-
-      new URL(
-        "/admin",
         req.url
       )
 
@@ -66,8 +46,6 @@ export const config = {
   matcher: [
 
     "/admin/:path*",
-
-    "/admin-login",
 
   ],
 
