@@ -205,7 +205,6 @@ export default function AdminPage() {
 
       let res;
 
-      /* UPDATE */
       if (editingId) {
 
         res = await fetch(
@@ -231,10 +230,7 @@ export default function AdminPage() {
 
         );
 
-      }
-
-      /* ADD */
-      else {
+      } else {
 
         res = await fetch(
 
@@ -369,22 +365,28 @@ export default function AdminPage() {
 
     <AdminProtection>
 
-      <div className="min-h-screen bg-[#f7f7f7] px-4 py-10">
+      <div className="min-h-screen bg-black text-white px-4 py-10">
 
         <div className="max-w-7xl mx-auto">
 
           {/* HEADER */}
-          <div className="mb-10 flex flex-col md:flex-row md:items-center md:justify-between gap-5">
+          <div className="mb-12 flex flex-col md:flex-row md:items-center md:justify-between gap-5">
 
             <div>
 
-              <h1 className="text-5xl font-bold text-black mb-3">
+              <p className="uppercase tracking-[6px] text-[#D4AF37] text-xs mb-4">
+
+                ANAMYST ADMIN
+
+              </p>
+
+              <h1 className="text-5xl font-bold text-white mb-4">
 
                 Admin Panel
 
               </h1>
 
-              <p className="text-gray-600 text-lg">
+              <p className="text-gray-400 text-lg">
 
                 Manage ANAMYST Products
 
@@ -392,7 +394,7 @@ export default function AdminPage() {
 
             </div>
 
-            {/* ACTION BUTTONS */}
+            {/* BUTTONS */}
             <div className="flex gap-4 flex-wrap">
 
               {/* VIEW ORDERS */}
@@ -444,7 +446,7 @@ export default function AdminPage() {
           {/* FORM */}
           <form
             onSubmit={handleSubmit}
-            className="bg-white rounded-3xl shadow-lg p-6 md:p-8 mb-12"
+            className="bg-white/5 border border-[#D4AF37]/20 rounded-[32px] backdrop-blur-xl p-6 md:p-8 mb-12"
           >
 
             <div className="grid md:grid-cols-2 gap-5">
@@ -456,14 +458,14 @@ export default function AdminPage() {
                 placeholder="Product Name"
                 value={form.name}
                 onChange={handleChange}
-                className="w-full border border-gray-300 bg-white text-black placeholder:text-gray-500 rounded-2xl px-5 py-4 outline-none focus:border-black"
+                className="w-full border border-white/10 bg-black/40 text-white placeholder:text-gray-400 rounded-2xl px-5 py-4 outline-none focus:border-[#D4AF37]"
                 required
               />
 
               {/* IMAGE */}
               <div className="space-y-3">
 
-                <label className="text-black font-semibold">
+                <label className="text-white font-semibold">
 
                   Product Image
 
@@ -475,12 +477,12 @@ export default function AdminPage() {
                   onChange={
                     handleImageUpload
                   }
-                  className="w-full border border-gray-300 bg-white text-black rounded-2xl px-5 py-4 outline-none"
+                  className="w-full border border-white/10 bg-black/40 text-white rounded-2xl px-5 py-4 outline-none"
                 />
 
                 {uploading && (
 
-                  <p className="text-blue-500">
+                  <p className="text-[#D4AF37]">
 
                     Uploading image...
 
@@ -490,11 +492,11 @@ export default function AdminPage() {
 
                 {form.image && (
 
-                  <div className="relative w-full h-[220px] rounded-2xl overflow-hidden border border-gray-200">
+                  <div className="relative w-full h-[220px] rounded-2xl overflow-hidden border border-[#D4AF37]/20 bg-black/30">
 
                     <Image
                       fill
-                      sizes="80px"
+                      sizes="220px"
                       src={form.image}
                       alt="Preview"
                       className="object-contain"
@@ -513,7 +515,7 @@ export default function AdminPage() {
                 placeholder="Price"
                 value={form.price}
                 onChange={handleChange}
-                className="w-full border border-gray-300 bg-white text-black rounded-2xl px-5 py-4 outline-none focus:border-black"
+                className="w-full border border-white/10 bg-black/40 text-white placeholder:text-gray-400 rounded-2xl px-5 py-4 outline-none focus:border-[#D4AF37]"
                 required
               />
 
@@ -524,13 +526,13 @@ export default function AdminPage() {
                 placeholder="Old Price"
                 value={form.oldPrice}
                 onChange={handleChange}
-                className="w-full border border-gray-300 bg-white text-black rounded-2xl px-5 py-4 outline-none focus:border-black"
+                className="w-full border border-white/10 bg-black/40 text-white placeholder:text-gray-400 rounded-2xl px-5 py-4 outline-none focus:border-[#D4AF37]"
               />
 
               {/* CATEGORY */}
               <div>
 
-                <label className="block text-black font-semibold mb-3">
+                <label className="block text-white font-semibold mb-3">
 
                   Product Category
 
@@ -540,7 +542,7 @@ export default function AdminPage() {
                   name="category"
                   value={form.category}
                   onChange={handleChange}
-                  className="w-full border border-gray-300 bg-white text-black rounded-2xl px-5 py-4 outline-none focus:border-black"
+                  className="w-full border border-white/10 bg-black/40 text-white rounded-2xl px-5 py-4 outline-none focus:border-[#D4AF37]"
                   required
                 >
 
@@ -579,7 +581,7 @@ export default function AdminPage() {
                 placeholder="Woody, Oud, Luxury"
                 value={form.notesTags}
                 onChange={handleChange}
-                className="w-full border border-gray-300 bg-white text-black rounded-2xl px-5 py-4 outline-none focus:border-black"
+                className="w-full border border-white/10 bg-black/40 text-white placeholder:text-gray-400 rounded-2xl px-5 py-4 outline-none focus:border-[#D4AF37]"
               />
 
               {/* BADGE */}
@@ -589,7 +591,7 @@ export default function AdminPage() {
                 placeholder="Premium / Luxury"
                 value={form.badge}
                 onChange={handleChange}
-                className="w-full border border-gray-300 bg-white text-black rounded-2xl px-5 py-4 outline-none focus:border-black"
+                className="w-full border border-white/10 bg-black/40 text-white placeholder:text-gray-400 rounded-2xl px-5 py-4 outline-none focus:border-[#D4AF37]"
               />
 
               {/* TAG */}
@@ -599,7 +601,7 @@ export default function AdminPage() {
                 placeholder="Trending / Bestseller"
                 value={form.tag}
                 onChange={handleChange}
-                className="w-full border border-gray-300 bg-white text-black rounded-2xl px-5 py-4 outline-none focus:border-black"
+                className="w-full border border-white/10 bg-black/40 text-white placeholder:text-gray-400 rounded-2xl px-5 py-4 outline-none focus:border-[#D4AF37]"
               />
 
               {/* RATING */}
@@ -610,7 +612,7 @@ export default function AdminPage() {
                 placeholder="Rating"
                 value={form.rating}
                 onChange={handleChange}
-                className="w-full border border-gray-300 bg-white text-black rounded-2xl px-5 py-4 outline-none focus:border-black"
+                className="w-full border border-white/10 bg-black/40 text-white placeholder:text-gray-400 rounded-2xl px-5 py-4 outline-none focus:border-[#D4AF37]"
               />
 
               {/* REVIEWS */}
@@ -620,7 +622,7 @@ export default function AdminPage() {
                 placeholder="Reviews"
                 value={form.reviews}
                 onChange={handleChange}
-                className="w-full border border-gray-300 bg-white text-black rounded-2xl px-5 py-4 outline-none focus:border-black"
+                className="w-full border border-white/10 bg-black/40 text-white placeholder:text-gray-400 rounded-2xl px-5 py-4 outline-none focus:border-[#D4AF37]"
               />
 
               {/* STOCK */}
@@ -630,7 +632,7 @@ export default function AdminPage() {
                 placeholder="Stock"
                 value={form.stock}
                 onChange={handleChange}
-                className="w-full border border-gray-300 bg-white text-black rounded-2xl px-5 py-4 outline-none focus:border-black"
+                className="w-full border border-white/10 bg-black/40 text-white placeholder:text-gray-400 rounded-2xl px-5 py-4 outline-none focus:border-[#D4AF37]"
               />
 
             </div>
@@ -642,14 +644,14 @@ export default function AdminPage() {
               value={form.description}
               onChange={handleChange}
               rows={5}
-              className="w-full border border-gray-300 bg-white text-black rounded-2xl px-5 py-4 outline-none mt-5 focus:border-black"
+              className="w-full border border-white/10 bg-black/40 text-white placeholder:text-gray-400 rounded-2xl px-5 py-4 outline-none mt-5 focus:border-[#D4AF37]"
             />
 
             {/* BUTTON */}
             <button
               type="submit"
               disabled={uploading}
-              className="mt-6 bg-black text-white px-8 py-4 rounded-2xl hover:bg-[#D4AF37] hover:text-black transition duration-300 font-semibold disabled:opacity-50"
+              className="mt-6 bg-[#D4AF37] text-black px-8 py-4 rounded-2xl hover:opacity-90 transition duration-300 font-semibold disabled:opacity-50"
             >
 
               {uploading
@@ -670,10 +672,10 @@ export default function AdminPage() {
 
                 <div
                   key={product._id}
-                  className="bg-white rounded-3xl shadow-lg overflow-hidden"
+                  className="bg-white/5 border border-[#D4AF37]/20 rounded-[32px] overflow-hidden backdrop-blur-xl"
                 >
 
-                  <div className="relative h-[320px] bg-[#f8f8f8]">
+                  <div className="relative h-[320px] bg-black/30">
 
                     <Image
                       src={product.image}
@@ -687,13 +689,13 @@ export default function AdminPage() {
 
                   <div className="p-6">
 
-                    <h2 className="text-2xl font-bold text-black">
+                    <h2 className="text-2xl font-bold text-white">
 
                       {product.name}
 
                     </h2>
 
-                    <p className="text-gray-600 mt-2 line-clamp-2">
+                    <p className="text-gray-400 mt-2 line-clamp-2">
 
                       {product.description}
 
@@ -703,13 +705,13 @@ export default function AdminPage() {
 
                       <div>
 
-                        <p className="text-3xl font-bold text-black">
+                        <p className="text-3xl font-bold text-[#D4AF37]">
 
                           ₹{product.price}
 
                         </p>
 
-                        <p className="text-green-600 font-semibold mt-1">
+                        <p className="text-green-400 font-semibold mt-1">
 
                           Stock:
                           {" "}
@@ -727,7 +729,7 @@ export default function AdminPage() {
                               product
                             )
                           }
-                          className="bg-blue-500 text-white px-5 py-2 rounded-xl hover:bg-blue-600 transition"
+                          className="bg-[#D4AF37] text-black px-5 py-2 rounded-xl hover:opacity-90 transition font-semibold"
                         >
 
                           Edit

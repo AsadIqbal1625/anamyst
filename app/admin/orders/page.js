@@ -5,12 +5,19 @@ import {
   useState,
 } from "react";
 
+import {
+  useRouter,
+} from "next/navigation";
+
 import Image from "next/image";
 
 import AdminProtection
 from "../../../components/AdminProtection";
 
 export default function OrdersPage() {
+
+  const router =
+    useRouter();
 
   const [orders,
     setOrders] =
@@ -115,7 +122,7 @@ export default function OrdersPage() {
 
   }
 
-  /* FILTERED ORDERS */
+  /* FILTERED */
   const filteredOrders =
 
     activeFilter === "All"
@@ -158,30 +165,53 @@ export default function OrdersPage() {
 
         <div className="max-w-7xl mx-auto">
 
-          {/* TITLE */}
-          <div className="mb-10">
+          {/* HEADER */}
+          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-5 mb-12">
 
-            <p className="uppercase tracking-[6px] text-[#D4AF37] text-xs mb-4">
+            <div>
 
-              ANAMYST Admin
+              <p className="uppercase tracking-[6px] text-[#D4AF37] text-xs mb-4">
 
-            </p>
+                ANAMYST Admin
 
-            <h1 className="text-5xl font-bold mb-4">
+              </p>
 
-              Orders Dashboard
+              <h1 className="text-5xl font-bold mb-4">
 
-            </h1>
+                Orders Dashboard
 
-            <p className="text-gray-400 text-lg">
+              </h1>
 
-              Manage customer orders and delivery status.
+              <p className="text-gray-400 text-lg">
 
-            </p>
+                Manage customer orders and delivery status.
+
+              </p>
+
+            </div>
+
+            {/* BACK BUTTON */}
+            <button
+
+              onClick={() => {
+
+                router.push(
+                  "/admin"
+                );
+
+              }}
+
+              className="bg-[#D4AF37] hover:opacity-90 text-black px-6 py-3 rounded-2xl font-semibold transition"
+
+            >
+
+              Back To Admin
+
+            </button>
 
           </div>
 
-          {/* ORDER FILTERS */}
+          {/* FILTERS */}
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-5 mb-10">
 
             {/* ALL */}
@@ -337,7 +367,7 @@ export default function OrdersPage() {
 
                 <div
                   key={order._id}
-                  className="bg-white/5 border border-white/10 rounded-[32px] p-6 md:p-8"
+                  className="bg-white/5 border border-[#D4AF37]/20 rounded-[32px] p-6 md:p-8 backdrop-blur-xl"
                 >
 
                   {/* TOP */}
@@ -345,7 +375,7 @@ export default function OrdersPage() {
 
                     <div>
 
-                      <h2 className="text-3xl font-bold">
+                      <h2 className="text-3xl font-bold text-white">
 
                         {order.customerName}
 
@@ -378,7 +408,7 @@ export default function OrdersPage() {
                         className={`px-5 py-3 rounded-2xl font-semibold transition ${
                           order.orderStatus === "Pending"
                             ? "bg-yellow-500 text-black"
-                            : "bg-white/10"
+                            : "bg-white/10 text-white"
                         }`}
                       >
 
@@ -396,7 +426,7 @@ export default function OrdersPage() {
                         className={`px-5 py-3 rounded-2xl font-semibold transition ${
                           order.orderStatus === "Delivered"
                             ? "bg-green-500 text-black"
-                            : "bg-white/10"
+                            : "bg-white/10 text-white"
                         }`}
                       >
 
@@ -414,7 +444,7 @@ export default function OrdersPage() {
                         className={`px-5 py-3 rounded-2xl font-semibold transition ${
                           order.orderStatus === "Cancelled"
                             ? "bg-red-500 text-white"
-                            : "bg-white/10"
+                            : "bg-white/10 text-white"
                         }`}
                       >
 
@@ -427,7 +457,7 @@ export default function OrdersPage() {
                   </div>
 
                   {/* ADDRESS */}
-                  <div className="mb-8 bg-black/30 border border-white/10 rounded-2xl p-5">
+                  <div className="mb-8 bg-black/40 border border-white/10 rounded-2xl p-5">
 
                     <h3 className="text-[#D4AF37] font-semibold mb-3">
 
@@ -477,7 +507,7 @@ export default function OrdersPage() {
 
                           <div className="flex-1">
 
-                            <h3 className="text-xl font-semibold">
+                            <h3 className="text-xl font-semibold text-white">
 
                               {product.name}
 
@@ -518,7 +548,7 @@ export default function OrdersPage() {
 
                       </p>
 
-                      <h3 className="text-2xl font-bold mt-2">
+                      <h3 className="text-2xl font-bold mt-2 text-white">
 
                         {order.paymentMethod}
 
