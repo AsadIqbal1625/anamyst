@@ -1,4 +1,6 @@
 import "./globals.css";
+import Script
+from "next/script";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 
@@ -9,6 +11,7 @@ export default function RootLayout({ children }) {
         <Navbar />
         {children}
         <Footer />
+       <Script src="https://checkout.razorpay.com/v1/checkout.js" />
       </body>
     </html>
   );

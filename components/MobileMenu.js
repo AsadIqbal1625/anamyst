@@ -375,6 +375,28 @@ export default function MobileMenu({
             </span>
 
           </Link>
+          {/* TRACK ORDER */}
+          <Link
+            href="/track-order"
+            onClick={() =>
+              setIsOpen(false)
+            }
+            className="flex items-center justify-between px-6 py-5 border-b border-white/5 hover:bg-white/5 transition-all duration-300 group"
+          >
+
+            <span className="text-white text-2xl font-light">
+
+              Track Order
+
+            </span>
+
+            <span className="text-[#D4AF37] opacity-0 group-hover:opacity-100 transition">
+
+              →
+
+            </span>
+
+          </Link>
 
           {/* CART */}
           <Link

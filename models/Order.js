@@ -46,7 +46,9 @@ const OrderSchema =
           price: Number,
         },
       ],
-
+     orderId: {
+      type: String,
+      },
       totalAmount: {
         type: Number,
         required: true,
@@ -55,6 +57,18 @@ const OrderSchema =
       paymentMethod: {
         type: String,
         default: "COD",
+      },
+      paymentId: {
+        type: String,
+      },
+
+      razorpayOrderId: {
+        type: String,
+      },
+
+      paymentStatus: {
+        type: String,
+        default: "Pending",
       },
 
       orderStatus: {

@@ -18,15 +18,23 @@ export async function GET() {
         });
 
     return Response.json({
+
       success: true,
+
       orders,
+
     });
 
   } catch (error) {
 
+    console.log(error);
+
     return Response.json({
+
       success: false,
+
       error: error.message,
+
     });
 
   }
@@ -43,19 +51,45 @@ export async function POST(req) {
     const body =
       await req.json();
 
+    /* ORDER ID */
+    const orderId =
+
+      "ANM-" +
+
+      Math.floor(
+        100000 +
+        Math.random() *
+        900000
+      );
+
+    /* CREATE */
     const order =
-      await Order.create(body);
+      await Order.create({
+
+        ...body,
+
+        orderId,
+
+      });
 
     return Response.json({
+
       success: true,
+
       order,
+
     });
 
   } catch (error) {
 
+    console.log(error);
+
     return Response.json({
+
       success: false,
+
       error: error.message,
+
     });
 
   }

@@ -1,6 +1,8 @@
 "use client";
+
 import AdminProtection
 from "../../components/AdminProtection";
+
 import {
   useEffect,
   useState,
@@ -8,7 +10,14 @@ import {
 
 import Image from "next/image";
 
+import {
+  useRouter,
+} from "next/navigation";
+
 export default function AdminPage() {
+
+  const router =
+    useRouter();
 
   const emptyForm = {
 
@@ -27,10 +36,12 @@ export default function AdminPage() {
 
   };
 
-  const [form, setForm] =
+  const [form,
+    setForm] =
     useState(emptyForm);
 
-  const [products, setProducts] =
+  const [products,
+    setProducts] =
     useState([]);
 
   const [editingId,
@@ -357,320 +368,362 @@ export default function AdminPage() {
   return (
 
     <AdminProtection>
-    <div className="min-h-screen bg-[#f7f7f7] px-4 py-10">
 
-      <div className="max-w-7xl mx-auto">
+      <div className="min-h-screen bg-[#f7f7f7] px-4 py-10">
 
-        {/* TITLE */}
-        <div className="mb-10">
+        <div className="max-w-7xl mx-auto">
 
-          <h1 className="text-5xl font-bold text-black mb-3">
+          {/* HEADER */}
+          <div className="mb-10 flex flex-col md:flex-row md:items-center md:justify-between gap-5">
 
-            Admin Panel
+            <div>
 
-          </h1>
+              <h1 className="text-5xl font-bold text-black mb-3">
 
-          <p className="text-gray-600 text-lg">
+                Admin Panel
 
-            Manage ANAMYST Products
+              </h1>
 
-          </p>
+              <p className="text-gray-600 text-lg">
 
-        </div>
+                Manage ANAMYST Products
 
-        {/* FORM */}
-        <form
-          onSubmit={handleSubmit}
-          className="bg-white rounded-3xl shadow-lg p-6 md:p-8 mb-12"
-        >
-
-          <div className="grid md:grid-cols-2 gap-5">
-
-            {/* NAME */}
-            <input
-              type="text"
-              name="name"
-              placeholder="Product Name"
-              value={form.name}
-              onChange={handleChange}
-              className="w-full border border-gray-300 bg-white text-black placeholder:text-gray-500 rounded-2xl px-5 py-4 outline-none focus:border-black"
-              required
-            />
-
-            {/* IMAGE UPLOAD */}
-            <div className="space-y-3">
-
-              <label className="text-black font-semibold">
-
-                Product Image
-
-              </label>
-
-              <input
-                type="file"
-                accept="image/*"
-                onChange={
-                  handleImageUpload
-                }
-                className="w-full border border-gray-300 bg-white text-black rounded-2xl px-5 py-4 outline-none"
-              />
-
-              {uploading && (
-
-                <p className="text-blue-500">
-
-                  Uploading image...
-
-                </p>
-
-              )}
-
-              {form.image && (
-
-                <div className="relative w-full h-[220px] rounded-2xl overflow-hidden border border-gray-200">
-
-                  <Image
-                  fill
-                    sizes="80px"
-                    src={form.image}
-                    alt="Preview"
-                    
-                    className="object-contain"
-                  />
-
-                </div>
-
-              )}
+              </p>
 
             </div>
 
-            {/* PRICE */}
-            <input
-              type="number"
-              name="price"
-              placeholder="Price"
-              value={form.price}
-              onChange={handleChange}
-              className="w-full border border-gray-300 bg-white text-black placeholder:text-gray-500 rounded-2xl px-5 py-4 outline-none focus:border-black"
-              required
-            />
+            {/* LOGOUT */}
+            <button
 
-            {/* OLD PRICE */}
-            <input
-              type="number"
-              name="oldPrice"
-              placeholder="Old Price"
-              value={form.oldPrice}
-              onChange={handleChange}
-              className="w-full border border-gray-300 bg-white text-black placeholder:text-gray-500 rounded-2xl px-5 py-4 outline-none focus:border-black"
-            />
+              onClick={() => {
 
-            {/* CATEGORY */}
-            <div>
-            <label className="block text-black font-semibold mb-3">
-              Product Category
-            </label>
-            <select
-              name="category"
-              value={form.category}
-              onChange={handleChange}
-              className="w-full border border-gray-300 bg-white text-black rounded-2xl px-5 py-4 outline-none focus:border-black"
-              required
+                document.cookie =
+
+                  "admin-auth=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+
+                router.push(
+                  "/admin-login"
+                );
+
+              }}
+
+              className="bg-red-500 hover:bg-red-600 text-white px-6 py-3 rounded-2xl font-semibold transition"
+
             >
-              <option value="">
-               Select Category
-              </option>
-              <option value="Perfumes">
-                Perfumes
-              </option>
-              <option value="Attars">
-                Attars
-              </option>
-              <option value="Fresheners">
-                Fresheners
-              </option>
-              <option value="Premium Gifts">
-               Premium Gifts
-              </option>
-              <option value="Combos">
-                Combos
-              </option>
-            </select>
-          </div>
 
-            {/* NOTES */}
-            <input
-              type="text"
-              name="notesTags"
-              placeholder="Woody, Oud, Luxury"
-              value={form.notesTags}
-              onChange={handleChange}
-              className="w-full border border-gray-300 bg-white text-black placeholder:text-gray-500 rounded-2xl px-5 py-4 outline-none focus:border-black"
-            />
+              Logout
 
-            {/* BADGE */}
-            <input
-              type="text"
-              name="badge"
-              placeholder="Premium / Luxury"
-              value={form.badge}
-              onChange={handleChange}
-              className="w-full border border-gray-300 bg-white text-black placeholder:text-gray-500 rounded-2xl px-5 py-4 outline-none focus:border-black"
-            />
-
-            {/* TAG */}
-            <input
-              type="text"
-              name="tag"
-              placeholder="Trending / Bestseller"
-              value={form.tag}
-              onChange={handleChange}
-              className="w-full border border-gray-300 bg-white text-black placeholder:text-gray-500 rounded-2xl px-5 py-4 outline-none focus:border-black"
-            />
-
-            {/* RATING */}
-            <input
-              type="number"
-              step="0.1"
-              name="rating"
-              placeholder="Rating"
-              value={form.rating}
-              onChange={handleChange}
-              className="w-full border border-gray-300 bg-white text-black placeholder:text-gray-500 rounded-2xl px-5 py-4 outline-none focus:border-black"
-            />
-
-            {/* REVIEWS */}
-            <input
-              type="number"
-              name="reviews"
-              placeholder="Reviews"
-              value={form.reviews}
-              onChange={handleChange}
-              className="w-full border border-gray-300 bg-white text-black placeholder:text-gray-500 rounded-2xl px-5 py-4 outline-none focus:border-black"
-            />
-
-            {/* STOCK */}
-            <input
-              type="number"
-              name="stock"
-              placeholder="Stock"
-              value={form.stock}
-              onChange={handleChange}
-              className="w-full border border-gray-300 bg-white text-black placeholder:text-gray-500 rounded-2xl px-5 py-4 outline-none focus:border-black"
-            />
+            </button>
 
           </div>
 
-          {/* DESCRIPTION */}
-          <textarea
-            name="description"
-            placeholder="Product Description"
-            value={form.description}
-            onChange={handleChange}
-            rows={5}
-            className="w-full border border-gray-300 bg-white text-black placeholder:text-gray-500 rounded-2xl px-5 py-4 outline-none mt-5 focus:border-black"
-          />
-
-          {/* BUTTON */}
-          <button
-            type="submit"
-            disabled={uploading}
-            className="mt-6 bg-black text-white px-8 py-4 rounded-2xl hover:bg-[#D4AF37] hover:text-black transition duration-300 font-semibold disabled:opacity-50"
+          {/* FORM */}
+          <form
+            onSubmit={handleSubmit}
+            className="bg-white rounded-3xl shadow-lg p-6 md:p-8 mb-12"
           >
 
-            {uploading
-              ? "Uploading..."
-              : editingId
-              ? "Update Product"
-              : "Add Product"}
+            <div className="grid md:grid-cols-2 gap-5">
 
-          </button>
+              {/* NAME */}
+              <input
+                type="text"
+                name="name"
+                placeholder="Product Name"
+                value={form.name}
+                onChange={handleChange}
+                className="w-full border border-gray-300 bg-white text-black placeholder:text-gray-500 rounded-2xl px-5 py-4 outline-none focus:border-black"
+                required
+              />
 
-        </form>
+              {/* IMAGE */}
+              <div className="space-y-3">
 
-        {/* PRODUCTS */}
-        <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-8">
+                <label className="text-black font-semibold">
 
-          {products.map(
-            (product) => (
+                  Product Image
 
-              <div
-                key={product._id}
-                className="bg-white rounded-3xl shadow-lg overflow-hidden"
-              >
+                </label>
 
-                <div className="relative h-[320px] bg-[#f8f8f8]">
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={
+                    handleImageUpload
+                  }
+                  className="w-full border border-gray-300 bg-white text-black rounded-2xl px-5 py-4 outline-none"
+                />
 
-                  <Image
-                    src={product.image}
-                    alt={product.name}
-                    fill
-                    className="object-contain p-5"
-                  />
+                {uploading && (
 
-                </div>
+                  <p className="text-blue-500">
 
-                <div className="p-6">
-
-                  <h2 className="text-2xl font-bold text-black">
-
-                    {product.name}
-
-                  </h2>
-
-                  <p className="text-gray-600 mt-2 line-clamp-2">
-
-                    {product.description}
+                    Uploading image...
 
                   </p>
 
-                  <div className="mt-5 flex items-center justify-between">
+                )}
 
-                    <div>
+                {form.image && (
 
-                      <p className="text-3xl font-bold text-black">
+                  <div className="relative w-full h-[220px] rounded-2xl overflow-hidden border border-gray-200">
 
-                        ₹{product.price}
+                    <Image
+                      fill
+                      sizes="80px"
+                      src={form.image}
+                      alt="Preview"
+                      className="object-contain"
+                    />
 
-                      </p>
+                  </div>
 
-                      <p className="text-green-600 font-semibold mt-1">
+                )}
 
-                        Stock:
-                        {" "}
-                        {product.stock}
+              </div>
 
-                      </p>
+              {/* PRICE */}
+              <input
+                type="number"
+                name="price"
+                placeholder="Price"
+                value={form.price}
+                onChange={handleChange}
+                className="w-full border border-gray-300 bg-white text-black rounded-2xl px-5 py-4 outline-none focus:border-black"
+                required
+              />
 
-                    </div>
+              {/* OLD PRICE */}
+              <input
+                type="number"
+                name="oldPrice"
+                placeholder="Old Price"
+                value={form.oldPrice}
+                onChange={handleChange}
+                className="w-full border border-gray-300 bg-white text-black rounded-2xl px-5 py-4 outline-none focus:border-black"
+              />
 
-                    <div className="flex gap-3">
+              {/* CATEGORY */}
+              <div>
 
-                      <button
-                        onClick={() =>
-                          editProduct(
-                            product
-                          )
-                        }
-                        className="bg-blue-500 text-white px-5 py-2 rounded-xl hover:bg-blue-600 transition"
-                      >
+                <label className="block text-black font-semibold mb-3">
 
-                        Edit
+                  Product Category
 
-                      </button>
+                </label>
 
-                      <button
-                        onClick={() =>
-                          deleteProduct(
-                            product._id
-                          )
-                        }
-                        className="bg-red-500 text-white px-5 py-2 rounded-xl hover:bg-red-600 transition"
-                      >
+                <select
+                  name="category"
+                  value={form.category}
+                  onChange={handleChange}
+                  className="w-full border border-gray-300 bg-white text-black rounded-2xl px-5 py-4 outline-none focus:border-black"
+                  required
+                >
 
-                        Delete
+                  <option value="">
+                    Select Category
+                  </option>
 
-                      </button>
+                  <option value="Perfumes">
+                    Perfumes
+                  </option>
+
+                  <option value="Attars">
+                    Attars
+                  </option>
+
+                  <option value="Fresheners">
+                    Fresheners
+                  </option>
+
+                  <option value="Premium Gifts">
+                    Premium Gifts
+                  </option>
+
+                  <option value="Combos">
+                    Combos
+                  </option>
+
+                </select>
+
+              </div>
+
+              {/* NOTES */}
+              <input
+                type="text"
+                name="notesTags"
+                placeholder="Woody, Oud, Luxury"
+                value={form.notesTags}
+                onChange={handleChange}
+                className="w-full border border-gray-300 bg-white text-black rounded-2xl px-5 py-4 outline-none focus:border-black"
+              />
+
+              {/* BADGE */}
+              <input
+                type="text"
+                name="badge"
+                placeholder="Premium / Luxury"
+                value={form.badge}
+                onChange={handleChange}
+                className="w-full border border-gray-300 bg-white text-black rounded-2xl px-5 py-4 outline-none focus:border-black"
+              />
+
+              {/* TAG */}
+              <input
+                type="text"
+                name="tag"
+                placeholder="Trending / Bestseller"
+                value={form.tag}
+                onChange={handleChange}
+                className="w-full border border-gray-300 bg-white text-black rounded-2xl px-5 py-4 outline-none focus:border-black"
+              />
+
+              {/* RATING */}
+              <input
+                type="number"
+                step="0.1"
+                name="rating"
+                placeholder="Rating"
+                value={form.rating}
+                onChange={handleChange}
+                className="w-full border border-gray-300 bg-white text-black rounded-2xl px-5 py-4 outline-none focus:border-black"
+              />
+
+              {/* REVIEWS */}
+              <input
+                type="number"
+                name="reviews"
+                placeholder="Reviews"
+                value={form.reviews}
+                onChange={handleChange}
+                className="w-full border border-gray-300 bg-white text-black rounded-2xl px-5 py-4 outline-none focus:border-black"
+              />
+
+              {/* STOCK */}
+              <input
+                type="number"
+                name="stock"
+                placeholder="Stock"
+                value={form.stock}
+                onChange={handleChange}
+                className="w-full border border-gray-300 bg-white text-black rounded-2xl px-5 py-4 outline-none focus:border-black"
+              />
+
+            </div>
+
+            {/* DESCRIPTION */}
+            <textarea
+              name="description"
+              placeholder="Product Description"
+              value={form.description}
+              onChange={handleChange}
+              rows={5}
+              className="w-full border border-gray-300 bg-white text-black rounded-2xl px-5 py-4 outline-none mt-5 focus:border-black"
+            />
+
+            {/* BUTTON */}
+            <button
+              type="submit"
+              disabled={uploading}
+              className="mt-6 bg-black text-white px-8 py-4 rounded-2xl hover:bg-[#D4AF37] hover:text-black transition duration-300 font-semibold disabled:opacity-50"
+            >
+
+              {uploading
+                ? "Uploading..."
+                : editingId
+                ? "Update Product"
+                : "Add Product"}
+
+            </button>
+
+          </form>
+
+          {/* PRODUCTS */}
+          <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-8">
+
+            {products.map(
+              (product) => (
+
+                <div
+                  key={product._id}
+                  className="bg-white rounded-3xl shadow-lg overflow-hidden"
+                >
+
+                  <div className="relative h-[320px] bg-[#f8f8f8]">
+
+                    <Image
+                      src={product.image}
+                      alt={product.name}
+                      fill
+                      sizes="320px"
+                      className="object-contain p-5"
+                    />
+
+                  </div>
+
+                  <div className="p-6">
+
+                    <h2 className="text-2xl font-bold text-black">
+
+                      {product.name}
+
+                    </h2>
+
+                    <p className="text-gray-600 mt-2 line-clamp-2">
+
+                      {product.description}
+
+                    </p>
+
+                    <div className="mt-5 flex items-center justify-between">
+
+                      <div>
+
+                        <p className="text-3xl font-bold text-black">
+
+                          ₹{product.price}
+
+                        </p>
+
+                        <p className="text-green-600 font-semibold mt-1">
+
+                          Stock:
+                          {" "}
+                          {product.stock}
+
+                        </p>
+
+                      </div>
+
+                      <div className="flex gap-3">
+
+                        <button
+                          onClick={() =>
+                            editProduct(
+                              product
+                            )
+                          }
+                          className="bg-blue-500 text-white px-5 py-2 rounded-xl hover:bg-blue-600 transition"
+                        >
+
+                          Edit
+
+                        </button>
+
+                        <button
+                          onClick={() =>
+                            deleteProduct(
+                              product._id
+                            )
+                          }
+                          className="bg-red-500 text-white px-5 py-2 rounded-xl hover:bg-red-600 transition"
+                        >
+
+                          Delete
+
+                        </button>
+
+                      </div>
 
                     </div>
 
@@ -678,19 +731,17 @@ export default function AdminPage() {
 
                 </div>
 
-              </div>
+              )
+            )}
 
-            )
-          )}
+          </div>
 
         </div>
 
       </div>
 
-    </div>
+    </AdminProtection>
 
-   </AdminProtection>
-
-);
+  );
 
 }

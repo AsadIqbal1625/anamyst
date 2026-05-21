@@ -1,40 +1,59 @@
-import Link from "next/link";
+export default async function OrderSuccessPage({
 
-export default function OrderSuccessPage() {
+  searchParams,
+
+}) {
+
+  const orderId =
+    searchParams.orderId;
 
   return (
 
-    <div className="min-h-screen flex items-center justify-center bg-[#f7f7f7] px-4">
+    <div className="min-h-screen bg-black text-white flex items-center justify-center px-6">
 
-      <div className="bg-white rounded-3xl shadow-xl p-10 max-w-xl text-center">
+      <div className="max-w-2xl w-full bg-white/5 border border-white/10 rounded-[40px] p-10 text-center">
 
-        <h1 className="text-5xl mb-5">
+        <div className="text-7xl mb-6">
 
-          🎉
+          ✅
 
-        </h1>
+        </div>
 
-        <h2 className="text-4xl font-bold text-black mb-4">
+        <h1 className="text-5xl font-bold mb-6">
 
           Order Placed Successfully
 
-        </h2>
+        </h1>
 
-        <p className="text-gray-600 text-lg mb-8">
+        <p className="text-gray-300 text-lg leading-8">
 
-          Thank you for shopping with ANAMYST.
+          Thank you for shopping with
+          ANAMYST.
 
         </p>
 
-        <Link href="/shop">
+        <p className="text-[#D4AF37] text-2xl font-bold mt-8">
 
-          <button className="bg-black text-white px-8 py-4 rounded-2xl hover:bg-[#D4AF37] hover:text-black transition duration-300 text-lg font-semibold">
+          Order ID:
+          {" "}
+          {orderId}
 
-            Continue Shopping
+        </p>
 
-          </button>
+        <p className="text-gray-400 mt-4">
 
-        </Link>
+          Save this Order ID for tracking your order.
+
+        </p>
+
+        <a
+          href="/track-order"
+          className="inline-block mt-10 bg-[#D4AF37] hover:opacity-90 text-black font-semibold px-8 py-4 rounded-2xl transition"
+        >
+
+          Track Order
+
+        </a>
 
       </div>
 

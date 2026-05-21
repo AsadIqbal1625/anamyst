@@ -54,9 +54,11 @@ export default function AdminLogin() {
 
       );
 
-      router.push(
-        "/admin"
-      );
+     document.cookie =
+
+  "admin-auth=true; path=/";
+
+router.push("/admin");
 
     } else {
 

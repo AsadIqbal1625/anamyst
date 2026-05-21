@@ -74,6 +74,12 @@ export default function Footer() {
                 FAQ
 
               </Link>
+              <Link
+                href="/track-order"
+                className="hover:text-[#D4AF37] transition"
+              >
+                Track Order
+              </Link>
 
               <Link
                 href="/contact"

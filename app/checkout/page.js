@@ -1,10 +1,14 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import {
+  useEffect,
+  useState,
+} from "react";
 
 import Image from "next/image";
 
-import { useRouter } from "next/navigation";
+import { useRouter }
+from "next/navigation";
 
 import {
   getCart,
@@ -13,16 +17,21 @@ import {
 
 export default function CheckoutPage() {
 
-  const router = useRouter();
+  const router =
+    useRouter();
 
-  const [cart, setCart] =
+  const [cart,
+    setCart] =
     useState([]);
 
-  const [loading, setLoading] =
+  const [loading,
+    setLoading] =
     useState(false);
 
-  const [form, setForm] =
+  const [form,
+    setForm] =
     useState({
+
       name: "",
       email: "",
       phone: "",
@@ -30,6 +39,7 @@ export default function CheckoutPage() {
       city: "",
       state: "",
       pincode: "",
+
     });
 
   /* LOAD CART */
@@ -44,6 +54,8 @@ export default function CheckoutPage() {
     ) {
 
       router.push("/cart");
+
+      return;
 
     }
 
@@ -66,114 +78,357 @@ export default function CheckoutPage() {
   };
 
   /* TOTAL */
-  const total = cart.reduce(
+  const total =
 
-    (sum, item) =>
+    cart.reduce(
 
-      sum +
-      item.price *
-      item.quantity,
+      (sum, item) =>
 
-    0
+        sum +
+        item.price *
+        item.quantity,
 
-  );
+      0
+
+    );
 
   /* PLACE ORDER */
-  const placeOrder = async () => {
+  const placeOrder =
+    async () => {
 
-    if (
+      if (
 
-      !form.name ||
-      !form.phone ||
-      !form.address ||
-      !form.city ||
-      !form.state ||
-      !form.pincode
+        !form.name ||
+        !form.email ||
+        !form.phone ||
+        !form.address ||
+        !form.city ||
+        !form.state ||
+        !form.pincode
 
-    ) {
-
-      alert(
-        "Please fill all required fields"
-      );
-
-      return;
-
-    }
-
-    try {
-
-      setLoading(true);
-
-      const orderData = {
-
-        customer: form,
-
-        products: cart,
-
-        totalAmount: total,
-
-        paymentMethod:
-          "Cash on Delivery",
-
-        paymentStatus:
-          "Pending",
-
-        orderStatus:
-          "Pending",
-
-      };
-
-      const res =
-        await fetch(
-          "/api/orders",
-          {
-            method: "POST",
-
-            headers: {
-              "Content-Type":
-                "application/json",
-            },
-
-            body: JSON.stringify(
-              orderData
-            ),
-          }
-        );
-
-      const data =
-        await res.json();
-
-      if (data.success) {
-
-        clearCart();
-
-        router.push(
-          "/order-success"
-        );
-
-      } else {
+      ) {
 
         alert(
-          "Order failed"
+          "Please fill all fields"
         );
+
+        return;
 
       }
 
-    } catch (error) {
+      try {
 
-      console.log(error);
+        setLoading(true);
 
-      alert(
-        "Something went wrong"
-      );
+        /* CREATE RAZORPAY ORDER */
+        const razorpayRes =
+          await fetch(
 
-    } finally {
+            "/api/razorpay",
 
-      setLoading(false);
+            {
 
-    }
+              method: "POST",
 
-  };
+              headers: {
+
+                "Content-Type":
+                  "application/json",
+
+              },
+
+              body:
+                JSON.stringify({
+
+                  amount: total,
+
+                }),
+
+            }
+
+          );
+
+        const razorpayData =
+          await razorpayRes.json();
+
+        if (
+          !razorpayData.success
+        ) {
+
+          alert(
+            "Payment initialization failed"
+          );
+
+          return;
+
+        }
+
+        const razorpayOrder =
+          razorpayData.order;
+
+        /* RAZORPAY OPTIONS */
+        const options = {
+
+          key:
+            process.env
+              .NEXT_PUBLIC_RAZORPAY_KEY_ID,
+
+          amount:
+            razorpayOrder.amount,
+
+          currency:
+            razorpayOrder.currency,
+
+          name:
+            "ANAMYST",
+
+          description:
+            "Luxury Fragrance Order",
+
+          order_id:
+            razorpayOrder.id,
+
+          handler:
+            async function (
+              response
+            ) {
+
+              try {
+
+                /* VERIFY PAYMENT */
+                const verifyRes =
+                  await fetch(
+
+                    "/api/verify-payment",
+
+                    {
+
+                      method: "POST",
+
+                      headers: {
+
+                        "Content-Type":
+                          "application/json",
+
+                      },
+
+                      body:
+                        JSON.stringify({
+
+                          razorpay_order_id:
+                            response
+                              .razorpay_order_id,
+
+                          razorpay_payment_id:
+                            response
+                              .razorpay_payment_id,
+
+                          razorpay_signature:
+                            response
+                              .razorpay_signature,
+
+                        }),
+
+                    }
+
+                  );
+
+                const verifyData =
+                  await verifyRes.json();
+
+                if (
+                  !verifyData.success
+                ) {
+
+                  alert(
+                    "Payment verification failed"
+                  );
+
+                  return;
+
+                }
+
+                /* SAVE ORDER */
+                const orderData = {
+
+                  customerName:
+                    form.name,
+
+                  email:
+                    form.email,
+
+                  phone:
+                    form.phone,
+
+                  address:
+                    form.address,
+
+                  city:
+                    form.city,
+
+                  state:
+                    form.state,
+
+                  pincode:
+                    form.pincode,
+
+                  products:
+                    cart.map(
+                      (item) => ({
+
+                        productId:
+                          item._id,
+
+                        name:
+                          item.name,
+
+                        image:
+                          item.image,
+
+                        quantity:
+                          item.quantity,
+
+                        price:
+                          item.price,
+
+                      })
+                    ),
+
+                  totalAmount:
+                    total,
+
+                  paymentMethod:
+                    "RAZORPAY",
+
+                  razorpayOrderId:
+                    response
+                      .razorpay_order_id,
+
+                  paymentId:
+                    response
+                      .razorpay_payment_id,
+
+                  paymentStatus:
+                    "Paid",
+
+                  orderStatus:
+                    "Pending",
+
+                };
+
+                const res =
+                  await fetch(
+                    "/api/orders",
+                    {
+
+                      method:
+                        "POST",
+
+                      headers: {
+
+                        "Content-Type":
+                          "application/json",
+
+                      },
+
+                      body:
+                        JSON.stringify(
+                          orderData
+                        ),
+
+                    }
+                  );
+
+                const data =
+                  await res.json();
+
+                if (
+                  data.success
+                ) {
+
+                  clearCart();
+
+                  router.push(
+
+                    `/order-success?orderId=${data.order.orderId}`
+
+                  );
+
+                } else {
+
+                  alert(
+                    "Order save failed"
+                  );
+
+                }
+
+              } catch (error) {
+
+                console.log(
+                  error
+                );
+
+                alert(
+                  "Payment succeeded but order save failed"
+                );
+
+              }
+
+            },
+
+          prefill: {
+
+            name:
+              form.name,
+
+            email:
+              form.email,
+
+            contact:
+              form.phone,
+
+          },
+
+          theme: {
+
+            color:
+              "#D4AF37",
+
+          },
+
+        };
+
+       const paymentObject =
+          new window.Razorpay(
+            options
+          );
+
+        /* PAYMENT FAILED */
+        paymentObject.on(
+          "payment.failed",
+          function (response) {
+            alert(
+              response.error.description
+            );
+          }
+        );
+        paymentObject.open();
+
+      } catch (error) {
+
+        console.log(error);
+
+        alert(
+          "Something went wrong"
+        );
+
+      } finally {
+
+        setLoading(false);
+
+      }
+
+    };
 
   return (
 
@@ -223,7 +478,6 @@ export default function CheckoutPage() {
 
             </h2>
 
-            {/* FORM */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
 
               <input
@@ -232,7 +486,7 @@ export default function CheckoutPage() {
                 placeholder="Full Name"
                 value={form.name}
                 onChange={handleChange}
-                className="bg-black/40 border border-white/10 rounded-2xl px-5 py-4 outline-none focus:border-[#D4AF37] text-white placeholder:text-gray-500 transition"
+                className="bg-black/40 border border-white/10 rounded-2xl px-5 py-4 outline-none focus:border-[#D4AF37] text-white placeholder:text-gray-500"
               />
 
               <input
@@ -241,7 +495,7 @@ export default function CheckoutPage() {
                 placeholder="Phone Number"
                 value={form.phone}
                 onChange={handleChange}
-                className="bg-black/40 border border-white/10 rounded-2xl px-5 py-4 outline-none focus:border-[#D4AF37] text-white placeholder:text-gray-500 transition"
+                className="bg-black/40 border border-white/10 rounded-2xl px-5 py-4 outline-none focus:border-[#D4AF37] text-white placeholder:text-gray-500"
               />
 
               <input
@@ -250,7 +504,7 @@ export default function CheckoutPage() {
                 placeholder="Email Address"
                 value={form.email}
                 onChange={handleChange}
-                className="bg-black/40 border border-white/10 rounded-2xl px-5 py-4 outline-none focus:border-[#D4AF37] text-white placeholder:text-gray-500 transition"
+                className="bg-black/40 border border-white/10 rounded-2xl px-5 py-4 outline-none focus:border-[#D4AF37] text-white placeholder:text-gray-500"
               />
 
               <input
@@ -259,7 +513,7 @@ export default function CheckoutPage() {
                 placeholder="City"
                 value={form.city}
                 onChange={handleChange}
-                className="bg-black/40 border border-white/10 rounded-2xl px-5 py-4 outline-none focus:border-[#D4AF37] text-white placeholder:text-gray-500 transition"
+                className="bg-black/40 border border-white/10 rounded-2xl px-5 py-4 outline-none focus:border-[#D4AF37] text-white placeholder:text-gray-500"
               />
 
               <input
@@ -268,7 +522,7 @@ export default function CheckoutPage() {
                 placeholder="State"
                 value={form.state}
                 onChange={handleChange}
-                className="bg-black/40 border border-white/10 rounded-2xl px-5 py-4 outline-none focus:border-[#D4AF37] text-white placeholder:text-gray-500 transition"
+                className="bg-black/40 border border-white/10 rounded-2xl px-5 py-4 outline-none focus:border-[#D4AF37] text-white placeholder:text-gray-500"
               />
 
               <input
@@ -277,48 +531,19 @@ export default function CheckoutPage() {
                 placeholder="Pincode"
                 value={form.pincode}
                 onChange={handleChange}
-                className="bg-black/40 border border-white/10 rounded-2xl px-5 py-4 outline-none focus:border-[#D4AF37] text-white placeholder:text-gray-500 transition"
+                className="bg-black/40 border border-white/10 rounded-2xl px-5 py-4 outline-none focus:border-[#D4AF37] text-white placeholder:text-gray-500"
               />
 
             </div>
 
-            {/* ADDRESS */}
             <textarea
               name="address"
               placeholder="Full Address"
               value={form.address}
               onChange={handleChange}
               rows={5}
-              className="w-full bg-black/40 border border-white/10 rounded-2xl px-5 py-4 outline-none focus:border-[#D4AF37] text-white placeholder:text-gray-500 transition mt-6"
+              className="w-full bg-black/40 border border-white/10 rounded-2xl px-5 py-4 outline-none focus:border-[#D4AF37] text-white placeholder:text-gray-500 mt-6"
             />
-
-            {/* PAYMENT */}
-            <div className="mt-10">
-
-              <h2 className="text-3xl font-bold text-white mb-5">
-
-                Payment Method
-
-              </h2>
-
-              <label className="flex items-center gap-4 bg-black/40 border border-white/10 rounded-2xl p-5">
-
-                <input
-                  type="radio"
-                  checked
-                  readOnly
-                  className="accent-[#D4AF37]"
-                />
-
-                <span className="text-white font-medium text-lg">
-
-                  Cash on Delivery
-
-                </span>
-
-              </label>
-
-            </div>
 
           </div>
 
@@ -333,7 +558,6 @@ export default function CheckoutPage() {
 
               </h2>
 
-              {/* ITEMS */}
               <div className="space-y-5">
 
                 {cart.map(
@@ -392,7 +616,6 @@ export default function CheckoutPage() {
 
               </div>
 
-              {/* TOTAL */}
               <div className="flex items-center justify-between mt-8">
 
                 <span className="text-2xl font-bold text-white">
@@ -409,35 +632,17 @@ export default function CheckoutPage() {
 
               </div>
 
-              {/* BUTTON */}
               <button
                 onClick={placeOrder}
                 disabled={loading}
-                className="w-full mt-8 bg-[#D4AF37] text-black py-5 rounded-2xl text-lg font-bold hover:opacity-90 transition duration-300"
+                className="w-full mt-8 bg-[#D4AF37] text-black py-5 rounded-2xl text-lg font-bold hover:opacity-90 transition"
               >
 
                 {loading
-                  ? "Placing Order..."
-                  : "Place Order"}
+                  ? "Initializing Payment..."
+                  : "Proceed To Payment"}
 
               </button>
-
-              {/* TRUST */}
-              <div className="mt-8 bg-black/40 border border-white/10 rounded-[24px] p-5 space-y-4 text-gray-300">
-
-                <p>
-                  🚚 Shipping Across India
-                </p>
-
-                <p>
-                  🔒 Secure Checkout
-                </p>
-
-                <p>
-                  💯 Authentic Luxury Fragrance
-                </p>
-
-              </div>
 
             </div>
 

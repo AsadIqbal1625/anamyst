@@ -315,6 +315,12 @@ export default function Navbar() {
                 FAQ
 
               </Link>
+              <Link
+                href="/track-order"
+                className="hover:text-[#D4AF37] transition"
+              >
+                Track Order
+              </Link>
 
               {/* CART */}
               <Link
