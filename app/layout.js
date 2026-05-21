@@ -63,7 +63,7 @@ export default function RootLayout({ children }) {
 
           <p className="text-xs text-white">
 
-            Chat With ANAMYST
+            Need Help?
 
           </p>
 
