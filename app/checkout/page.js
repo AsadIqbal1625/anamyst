@@ -30,6 +30,10 @@ export default function CheckoutPage() {
     setLoading] =
     useState(false);
 
+  const [paymentMethod,
+    setPaymentMethod] =
+    useState("RAZORPAY");
+
   const [form,
     setForm] =
     useState({
@@ -118,7 +122,144 @@ export default function CheckoutPage() {
 
         setLoading(true);
 
-        /* CHECK RAZORPAY */
+        /* ===========================
+           CASH ON DELIVERY
+        =========================== */
+
+        if (
+          paymentMethod ===
+          "COD"
+        ) {
+
+          const orderData = {
+
+            customerName:
+              form.name,
+
+            email:
+              form.email,
+
+            phone:
+              form.phone,
+
+            address:
+              form.address,
+
+            city:
+              form.city,
+
+            state:
+              form.state,
+
+            pincode:
+              form.pincode,
+
+            products:
+              cart.map(
+                (item) => ({
+
+                  productId:
+                    item._id,
+
+                  name:
+                    item.name,
+
+                  image:
+                    item.image,
+
+                  quantity:
+                    item.quantity,
+
+                  price:
+                    item.price,
+
+                })
+              ),
+
+            totalAmount:
+              total,
+
+            paymentMethod:
+              "COD",
+
+            paymentStatus:
+              "Pending",
+
+            orderStatus:
+              "Pending",
+
+          };
+
+          const res =
+            await fetch(
+              "/api/orders",
+              {
+
+                method: "POST",
+
+                headers: {
+
+                  "Content-Type":
+                    "application/json",
+
+                },
+
+                body:
+                  JSON.stringify(
+                    orderData
+                  ),
+
+              }
+            );
+
+          const data =
+            await res.json();
+
+          if (data.success) {
+
+            clearCart();
+
+            /* WHATSAPP MESSAGE */
+
+            const message =
+
+              `🛍️ *NEW COD ORDER*%0A%0A` +
+
+              `Order ID: ${data.order.orderId}%0A` +
+
+              `Customer: ${form.name}%0A` +
+
+              `Phone: ${form.phone}%0A` +
+
+              `Address: ${form.address}, ${form.city}, ${form.state} - ${form.pincode}%0A%0A` +
+
+              `Total: ₹${total}%0A` +
+
+              `Payment: COD`;
+
+            window.open(
+
+              `https://wa.me/918840305018?text=${message}`,
+
+              "_blank"
+
+            );
+
+            router.push(
+
+              `/order-success?orderId=${data.order.orderId}`
+
+            );
+
+          }
+
+          return;
+
+        }
+
+        /* ===========================
+           RAZORPAY
+        =========================== */
 
         if (
           !window.Razorpay
@@ -131,8 +272,6 @@ export default function CheckoutPage() {
           return;
 
         }
-
-        /* CREATE ORDER */
 
         const razorpayRes =
           await fetch(
@@ -160,10 +299,6 @@ export default function CheckoutPage() {
 
         const razorpayData =
           await razorpayRes.json();
-
-        console.log(
-          razorpayData
-        );
 
         if (
           !razorpayData.success
@@ -204,6 +339,18 @@ export default function CheckoutPage() {
 
           order_id:
             order.id,
+
+          method: {
+
+            upi: true,
+
+            card: true,
+
+            netbanking: true,
+
+            wallet: true,
+
+          },
 
           handler:
             async function (
@@ -367,6 +514,30 @@ export default function CheckoutPage() {
 
                   clearCart();
 
+                  /* WHATSAPP MESSAGE */
+
+                  const message =
+
+                    `💳 *NEW PAID ORDER*%0A%0A` +
+
+                    `Order ID: ${data.order.orderId}%0A` +
+
+                    `Customer: ${form.name}%0A` +
+
+                    `Phone: ${form.phone}%0A` +
+
+                    `Total: ₹${total}%0A` +
+
+                    `Payment: Paid Online`;
+
+                  window.open(
+
+                    `https://wa.me/918840305018?text=${message}`,
+
+                    "_blank"
+
+                  );
+
                   router.push(
 
                     `/order-success?orderId=${data.order.orderId}`
@@ -520,6 +691,7 @@ export default function CheckoutPage() {
 
           <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-8">
 
+            {/* LEFT */}
             <div className="lg:col-span-2 bg-white/5 border border-white/10 rounded-[36px] backdrop-blur-xl p-6 md:p-8">
 
               <h2 className="text-4xl font-bold text-white mb-10">
@@ -597,6 +769,7 @@ export default function CheckoutPage() {
 
             </div>
 
+            {/* RIGHT */}
             <div>
 
               <div className="bg-white/5 border border-white/10 rounded-[36px] backdrop-blur-xl p-6 sticky top-24">
@@ -663,6 +836,87 @@ export default function CheckoutPage() {
 
                 </div>
 
+                {/* PAYMENT METHODS */}
+
+                <div className="mt-8">
+
+                  <h3 className="text-2xl font-bold text-white mb-5">
+
+                    Payment Method
+
+                  </h3>
+
+                  <div className="grid gap-4">
+
+                    <button
+                      type="button"
+                      onClick={() =>
+                        setPaymentMethod(
+                          "RAZORPAY"
+                        )
+                      }
+                      className={`border rounded-2xl p-5 text-left transition ${
+                        paymentMethod ===
+                        "RAZORPAY"
+
+                          ? "border-[#D4AF37] bg-[#D4AF37]/10"
+
+                          : "border-white/10 bg-black/30"
+                      }`}
+                    >
+
+                      <h4 className="text-xl font-semibold text-white">
+
+                        Pay Online
+
+                      </h4>
+
+                      <p className="text-gray-400 mt-2">
+
+                        UPI, Cards,
+                        Netbanking
+
+                      </p>
+
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={() =>
+                        setPaymentMethod(
+                          "COD"
+                        )
+                      }
+                      className={`border rounded-2xl p-5 text-left transition ${
+                        paymentMethod ===
+                        "COD"
+
+                          ? "border-[#D4AF37] bg-[#D4AF37]/10"
+
+                          : "border-white/10 bg-black/30"
+                      }`}
+                    >
+
+                      <h4 className="text-xl font-semibold text-white">
+
+                        Cash On Delivery
+
+                      </h4>
+
+                      <p className="text-gray-400 mt-2">
+
+                        Pay when order arrives
+
+                      </p>
+
+                    </button>
+
+                  </div>
+
+                </div>
+
+                {/* TOTAL */}
+
                 <div className="flex items-center justify-between mt-8">
 
                   <span className="text-2xl font-bold text-white">
@@ -679,6 +933,8 @@ export default function CheckoutPage() {
 
                 </div>
 
+                {/* BUTTON */}
+
                 <button
                   onClick={placeOrder}
                   disabled={loading}
@@ -686,7 +942,14 @@ export default function CheckoutPage() {
                 >
 
                   {loading
-                    ? "Initializing Payment..."
+
+                    ? "Processing..."
+
+                    : paymentMethod ===
+                      "COD"
+
+                    ? "Place COD Order"
+
                     : "Proceed To Payment"}
 
                 </button>
