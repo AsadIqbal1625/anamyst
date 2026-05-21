@@ -392,28 +392,52 @@ export default function AdminPage() {
 
             </div>
 
-            {/* LOGOUT */}
-            <button
+            {/* ACTION BUTTONS */}
+            <div className="flex gap-4 flex-wrap">
 
-              onClick={() => {
+              {/* VIEW ORDERS */}
+              <button
 
-                document.cookie =
+                onClick={() => {
 
-                  "admin-auth=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+                  router.push(
+                    "/admin/orders"
+                  );
 
-                router.push(
-                  "/admin-login"
-                );
+                }}
 
-              }}
+                className="bg-[#D4AF37] hover:opacity-90 text-black px-6 py-3 rounded-2xl font-semibold transition"
 
-              className="bg-red-500 hover:bg-red-600 text-white px-6 py-3 rounded-2xl font-semibold transition"
+              >
 
-            >
+                View Orders
 
-              Logout
+              </button>
 
-            </button>
+              {/* LOGOUT */}
+              <button
+
+                onClick={() => {
+
+                  document.cookie =
+
+                    "admin-auth=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+
+                  router.push(
+                    "/admin-login"
+                  );
+
+                }}
+
+                className="bg-red-500 hover:bg-red-600 text-white px-6 py-3 rounded-2xl font-semibold transition"
+
+              >
+
+                Logout
+
+              </button>
+
+            </div>
 
           </div>
 
