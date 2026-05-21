@@ -7,6 +7,8 @@ import {
 
 import Image from "next/image";
 
+import Script from "next/script";
+
 import { useRouter }
 from "next/navigation";
 
@@ -42,7 +44,6 @@ export default function CheckoutPage() {
 
     });
 
-  /* LOAD CART */
   useEffect(() => {
 
     const cartItems =
@@ -63,7 +64,6 @@ export default function CheckoutPage() {
 
   }, [router]);
 
-  /* HANDLE INPUT */
   const handleChange = (e) => {
 
     setForm({
@@ -77,7 +77,6 @@ export default function CheckoutPage() {
 
   };
 
-  /* TOTAL */
   const total =
 
     cart.reduce(
@@ -92,7 +91,6 @@ export default function CheckoutPage() {
 
     );
 
-  /* PLACE ORDER */
   const placeOrder =
     async () => {
 
@@ -120,12 +118,25 @@ export default function CheckoutPage() {
 
         setLoading(true);
 
-        /* CREATE RAZORPAY ORDER */
+        /* CHECK RAZORPAY */
+
+        if (
+          !window.Razorpay
+        ) {
+
+          alert(
+            "Razorpay SDK failed to load"
+          );
+
+          return;
+
+        }
+
+        /* CREATE ORDER */
+
         const razorpayRes =
           await fetch(
-
             "/api/razorpay",
-
             {
 
               method: "POST",
@@ -145,17 +156,21 @@ export default function CheckoutPage() {
                 }),
 
             }
-
           );
 
         const razorpayData =
           await razorpayRes.json();
+
+        console.log(
+          razorpayData
+        );
 
         if (
           !razorpayData.success
         ) {
 
           alert(
+            razorpayData.error ||
             "Payment initialization failed"
           );
 
@@ -163,10 +178,9 @@ export default function CheckoutPage() {
 
         }
 
-        const razorpayOrder =
+        const order =
           razorpayData.order;
 
-        /* RAZORPAY OPTIONS */
         const options = {
 
           key:
@@ -174,10 +188,10 @@ export default function CheckoutPage() {
               .NEXT_PUBLIC_RAZORPAY_KEY_ID,
 
           amount:
-            razorpayOrder.amount,
+            order.amount,
 
           currency:
-            razorpayOrder.currency,
+            "INR",
 
           name:
             "ANAMYST",
@@ -185,8 +199,11 @@ export default function CheckoutPage() {
           description:
             "Luxury Fragrance Order",
 
+          image:
+            "/logo.png",
+
           order_id:
-            razorpayOrder.id,
+            order.id,
 
           handler:
             async function (
@@ -196,6 +213,7 @@ export default function CheckoutPage() {
               try {
 
                 /* VERIFY PAYMENT */
+
                 const verifyRes =
                   await fetch(
 
@@ -249,6 +267,7 @@ export default function CheckoutPage() {
                 }
 
                 /* SAVE ORDER */
+
                 const orderData = {
 
                   customerName:
@@ -369,12 +388,25 @@ export default function CheckoutPage() {
                 );
 
                 alert(
-                  "Payment succeeded but order save failed"
+                  "Payment success but order save failed"
                 );
 
               }
 
             },
+
+          modal: {
+
+            ondismiss:
+              function () {
+
+                console.log(
+                  "Payment popup closed"
+                );
+
+              },
+
+          },
 
           prefill: {
 
@@ -398,20 +430,34 @@ export default function CheckoutPage() {
 
         };
 
-       const paymentObject =
+        const paymentObject =
           new window.Razorpay(
             options
           );
 
-        /* PAYMENT FAILED */
         paymentObject.on(
+
           "payment.failed",
-          function (response) {
-            alert(
-              response.error.description
+
+          function (
+            response
+          ) {
+
+            console.log(
+              response
             );
+
+            alert(
+
+              response.error
+                .description
+
+            );
+
           }
+
         );
+
         paymentObject.open();
 
       } catch (error) {
@@ -432,227 +478,230 @@ export default function CheckoutPage() {
 
   return (
 
-    <div className="min-h-screen bg-black text-white overflow-hidden">
+    <>
 
-      {/* HERO */}
-      <section className="relative px-6 py-16 border-b border-[#D4AF37]/20">
+      <Script
+        src="https://checkout.razorpay.com/v1/checkout.js"
+        strategy="lazyOnload"
+      />
 
-        <div className="absolute inset-0 bg-gradient-to-b from-[#D4AF37]/10 to-transparent" />
+      <div className="min-h-screen bg-black text-white overflow-hidden">
 
-        <div className="relative max-w-6xl mx-auto text-center">
+        <section className="relative px-6 py-16 border-b border-[#D4AF37]/20">
 
-          <p className="uppercase tracking-[6px] text-[#D4AF37] text-xs mb-5">
+          <div className="absolute inset-0 bg-gradient-to-b from-[#D4AF37]/10 to-transparent" />
 
-            ANAMYST Checkout
+          <div className="relative max-w-6xl mx-auto text-center">
 
-          </p>
+            <p className="uppercase tracking-[6px] text-[#D4AF37] text-xs mb-5">
 
-          <h1 className="text-5xl md:text-6xl font-bold mb-6">
+              ANAMYST Checkout
 
-            Secure Checkout
+            </p>
 
-          </h1>
+            <h1 className="text-5xl md:text-6xl font-bold mb-6">
 
-          <p className="text-gray-300 text-lg max-w-2xl mx-auto leading-8">
+              Secure Checkout
 
-            Complete your luxury fragrance order
-            with confidence and secure checkout.
+            </h1>
 
-          </p>
+            <p className="text-gray-300 text-lg max-w-2xl mx-auto leading-8">
 
-        </div>
+              Complete your luxury fragrance order
+              with confidence and secure checkout.
 
-      </section>
-
-      {/* CONTENT */}
-      <section className="px-4 md:px-6 py-14">
-
-        <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-8">
-
-          {/* LEFT */}
-          <div className="lg:col-span-2 bg-white/5 border border-white/10 rounded-[36px] backdrop-blur-xl p-6 md:p-8">
-
-            <h2 className="text-4xl font-bold text-white mb-10">
-
-              Billing Details
-
-            </h2>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-
-              <input
-                type="text"
-                name="name"
-                placeholder="Full Name"
-                value={form.name}
-                onChange={handleChange}
-                className="bg-black/40 border border-white/10 rounded-2xl px-5 py-4 outline-none focus:border-[#D4AF37] text-white placeholder:text-gray-500"
-              />
-
-              <input
-                type="text"
-                name="phone"
-                placeholder="Phone Number"
-                value={form.phone}
-                onChange={handleChange}
-                className="bg-black/40 border border-white/10 rounded-2xl px-5 py-4 outline-none focus:border-[#D4AF37] text-white placeholder:text-gray-500"
-              />
-
-              <input
-                type="email"
-                name="email"
-                placeholder="Email Address"
-                value={form.email}
-                onChange={handleChange}
-                className="bg-black/40 border border-white/10 rounded-2xl px-5 py-4 outline-none focus:border-[#D4AF37] text-white placeholder:text-gray-500"
-              />
-
-              <input
-                type="text"
-                name="city"
-                placeholder="City"
-                value={form.city}
-                onChange={handleChange}
-                className="bg-black/40 border border-white/10 rounded-2xl px-5 py-4 outline-none focus:border-[#D4AF37] text-white placeholder:text-gray-500"
-              />
-
-              <input
-                type="text"
-                name="state"
-                placeholder="State"
-                value={form.state}
-                onChange={handleChange}
-                className="bg-black/40 border border-white/10 rounded-2xl px-5 py-4 outline-none focus:border-[#D4AF37] text-white placeholder:text-gray-500"
-              />
-
-              <input
-                type="text"
-                name="pincode"
-                placeholder="Pincode"
-                value={form.pincode}
-                onChange={handleChange}
-                className="bg-black/40 border border-white/10 rounded-2xl px-5 py-4 outline-none focus:border-[#D4AF37] text-white placeholder:text-gray-500"
-              />
-
-            </div>
-
-            <textarea
-              name="address"
-              placeholder="Full Address"
-              value={form.address}
-              onChange={handleChange}
-              rows={5}
-              className="w-full bg-black/40 border border-white/10 rounded-2xl px-5 py-4 outline-none focus:border-[#D4AF37] text-white placeholder:text-gray-500 mt-6"
-            />
+            </p>
 
           </div>
 
-          {/* RIGHT */}
-          <div>
+        </section>
 
-            <div className="bg-white/5 border border-white/10 rounded-[36px] backdrop-blur-xl p-6 sticky top-24">
+        <section className="px-4 md:px-6 py-14">
 
-              <h2 className="text-3xl font-bold text-white mb-8">
+          <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-8">
 
-                Order Summary
+            <div className="lg:col-span-2 bg-white/5 border border-white/10 rounded-[36px] backdrop-blur-xl p-6 md:p-8">
+
+              <h2 className="text-4xl font-bold text-white mb-10">
+
+                Billing Details
 
               </h2>
 
-              <div className="space-y-5">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
 
-                {cart.map(
-                  (
-                    item,
-                    index
-                  ) => (
+                <input
+                  type="text"
+                  name="name"
+                  placeholder="Full Name"
+                  value={form.name}
+                  onChange={handleChange}
+                  className="bg-black/40 border border-white/10 rounded-2xl px-5 py-4 outline-none focus:border-[#D4AF37] text-white"
+                />
 
-                    <div
-                      key={`${item._id}-${index}`}
-                      className="flex gap-4 border-b border-white/10 pb-5"
-                    >
+                <input
+                  type="text"
+                  name="phone"
+                  placeholder="Phone Number"
+                  value={form.phone}
+                  onChange={handleChange}
+                  className="bg-black/40 border border-white/10 rounded-2xl px-5 py-4 outline-none focus:border-[#D4AF37] text-white"
+                />
 
-                      <div className="bg-black/40 rounded-2xl overflow-hidden">
+                <input
+                  type="email"
+                  name="email"
+                  placeholder="Email Address"
+                  value={form.email}
+                  onChange={handleChange}
+                  className="bg-black/40 border border-white/10 rounded-2xl px-5 py-4 outline-none focus:border-[#D4AF37] text-white"
+                />
 
-                        <Image
-                          src={item.image}
-                          alt={item.name}
-                          width={90}
-                          height={90}
-                          className="object-contain w-auto h-auto"
-                        />
+                <input
+                  type="text"
+                  name="city"
+                  placeholder="City"
+                  value={form.city}
+                  onChange={handleChange}
+                  className="bg-black/40 border border-white/10 rounded-2xl px-5 py-4 outline-none focus:border-[#D4AF37] text-white"
+                />
 
-                      </div>
+                <input
+                  type="text"
+                  name="state"
+                  placeholder="State"
+                  value={form.state}
+                  onChange={handleChange}
+                  className="bg-black/40 border border-white/10 rounded-2xl px-5 py-4 outline-none focus:border-[#D4AF37] text-white"
+                />
 
-                      <div className="flex-1">
-
-                        <h3 className="text-white font-semibold text-lg">
-
-                          {item.name}
-
-                        </h3>
-
-                        <p className="text-gray-400 text-sm">
-
-                          Qty:
-                          {" "}
-                          {item.quantity}
-
-                        </p>
-
-                        <p className="text-[#D4AF37] font-bold mt-2 text-lg">
-
-                          ₹
-                          {item.price *
-                            item.quantity}
-
-                        </p>
-
-                      </div>
-
-                    </div>
-
-                  )
-                )}
-
-              </div>
-
-              <div className="flex items-center justify-between mt-8">
-
-                <span className="text-2xl font-bold text-white">
-
-                  Total
-
-                </span>
-
-                <span className="text-4xl font-bold text-[#D4AF37]">
-
-                  ₹{total}
-
-                </span>
+                <input
+                  type="text"
+                  name="pincode"
+                  placeholder="Pincode"
+                  value={form.pincode}
+                  onChange={handleChange}
+                  className="bg-black/40 border border-white/10 rounded-2xl px-5 py-4 outline-none focus:border-[#D4AF37] text-white"
+                />
 
               </div>
 
-              <button
-                onClick={placeOrder}
-                disabled={loading}
-                className="w-full mt-8 bg-[#D4AF37] text-black py-5 rounded-2xl text-lg font-bold hover:opacity-90 transition"
-              >
+              <textarea
+                name="address"
+                placeholder="Full Address"
+                value={form.address}
+                onChange={handleChange}
+                rows={5}
+                className="w-full bg-black/40 border border-white/10 rounded-2xl px-5 py-4 outline-none focus:border-[#D4AF37] text-white mt-6"
+              />
 
-                {loading
-                  ? "Initializing Payment..."
-                  : "Proceed To Payment"}
+            </div>
 
-              </button>
+            <div>
+
+              <div className="bg-white/5 border border-white/10 rounded-[36px] backdrop-blur-xl p-6 sticky top-24">
+
+                <h2 className="text-3xl font-bold text-white mb-8">
+
+                  Order Summary
+
+                </h2>
+
+                <div className="space-y-5">
+
+                  {cart.map(
+                    (
+                      item,
+                      index
+                    ) => (
+
+                      <div
+                        key={`${item._id}-${index}`}
+                        className="flex gap-4 border-b border-white/10 pb-5"
+                      >
+
+                        <div className="bg-black/40 rounded-2xl overflow-hidden">
+
+                          <Image
+                            src={item.image}
+                            alt={item.name}
+                            width={90}
+                            height={90}
+                            className="object-contain"
+                          />
+
+                        </div>
+
+                        <div className="flex-1">
+
+                          <h3 className="text-white font-semibold text-lg">
+
+                            {item.name}
+
+                          </h3>
+
+                          <p className="text-gray-400 text-sm">
+
+                            Qty: {item.quantity}
+
+                          </p>
+
+                          <p className="text-[#D4AF37] font-bold mt-2 text-lg">
+
+                            ₹
+                            {item.price *
+                              item.quantity}
+
+                          </p>
+
+                        </div>
+
+                      </div>
+
+                    )
+                  )}
+
+                </div>
+
+                <div className="flex items-center justify-between mt-8">
+
+                  <span className="text-2xl font-bold text-white">
+
+                    Total
+
+                  </span>
+
+                  <span className="text-4xl font-bold text-[#D4AF37]">
+
+                    ₹{total}
+
+                  </span>
+
+                </div>
+
+                <button
+                  onClick={placeOrder}
+                  disabled={loading}
+                  className="w-full mt-8 bg-[#D4AF37] text-black py-5 rounded-2xl text-lg font-bold hover:opacity-90 transition"
+                >
+
+                  {loading
+                    ? "Initializing Payment..."
+                    : "Proceed To Payment"}
+
+                </button>
+
+              </div>
 
             </div>
 
           </div>
 
-        </div>
+        </section>
 
-      </section>
+      </div>
 
-    </div>
+    </>
 
   );
 
