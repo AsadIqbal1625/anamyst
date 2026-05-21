@@ -1,25 +1,20 @@
-"use client";
-
 import Link from "next/link";
-import { useSearchParams } from "next/navigation";
-import { Suspense } from "react";
 
-function SuccessContent() {
-  const searchParams = useSearchParams();
+export const metadata = {
+  title: "Order Successful | ANAMYST",
+  description:
+    "Your ANAMYST luxury fragrance order has been placed successfully.",
+};
 
-  const orderId =
-    searchParams.get("orderId") || "ANM-XXXXXX";
+function SuccessContent({ orderId }) {
 
   return (
-    <div className="min-h-screen bg-black text-white">
 
-      {/* SUCCESS CARD */}
+    <div className="min-h-screen bg-black text-white">
 
       <div className="flex items-center justify-center px-6 py-24">
 
         <div className="bg-[#0B0B0B] border border-[#D4AF37]/20 rounded-3xl p-12 max-w-lg w-full text-center shadow-2xl">
-
-          {/* ICON */}
 
           <div className="w-20 h-20 bg-green-500 rounded-2xl flex items-center justify-center mx-auto mb-8 text-5xl">
 
@@ -27,23 +22,17 @@ function SuccessContent() {
 
           </div>
 
-          {/* TITLE */}
-
           <h1 className="text-5xl font-bold mb-4 leading-tight">
 
             Order Placed Successfully
 
           </h1>
 
-          {/* SUBTITLE */}
-
           <p className="text-gray-400 mb-10">
 
             Thank you for shopping with ANAMYST.
 
           </p>
-
-          {/* ORDER ID */}
 
           <div className="bg-black border border-[#D4AF37]/20 rounded-2xl p-6 mb-10">
 
@@ -61,15 +50,11 @@ function SuccessContent() {
 
           </div>
 
-          {/* INFO */}
-
           <p className="text-sm text-gray-500 mb-8">
 
             Save this Order ID for tracking your order.
 
           </p>
-
-          {/* BUTTONS */}
 
           <div className="flex flex-col gap-4">
 
@@ -81,7 +66,7 @@ function SuccessContent() {
             </Link>
 
             <Link
-              href="/collections"
+              href="/shop"
               className="border border-[#D4AF37]/30 py-4 rounded-2xl font-bold hover:bg-[#D4AF37]/10 transition"
             >
               Continue Shopping
@@ -94,13 +79,18 @@ function SuccessContent() {
       </div>
 
     </div>
+
   );
+
 }
 
-export default function OrderSuccessPage() {
-  return (
-    <Suspense fallback={<div>Loading...</div>}>
-      <SuccessContent />
-    </Suspense>
-  );
+export default async function OrderSuccessPage({ searchParams }) {
+
+  const params = await searchParams;
+
+  const orderId =
+    params?.orderId || "ANM-XXXXXX";
+
+  return <SuccessContent orderId={orderId} />;
+
 }

@@ -1,3 +1,18 @@
+export const metadata = {
+  title: "ANAMYST | Luxury Fragrances",
+  description:
+    "Discover premium luxury fragrances crafted for elegance, sophistication, and timeless identity.",
+  keywords: [
+    "luxury perfume",
+    "premium fragrance",
+    "oud perfume",
+    "luxury fragrance india",
+    "ANAMYST perfumes",
+    "designer perfume",
+    "niche fragrance",
+  ],
+};
+
 import Link from "next/link";
 
 export default function Home() {

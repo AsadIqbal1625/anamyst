@@ -1,3 +1,4 @@
+
 import "./globals.css";
 import Script from "next/script";
 import Navbar from "../components/Navbar";
