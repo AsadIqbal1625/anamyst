@@ -283,9 +283,10 @@ const filtered =
 
                           <Image
                             fill
-                            sizes="90px"
+                            sizes="(max-width: 768px) 100vw, 50vw"
                             src={product.image}
                             alt={product.name}
+                            loading="lazy"
                             className="object-contain p-2"
                           />
 

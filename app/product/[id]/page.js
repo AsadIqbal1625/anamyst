@@ -163,6 +163,7 @@ export default function ProductPage() {
                 alt={product.name}
                 width={700}
                 height={700}
+                sizes="(max-width: 768px) 100vw, 50vw"
                 priority
                 className="w-full h-[260px] sm:h-[340px] md:h-[520px] object-contain transition-transform duration-700 hover:scale-105"
               />
@@ -446,6 +447,8 @@ export default function ProductPage() {
                         alt={item.name}
                         width={500}
                         height={500}
+                        loading="lazy"
+                        sizes="(max-width: 768px) 100vw, 50vw"
                         className="w-full h-72 object-contain hover:scale-105 transition-transform duration-700"
                       />
 

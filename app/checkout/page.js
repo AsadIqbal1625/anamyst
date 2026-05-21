@@ -801,6 +801,8 @@ export default function CheckoutPage() {
                             alt={item.name}
                             width={90}
                             height={90}
+                            loading="lazy"
+                            sizes="(max-width: 768px) 100vw, 50vw"
                             className="object-contain"
                           />
 

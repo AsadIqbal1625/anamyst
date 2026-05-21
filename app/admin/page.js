@@ -496,10 +496,11 @@ export default function AdminPage() {
 
                     <Image
                       fill
-                      sizes="220px"
+                      sizes="(max-width: 768px) 100vw, 50vw"
                       src={form.image}
                       alt="Preview"
                       className="object-contain"
+                      loading="lazy"
                     />
 
                   </div>
@@ -681,7 +682,8 @@ export default function AdminPage() {
                       src={product.image}
                       alt={product.name}
                       fill
-                      sizes="320px"
+                      loading="lazy"
+                      sizes="(max-width: 768px) 100vw, 50vw"
                       className="object-contain p-5"
                     />
 

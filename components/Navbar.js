@@ -124,6 +124,8 @@ export default function Navbar() {
                   alt="ANAMYST"
                   width={42}
                   height={42}
+                  loading="lazy"
+                  sizes="(max-width: 768px) 100vw, 50vw"
                   className="rounded-lg object-cover"
                 />
 
