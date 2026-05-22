@@ -2,6 +2,7 @@
 
 import {
   useEffect,
+  useMemo,
   useState,
 } from "react";
 
@@ -20,21 +21,39 @@ import {
 
 export default function CartPage() {
 
-  const [cart, setCart] =
+  const [mounted,
+    setMounted] =
+    useState(false);
+
+  const [cart,
+    setCart] =
     useState([]);
 
   const [products,
     setProducts] =
     useState([]);
 
+  /* HYDRATION FIX */
+
+  useEffect(() => {
+
+    setMounted(true);
+
+  }, []);
+
   /* LOAD CART */
+
   const loadCart = () => {
 
-    setCart(getCart());
+    const cartData =
+      getCart();
+
+    setCart(cartData);
 
   };
 
   /* LOAD PRODUCTS */
+
   async function loadProducts() {
 
     try {
@@ -65,52 +84,70 @@ export default function CartPage() {
 
   useEffect(() => {
 
+    if (!mounted) return;
+
     loadCart();
 
     loadProducts();
 
-  }, []);
+  }, [mounted]);
 
-  /* TOTAL */
-  const total = cart.reduce(
+  /* SAFE TOTAL */
 
-    (sum, item) =>
+  const total = useMemo(() => {
 
-      sum +
-      item.price *
-        item.quantity,
+    return cart.reduce(
 
-    0
+      (sum, item) => {
 
-  );
+        const price =
+          Number(item.price) || 0;
+
+        const quantity =
+          Number(item.quantity) || 1;
+
+        return (
+          sum +
+          price * quantity
+        );
+
+      },
+
+      0
+
+    );
+
+  }, [cart]);
+
+  if (!mounted) return null;
 
   return (
 
-    <div className="min-h-screen bg-black text-white overflow-hidden">
+    <div className="min-h-screen bg-black text-white">
 
       {/* HERO */}
-      <section className="relative px-6 py-16 border-b border-[#D4AF37]/20">
 
-        <div className="absolute inset-0 bg-gradient-to-b from-[#D4AF37]/10 to-transparent" />
+      <section className="relative px-6 py-8">
 
-        <div className="relative max-w-6xl mx-auto text-center">
+        <div className="absolute inset-0 bg-gradient-to-b from-[#D4AF37]/5 to-transparent" />
 
-          <p className="uppercase tracking-[6px] text-[#D4AF37] text-xs mb-5">
+        <div className="relative max-w-5xl mx-auto text-center">
+
+          <p className="uppercase tracking-[5px] text-[#D4AF37] text-xs mb-3">
 
             ANAMYST Checkout
 
           </p>
 
-          <h1 className="text-5xl md:text-6xl font-bold mb-6">
+          <h1 className="text-4xl md:text-5xl font-bold mb-3">
 
             Your Cart
 
           </h1>
 
-          <p className="text-gray-300 text-lg max-w-2xl mx-auto leading-8">
+          <p className="text-gray-400 max-w-xl mx-auto">
 
-            Review your luxury fragrance
-            collection before checkout.
+            Review your luxury fragrance collection before checkout.
 
           </p>
 
@@ -118,299 +155,250 @@ export default function CartPage() {
 
       </section>
 
-      {/* EMPTY */}
+      {/* EMPTY CART */}
+
       {cart.length === 0 ? (
 
-        <div className="flex flex-col items-center justify-center py-32 px-6 text-center">
+        <section className="px-6 py-12">
 
-          <h2 className="text-4xl font-bold mb-5">
+          <div className="max-w-md mx-auto bg-[#0B0B0B] border border-[#D4AF37]/20 rounded-3xl p-10 text-center">
 
-            Your cart is empty
+            <div className="w-20 h-20 rounded-2xl bg-[#D4AF37]/10 flex items-center justify-center mx-auto mb-6">
 
-          </h2>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                strokeWidth={1.5}
+                stroke="currentColor"
+                className="w-10 h-10 text-[#D4AF37]"
+              >
 
-          <p className="text-gray-400 mb-10 max-w-xl leading-8">
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M2.25 3h1.386a1.5 1.5 0 011.415 1.03L5.76 6.75m0 0L7.5 14.25h9.75l1.74-7.5H5.76zm0 0L5.25 4.5M9 18.75a.75.75 0 100 1.5.75.75 0 000-1.5zm9 0a.75.75 0 100 1.5.75.75 0 000-1.5z"
+                />
 
-            Explore premium fragrances
-            from ANAMYST.
+              </svg>
 
-          </p>
+            </div>
 
-          <Link href="/shop">
+            <h2 className="text-3xl font-bold mb-4">
 
-            <button className="bg-[#D4AF37] text-black px-8 py-4 rounded-2xl hover:opacity-90 transition duration-300 font-semibold">
+              Your Cart is Empty
 
-              Continue Shopping
+            </h2>
 
-            </button>
+            <p className="text-gray-400 mb-8 leading-relaxed">
 
-          </Link>
+              Discover signature luxury fragrances crafted for elegance and timeless identity.
 
-        </div>
+            </p>
+
+            <Link href="/shop">
+
+              <button className="bg-[#D4AF37] text-black px-8 py-4 rounded-2xl hover:opacity-90 transition duration-300 font-semibold">
+
+                Explore Collection
+
+              </button>
+
+            </Link>
+
+          </div>
+
+        </section>
 
       ) : (
 
-        <section className="px-4 md:px-6 py-14">
+        <section className="px-4 md:px-6 py-8">
 
-          <div className="max-w-7xl mx-auto grid lg:grid-cols-3 gap-10">
+          <div className="max-w-7xl mx-auto grid lg:grid-cols-3 gap-6">
 
             {/* LEFT */}
-            <div className="lg:col-span-2 space-y-8">
+
+            <div className="lg:col-span-2 space-y-5">
 
               {cart.map(
-                (item, index) => (
+                (item, index) => {
 
-                  <div
-                    key={`${item._id}-${index}`}
-                    className="bg-white/5 border border-white/10 rounded-[36px] overflow-hidden backdrop-blur-xl"
-                  >
+                  const price =
+                    Number(item.price) || 0;
 
-                    <div className="flex flex-col md:flex-row">
+                  const quantity =
+                    Number(item.quantity) || 1;
 
-                      {/* IMAGE */}
-                      <div className="relative md:w-[320px] h-[320px] overflow-hidden bg-black/40">
+                  return (
 
-                        <Image
-                          src={item.image}
-                          alt={item.name}
-                          fill
-                          priority
-                          sizes="(max-width:768px) 100vw, 320px"
-                          className="object-contain hover:scale-105 transition duration-700"
-                        />
+                    <div
+                      key={`${item._id}-${index}`}
+                      className="bg-[#0B0B0B] rounded-3xl overflow-hidden border border-white/10"
+                    >
 
-                        <span className="absolute top-4 left-4 bg-black text-white text-xs px-4 py-2 rounded-full z-10 border border-white/10">
+                      <div className="flex flex-col md:flex-row">
 
-                          {item.tag ||
-                            "Best Seller"}
+                        {/* IMAGE */}
 
-                        </span>
+                        <div className="relative md:w-[220px] h-[220px] bg-black">
 
-                        <span className="absolute top-4 right-4 bg-[#D4AF37] text-black text-xs font-semibold px-4 py-2 rounded-full z-10">
+                          <Image
+                            src={item.image}
+                            alt={item.name}
+                            fill
+                            loading="lazy"
+                            sizes="(max-width: 768px) 100vw, 50vw"
+                            className="object-contain p-5"
+                          />
 
-                          {item.badge ||
-                            "Premium"}
+                        </div>
 
-                        </span>
+                        {/* CONTENT */}
 
-                      </div>
+                        <div className="flex-1 p-6">
 
-                      {/* CONTENT */}
-                      <div className="flex-1 p-6 flex flex-col justify-between">
-
-                        <div>
-
-                          <p className="uppercase tracking-[5px] text-[#D4AF37] text-xs mb-4">
+                          <p className="uppercase tracking-[4px] text-[#D4AF37] text-xs mb-3">
 
                             ANAMYST Luxury
 
                           </p>
 
-                          <h2 className="text-4xl font-bold text-white mb-4">
+                          <h2 className="text-2xl md:text-3xl font-bold mb-3">
 
                             {item.name}
 
                           </h2>
 
-                          <p className="text-gray-400 text-lg">
+                          <p className="text-gray-400 mb-5">
 
-                            Premium Luxury Fragrance
+                            Crafted for timeless elegance.
 
                           </p>
-
-                          {/* NOTES */}
-                          <div className="flex flex-wrap gap-3 mt-6">
-
-                            {item.notesTags?.map(
-                              (
-                                note,
-                                noteIndex
-                              ) => (
-
-                                <span
-                                  key={`${note}-${noteIndex}`}
-                                  className="bg-black text-[#D4AF37] border border-[#D4AF37]/30 px-4 py-2 rounded-full text-xs font-semibold tracking-wide"
-                                >
-
-                                  {note}
-
-                                </span>
-
-                              )
-                            )}
-
-                          </div>
-
-                          {/* RATING */}
-                          <div className="flex items-center gap-3 mt-6">
-
-                            <span className="text-[#D4AF37] text-lg">
-
-                              ★★★★★
-
-                            </span>
-
-                            <span className="text-gray-400">
-
-                              {item.rating ||
-                                4.8}
-
-                              {" "}
-                              (
-                              {item.reviews ||
-                                120}
-                              {" "}
-                              reviews)
-
-                            </span>
-
-                          </div>
 
                           {/* PRICE */}
-                          <div className="flex items-center gap-4 mt-6 flex-wrap">
 
-                            <p className="text-4xl font-bold text-white">
+                          <div className="flex items-center gap-4 mb-7">
 
-                              ₹{item.price}
+                            <p className="text-3xl font-bold">
+
+                              ₹{price}
 
                             </p>
 
-                            <p className="text-gray-500 line-through text-xl">
+                            <p className="text-gray-500 line-through">
 
                               ₹
-                              {item.oldPrice ||
-                                item.price +
-                                  500}
+                              {Number(
+                                item.oldPrice
+                              ) ||
+                                price + 500}
 
                             </p>
-
-                            <span className="text-green-400 font-semibold">
-
-                              In Stock
-
-                            </span>
 
                           </div>
 
-                          <p className="mt-5 text-gray-400">
+                          {/* ACTIONS */}
 
-                            🚚 Shipping Across India
+                          <div className="flex flex-wrap items-center justify-between gap-5">
 
-                          </p>
+                            {/* QUANTITY */}
 
-                        </div>
+                            <div className="flex items-center gap-3">
 
-                        {/* BOTTOM */}
-                        <div className="flex items-center justify-between flex-wrap gap-5 mt-10">
-
-                          {/* QUANTITY */}
-                          <div className="flex items-center gap-4">
-
-                            {/* DECREASE */}
-                            <button
-                              onClick={() => {
-
-                                if (
-                                  item.quantity === 1
-                                ) {
-
-                                  const confirmDelete =
-                                    confirm(
-                                      "Remove this item from cart?"
-                                    );
+                              <button
+                                onClick={() => {
 
                                   if (
-                                    confirmDelete
+                                    quantity === 1
                                   ) {
 
                                     removeFromCart(
                                       item._id
                                     );
 
-                                    loadCart();
+                                  } else {
+
+                                    updateQuantity(
+                                      item._id,
+                                      "decrease"
+                                    );
 
                                   }
 
-                                } else {
+                                  loadCart();
+
+                                }}
+                                className="w-10 h-10 rounded-xl bg-black border border-white/10 hover:bg-[#D4AF37] hover:text-black transition"
+                              >
+
+                                -
+
+                              </button>
+
+                              <span className="text-lg font-semibold">
+
+                                {quantity}
+
+                              </span>
+
+                              <button
+                                onClick={() => {
 
                                   updateQuantity(
                                     item._id,
-                                    "decrease"
+                                    "increase"
                                   );
 
                                   loadCart();
 
-                                }
+                                }}
+                                className="w-10 h-10 rounded-xl bg-black border border-white/10 hover:bg-[#D4AF37] hover:text-black transition"
+                              >
 
-                              }}
-                              className="w-12 h-12 rounded-2xl bg-black border border-white/10 text-white hover:bg-[#D4AF37] hover:text-black transition duration-300 text-xl"
-                            >
+                                +
 
-                              -
+                              </button>
 
-                            </button>
+                            </div>
 
-                            <span className="text-2xl font-bold text-white">
+                            {/* REMOVE */}
 
-                              {item.quantity}
-
-                            </span>
-
-                            {/* INCREASE */}
                             <button
                               onClick={() => {
 
-                                updateQuantity(
-                                  item._id,
-                                  "increase"
+                                removeFromCart(
+                                  item._id
                                 );
 
                                 loadCart();
 
                               }}
-                              className="w-12 h-12 rounded-2xl bg-black border border-white/10 text-white hover:bg-[#D4AF37] hover:text-black transition duration-300 text-xl"
+                              className="text-red-400 hover:text-red-300 transition text-sm"
                             >
 
-                              +
+                              Remove
 
                             </button>
 
-                          </div>
+                            {/* TOTAL */}
 
-                          {/* REMOVE */}
-                          <button
-                            onClick={() => {
+                            <div className="text-right">
 
-                              removeFromCart(
-                                item._id
-                              );
+                              <p className="text-gray-500 text-sm">
 
-                              loadCart();
+                                Total
 
-                            }}
-                            className="text-red-400 font-semibold hover:text-red-300 transition duration-300"
-                          >
+                              </p>
 
-                            Remove
+                              <p className="text-2xl font-bold">
 
-                          </button>
+                                ₹
+                                {price *
+                                  quantity}
 
-                          {/* TOTAL */}
-                          <div className="text-right">
+                              </p>
 
-                            <p className="text-gray-500">
-
-                              Total
-
-                            </p>
-
-                            <p className="text-3xl font-bold text-white">
-
-                              ₹
-                              {item.price *
-                                item.quantity}
-
-                            </p>
+                            </div>
 
                           </div>
 
@@ -420,27 +408,28 @@ export default function CartPage() {
 
                     </div>
 
-                  </div>
+                  );
 
-                )
+                }
               )}
 
             </div>
 
             {/* RIGHT */}
+
             <div>
 
-              <div className="bg-white/5 border border-white/10 rounded-[36px] p-8 sticky top-24 backdrop-blur-xl">
+              <div className="bg-[#0B0B0B] rounded-3xl p-7 sticky top-24 border border-white/10">
 
-                <h2 className="text-3xl font-bold mb-8 text-white">
+                <h2 className="text-2xl font-bold mb-7">
 
-                  Price Details
+                  Order Summary
 
                 </h2>
 
-                <div className="space-y-5">
+                <div className="space-y-4">
 
-                  <div className="flex justify-between text-gray-300 text-lg">
+                  <div className="flex justify-between text-gray-300">
 
                     <span>Total Items</span>
 
@@ -451,7 +440,9 @@ export default function CartPage() {
                         (sum, i) =>
 
                           sum +
-                          i.quantity,
+                          (Number(
+                            i.quantity
+                          ) || 1),
 
                         0
 
@@ -461,7 +452,7 @@ export default function CartPage() {
 
                   </div>
 
-                  <div className="flex justify-between text-gray-300 text-lg">
+                  <div className="flex justify-between text-gray-300">
 
                     <span>Total Price</span>
 
@@ -473,7 +464,7 @@ export default function CartPage() {
 
                   </div>
 
-                  <div className="flex justify-between text-gray-300 text-lg">
+                  <div className="flex justify-between text-gray-300">
 
                     <span>Shipping</span>
 
@@ -487,17 +478,17 @@ export default function CartPage() {
 
                 </div>
 
-                <hr className="my-8 border-white/10" />
+                <div className="border-t border-white/10 my-7" />
 
-                <div className="flex justify-between items-center mb-8">
+                <div className="flex justify-between items-center mb-7">
 
-                  <span className="text-2xl font-bold text-white">
+                  <span className="text-xl font-semibold">
 
                     Total
 
                   </span>
 
-                  <span className="text-4xl font-bold text-[#D4AF37]">
+                  <span className="text-3xl font-bold text-[#D4AF37]">
 
                     ₹{total}
 
@@ -505,8 +496,7 @@ export default function CartPage() {
 
                 </div>
 
-                {/* FEATURES */}
-                <div className="bg-black/40 border border-white/10 rounded-[24px] p-5 mb-8 space-y-4 text-gray-300">
+                <div className="bg-black rounded-2xl p-5 mb-7 space-y-3 text-gray-400 text-sm">
 
                   <p>
 
@@ -522,7 +512,7 @@ export default function CartPage() {
 
                   <p>
 
-                    💯 Authentic Luxury Fragrances
+                    ✨ Authentic Luxury Fragrances
 
                   </p>
 
@@ -530,7 +520,7 @@ export default function CartPage() {
 
                 <Link href="/checkout">
 
-                  <button className="w-full bg-[#D4AF37] text-black py-5 rounded-2xl hover:opacity-90 transition duration-300 text-lg font-semibold">
+                  <button className="w-full bg-[#D4AF37] text-black py-4 rounded-2xl hover:opacity-90 transition font-semibold">
 
                     Proceed to Checkout
 
@@ -549,17 +539,18 @@ export default function CartPage() {
       )}
 
       {/* SUGGESTIONS */}
-      <section className="px-6 pb-24">
+
+      <section className="px-6 pb-20 pt-8">
 
         <div className="max-w-7xl mx-auto">
 
-          <h2 className="text-4xl font-bold mb-12 text-white text-center">
+          <h2 className="text-3xl font-bold mb-8 text-center">
 
             You May Also Like
 
           </h2>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
 
             {products
               .slice(0, 4)

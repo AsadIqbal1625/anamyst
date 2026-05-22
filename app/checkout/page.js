@@ -1,8 +1,8 @@
-
 "use client";
 
 import {
   useEffect,
+  useMemo,
   useState,
 } from "react";
 
@@ -35,6 +35,10 @@ export default function CheckoutPage() {
     setPaymentMethod] =
     useState("RAZORPAY");
 
+  const [mounted,
+    setMounted] =
+    useState(false);
+
   const [form,
     setForm] =
     useState({
@@ -50,6 +54,8 @@ export default function CheckoutPage() {
     });
 
   useEffect(() => {
+
+    setMounted(true);
 
     const cartItems =
       getCart();
@@ -82,19 +88,32 @@ export default function CheckoutPage() {
 
   };
 
-  const total =
+  const total = useMemo(() => {
 
-    cart.reduce(
+    return cart.reduce(
 
-      (sum, item) =>
+      (sum, item) => {
 
-        sum +
-        item.price *
-        item.quantity,
+        const price =
+          Number(item.price) || 0;
+
+        const quantity =
+          Number(item.quantity) || 1;
+
+        return (
+          sum +
+          price * quantity
+        );
+
+      },
 
       0
 
     );
+
+  }, [cart]);
+
+  if (!mounted) return null;
 
   const placeOrder =
     async () => {
@@ -123,9 +142,7 @@ export default function CheckoutPage() {
 
         setLoading(true);
 
-        /* ===========================
-           CASH ON DELIVERY
-        =========================== */
+        /* COD */
 
         if (
           paymentMethod ===
@@ -156,26 +173,7 @@ export default function CheckoutPage() {
               form.pincode,
 
             products:
-              cart.map(
-                (item) => ({
-
-                  productId:
-                    item._id,
-
-                  name:
-                    item.name,
-
-                  image:
-                    item.image,
-
-                  quantity:
-                    item.quantity,
-
-                  price:
-                    item.price,
-
-                })
-              ),
+              cart,
 
             totalAmount:
               total,
@@ -220,32 +218,6 @@ export default function CheckoutPage() {
 
             clearCart();
 
-            /* WHATSAPP MESSAGE */
-
-            const message =
-
-              `🛍️ *NEW COD ORDER*%0A%0A` +
-
-              `Order ID: ${data.order.orderId}%0A` +
-
-              `Customer: ${form.name}%0A` +
-
-              `Phone: ${form.phone}%0A` +
-
-              `Address: ${form.address}, ${form.city}, ${form.state} - ${form.pincode}%0A%0A` +
-
-              `Total: ₹${total}%0A` +
-
-              `Payment: COD`;
-
-            window.open(
-
-              `https://wa.me/918840305018?text=${message}`,
-
-              "_blank"
-
-            );
-
             router.push(
 
               `/order-success?orderId=${data.order.orderId}`
@@ -258,21 +230,7 @@ export default function CheckoutPage() {
 
         }
 
-        /* ===========================
-           RAZORPAY
-        =========================== */
-
-        if (
-          !window.Razorpay
-        ) {
-
-          alert(
-            "Razorpay SDK failed to load"
-          );
-
-          return;
-
-        }
+        /* RAZORPAY */
 
         const razorpayRes =
           await fetch(
@@ -301,19 +259,6 @@ export default function CheckoutPage() {
         const razorpayData =
           await razorpayRes.json();
 
-        if (
-          !razorpayData.success
-        ) {
-
-          alert(
-            razorpayData.error ||
-            "Payment initialization failed"
-          );
-
-          return;
-
-        }
-
         const order =
           razorpayData.order;
 
@@ -341,242 +286,157 @@ export default function CheckoutPage() {
           order_id:
             order.id,
 
-          method: {
-
-            upi: true,
-
-            card: true,
-
-            netbanking: true,
-
-            wallet: true,
-
-          },
-
           handler:
             async function (
               response
             ) {
 
-              try {
+              const verifyRes =
+                await fetch(
 
-                /* VERIFY PAYMENT */
+                  "/api/verify-payment",
 
-                const verifyRes =
-                  await fetch(
+                  {
 
-                    "/api/verify-payment",
+                    method: "POST",
 
-                    {
+                    headers: {
 
-                      method: "POST",
+                      "Content-Type":
+                        "application/json",
 
-                      headers: {
+                    },
 
-                        "Content-Type":
-                          "application/json",
+                    body:
+                      JSON.stringify({
 
-                      },
+                        razorpay_order_id:
+                          response
+                            .razorpay_order_id,
 
-                      body:
-                        JSON.stringify({
+                        razorpay_payment_id:
+                          response
+                            .razorpay_payment_id,
 
-                          razorpay_order_id:
-                            response
-                              .razorpay_order_id,
+                        razorpay_signature:
+                          response
+                            .razorpay_signature,
 
-                          razorpay_payment_id:
-                            response
-                              .razorpay_payment_id,
+                      }),
 
-                          razorpay_signature:
-                            response
-                              .razorpay_signature,
+                  }
 
-                        }),
-
-                    }
-
-                  );
-
-                const verifyData =
-                  await verifyRes.json();
-
-                if (
-                  !verifyData.success
-                ) {
-
-                  alert(
-                    "Payment verification failed"
-                  );
-
-                  return;
-
-                }
-
-                /* SAVE ORDER */
-
-                const orderData = {
-
-                  customerName:
-                    form.name,
-
-                  email:
-                    form.email,
-
-                  phone:
-                    form.phone,
-
-                  address:
-                    form.address,
-
-                  city:
-                    form.city,
-
-                  state:
-                    form.state,
-
-                  pincode:
-                    form.pincode,
-
-                  products:
-                    cart.map(
-                      (item) => ({
-
-                        productId:
-                          item._id,
-
-                        name:
-                          item.name,
-
-                        image:
-                          item.image,
-
-                        quantity:
-                          item.quantity,
-
-                        price:
-                          item.price,
-
-                      })
-                    ),
-
-                  totalAmount:
-                    total,
-
-                  paymentMethod:
-                    "RAZORPAY",
-
-                  razorpayOrderId:
-                    response
-                      .razorpay_order_id,
-
-                  paymentId:
-                    response
-                      .razorpay_payment_id,
-
-                  paymentStatus:
-                    "Paid",
-
-                  orderStatus:
-                    "Pending",
-
-                };
-
-                const res =
-                  await fetch(
-                    "/api/orders",
-                    {
-
-                      method:
-                        "POST",
-
-                      headers: {
-
-                        "Content-Type":
-                          "application/json",
-
-                      },
-
-                      body:
-                        JSON.stringify(
-                          orderData
-                        ),
-
-                    }
-                  );
-
-                const data =
-                  await res.json();
-
-                if (
-                  data.success
-                ) {
-
-                  clearCart();
-
-                  /* WHATSAPP MESSAGE */
-
-                  const message =
-
-                    `💳 *NEW PAID ORDER*%0A%0A` +
-
-                    `Order ID: ${data.order.orderId}%0A` +
-
-                    `Customer: ${form.name}%0A` +
-
-                    `Phone: ${form.phone}%0A` +
-
-                    `Total: ₹${total}%0A` +
-
-                    `Payment: Paid Online`;
-
-                  window.open(
-
-                    `https://wa.me/918840305018?text=${message}`,
-
-                    "_blank"
-
-                  );
-
-                  router.push(
-
-                    `/order-success?orderId=${data.order.orderId}`
-
-                  );
-
-                } else {
-
-                  alert(
-                    "Order save failed"
-                  );
-
-                }
-
-              } catch (error) {
-
-                console.log(
-                  error
                 );
 
+              const verifyData =
+                await verifyRes.json();
+
+              if (
+                !verifyData.success
+              ) {
+
                 alert(
-                  "Payment success but order save failed"
+                  "Payment verification failed"
+                );
+
+                return;
+
+              }
+
+              const orderData = {
+
+                customerName:
+                  form.name,
+
+                email:
+                  form.email,
+
+                phone:
+                  form.phone,
+
+                address:
+                  form.address,
+
+                city:
+                  form.city,
+
+                state:
+                  form.state,
+
+                pincode:
+                  form.pincode,
+
+                products:
+                  cart,
+
+                totalAmount:
+                  total,
+
+                paymentMethod:
+                  "RAZORPAY",
+
+                razorpayOrderId:
+                  response
+                    .razorpay_order_id,
+
+                paymentId:
+                  response
+                    .razorpay_payment_id,
+
+                paymentStatus:
+                  "Paid",
+
+                orderStatus:
+                  "Pending",
+
+              };
+
+              const res =
+                await fetch(
+                  "/api/orders",
+                  {
+
+                    method:
+                      "POST",
+
+                    headers: {
+
+                      "Content-Type":
+                        "application/json",
+
+                    },
+
+                    body:
+                      JSON.stringify(
+                        orderData
+                      ),
+
+                  }
+                );
+
+              const data =
+                await res.json();
+
+              if (
+                data.success
+              ) {
+
+                clearCart();
+
+                router.push(
+
+                  `/order-success?orderId=${data.order.orderId}`
+
                 );
 
               }
 
             },
 
-          modal: {
+          theme: {
 
-            ondismiss:
-              function () {
-
-                console.log(
-                  "Payment popup closed"
-                );
-
-              },
+            color:
+              "#D4AF37",
 
           },
 
@@ -593,42 +453,12 @@ export default function CheckoutPage() {
 
           },
 
-          theme: {
-
-            color:
-              "#D4AF37",
-
-          },
-
         };
 
         const paymentObject =
           new window.Razorpay(
             options
           );
-
-        paymentObject.on(
-
-          "payment.failed",
-
-          function (
-            response
-          ) {
-
-            console.log(
-              response
-            );
-
-            alert(
-
-              response.error
-                .description
-
-            );
-
-          }
-
-        );
 
         paymentObject.open();
 
@@ -657,30 +487,29 @@ export default function CheckoutPage() {
         strategy="lazyOnload"
       />
 
-      <div className="min-h-screen bg-black text-white overflow-hidden">
+      <div className="min-h-screen bg-black text-white">
 
-        <section className="relative px-6 py-16 border-b border-[#D4AF37]/20">
+        {/* HERO */}
 
-          <div className="absolute inset-0 bg-gradient-to-b from-[#D4AF37]/10 to-transparent" />
+        <section className="px-6 py-10">
 
-          <div className="relative max-w-6xl mx-auto text-center">
+          <div className="max-w-6xl mx-auto text-center">
 
-            <p className="uppercase tracking-[6px] text-[#D4AF37] text-xs mb-5">
+            <p className="uppercase tracking-[5px] text-[#D4AF37] text-xs mb-4">
 
               ANAMYST Checkout
 
             </p>
 
-            <h1 className="text-5xl md:text-6xl font-bold mb-6">
+            <h1 className="text-4xl md:text-5xl font-bold mb-4">
 
               Secure Checkout
 
             </h1>
 
-            <p className="text-gray-300 text-lg max-w-2xl mx-auto leading-8">
+            <p className="text-gray-400 max-w-2xl mx-auto">
 
-              Complete your luxury fragrance order
-              with confidence and secure checkout.
+              Complete your luxury fragrance order with secure payment and fast delivery.
 
             </p>
 
@@ -688,74 +517,80 @@ export default function CheckoutPage() {
 
         </section>
 
-        <section className="px-4 md:px-6 py-14">
+        {/* MAIN */}
 
-          <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <section className="px-4 md:px-6 pb-16">
+
+          <div className="max-w-7xl mx-auto bg-[#0B0B0B] rounded-[32px] overflow-hidden grid lg:grid-cols-3">
 
             {/* LEFT */}
-            <div className="lg:col-span-2 bg-white/5 border border-white/10 rounded-[36px] backdrop-blur-xl p-6 md:p-8">
 
-              <h2 className="text-4xl font-bold text-white mb-10">
+            <div className="lg:col-span-2 p-6 md:p-10 border-b lg:border-b-0 lg:border-r border-white/10">
+
+              <h2 className="text-3xl font-bold mb-8">
 
                 Billing Details
 
               </h2>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="grid md:grid-cols-2 gap-5">
 
-                <input
-                  type="text"
-                  name="name"
-                  placeholder="Full Name"
-                  value={form.name}
-                  onChange={handleChange}
-                  className="bg-black/40 border border-white/10 rounded-2xl px-5 py-4 outline-none focus:border-[#D4AF37] text-white"
-                />
+                {[
+                  {
+                    name: "name",
+                    placeholder:
+                      "Full Name",
+                  },
 
-                <input
-                  type="text"
-                  name="phone"
-                  placeholder="Phone Number"
-                  value={form.phone}
-                  onChange={handleChange}
-                  className="bg-black/40 border border-white/10 rounded-2xl px-5 py-4 outline-none focus:border-[#D4AF37] text-white"
-                />
+                  {
+                    name: "phone",
+                    placeholder:
+                      "Phone Number",
+                  },
 
-                <input
-                  type="email"
-                  name="email"
-                  placeholder="Email Address"
-                  value={form.email}
-                  onChange={handleChange}
-                  className="bg-black/40 border border-white/10 rounded-2xl px-5 py-4 outline-none focus:border-[#D4AF37] text-white"
-                />
+                  {
+                    name: "email",
+                    placeholder:
+                      "Email Address",
+                  },
 
-                <input
-                  type="text"
-                  name="city"
-                  placeholder="City"
-                  value={form.city}
-                  onChange={handleChange}
-                  className="bg-black/40 border border-white/10 rounded-2xl px-5 py-4 outline-none focus:border-[#D4AF37] text-white"
-                />
+                  {
+                    name: "city",
+                    placeholder:
+                      "City",
+                  },
 
-                <input
-                  type="text"
-                  name="state"
-                  placeholder="State"
-                  value={form.state}
-                  onChange={handleChange}
-                  className="bg-black/40 border border-white/10 rounded-2xl px-5 py-4 outline-none focus:border-[#D4AF37] text-white"
-                />
+                  {
+                    name: "state",
+                    placeholder:
+                      "State",
+                  },
 
-                <input
-                  type="text"
-                  name="pincode"
-                  placeholder="Pincode"
-                  value={form.pincode}
-                  onChange={handleChange}
-                  className="bg-black/40 border border-white/10 rounded-2xl px-5 py-4 outline-none focus:border-[#D4AF37] text-white"
-                />
+                  {
+                    name: "pincode",
+                    placeholder:
+                      "Pincode",
+                  },
+
+                ].map((field) => (
+
+                  <input
+                    key={field.name}
+                    type="text"
+                    name={field.name}
+                    placeholder={
+                      field.placeholder
+                    }
+                    value={
+                      form[field.name]
+                    }
+                    onChange={
+                      handleChange
+                    }
+                    className="bg-black border border-white/10 rounded-2xl px-5 py-3 outline-none focus:border-[#D4AF37] transition"
+                  />
+
+                ))}
 
               </div>
 
@@ -765,170 +600,172 @@ export default function CheckoutPage() {
                 value={form.address}
                 onChange={handleChange}
                 rows={5}
-                className="w-full bg-black/40 border border-white/10 rounded-2xl px-5 py-4 outline-none focus:border-[#D4AF37] text-white mt-6"
+                className="w-full mt-5 bg-black border border-white/10 rounded-2xl px-5 py-3 outline-none focus:border-[#D4AF37]"
               />
 
             </div>
 
             {/* RIGHT */}
-            <div>
 
-              <div className="bg-white/5 border border-white/10 rounded-[36px] backdrop-blur-xl p-6 sticky top-24">
+            <div className="p-6 md:p-8 bg-black/40">
 
-                <h2 className="text-3xl font-bold text-white mb-8">
+              <h2 className="text-2xl font-bold mb-8">
 
-                  Order Summary
+                Order Summary
 
-                </h2>
+              </h2>
 
-                <div className="space-y-5">
+              <div className="space-y-5">
 
-                  {cart.map(
-                    (
-                      item,
-                      index
-                    ) => (
+                {cart.map(
+                  (
+                    item,
+                    index
+                  ) => (
 
-                      <div
-                        key={`${item._id}-${index}`}
-                        className="flex gap-4 border-b border-white/10 pb-5"
-                      >
+                    <div
+                      key={`${item._id}-${index}`}
+                      className="flex gap-4"
+                    >
 
-                        <div className="bg-black/40 rounded-2xl overflow-hidden">
+                      <div className="bg-[#111] rounded-2xl overflow-hidden shrink-0">
 
-                          <Image
-                            src={item.image}
-                            alt={item.name}
-                            width={90}
-                            height={90}
-                            loading="lazy"
-                            sizes="(max-width: 768px) 100vw, 50vw"
-                            className="object-contain"
-                          />
-
-                        </div>
-
-                        <div className="flex-1">
-
-                          <h3 className="text-white font-semibold text-lg">
-
-                            {item.name}
-
-                          </h3>
-
-                          <p className="text-gray-400 text-sm">
-
-                            Qty: {item.quantity}
-
-                          </p>
-
-                          <p className="text-[#D4AF37] font-bold mt-2 text-lg">
-
-                            ₹
-                            {item.price *
-                              item.quantity}
-
-                          </p>
-
-                        </div>
+                        <Image
+                          src={item.image}
+                          alt={item.name}
+                          width={72}
+                          height={72}
+                          loading="lazy"
+                          sizes="(max-width: 768px) 100vw, 50vw"
+                          className="object-contain"
+                        />
 
                       </div>
 
-                    )
-                  )}
+                      <div className="flex-1">
 
-                </div>
+                        <h3 className="font-semibold">
 
-                {/* PAYMENT METHODS */}
+                          {item.name}
 
-                <div className="mt-8">
+                        </h3>
 
-                  <h3 className="text-2xl font-bold text-white mb-5">
+                        <p className="text-sm text-gray-400">
 
-                    Payment Method
+                          Qty:
+                          {" "}
+                          {item.quantity}
 
-                  </h3>
+                        </p>
 
-                  <div className="grid gap-4">
+                        <p className="text-[#D4AF37] font-bold mt-1">
+
+                          ₹
+                          {Number(
+                            item.price
+                          ) *
+                            Number(
+                              item.quantity
+                            )}
+
+                        </p>
+
+                      </div>
+
+                    </div>
+
+                  )
+                )}
+
+              </div>
+
+              {/* PAYMENT */}
+
+              <div className="mt-10">
+
+                <h3 className="text-xl font-bold mb-4">
+
+                  Payment Method
+
+                </h3>
+
+                <div className="space-y-4">
+
+                  {[
+                    {
+                      id:
+                        "RAZORPAY",
+
+                      title:
+                        "Pay Online",
+
+                      desc:
+                        "UPI, Cards & Netbanking",
+                    },
+
+                    {
+                      id: "COD",
+
+                      title:
+                        "Cash On Delivery",
+
+                      desc:
+                        "Pay after delivery",
+                    },
+
+                  ].map((method) => (
 
                     <button
+                      key={method.id}
                       type="button"
                       onClick={() =>
                         setPaymentMethod(
-                          "RAZORPAY"
+                          method.id
                         )
                       }
-                      className={`border rounded-2xl p-5 text-left transition ${
+                      className={`w-full rounded-2xl p-4 text-left border transition ${
                         paymentMethod ===
-                        "RAZORPAY"
+                        method.id
 
                           ? "border-[#D4AF37] bg-[#D4AF37]/10"
 
-                          : "border-white/10 bg-black/30"
+                          : "border-white/10 bg-black"
                       }`}
                     >
 
-                      <h4 className="text-xl font-semibold text-white">
+                      <h4 className="font-semibold">
 
-                        Pay Online
+                        {method.title}
 
                       </h4>
 
-                      <p className="text-gray-400 mt-2">
+                      <p className="text-sm text-gray-400 mt-1">
 
-                        UPI, Cards,
-                        Netbanking
+                        {method.desc}
 
                       </p>
 
                     </button>
 
-                    <button
-                      type="button"
-                      onClick={() =>
-                        setPaymentMethod(
-                          "COD"
-                        )
-                      }
-                      className={`border rounded-2xl p-5 text-left transition ${
-                        paymentMethod ===
-                        "COD"
-
-                          ? "border-[#D4AF37] bg-[#D4AF37]/10"
-
-                          : "border-white/10 bg-black/30"
-                      }`}
-                    >
-
-                      <h4 className="text-xl font-semibold text-white">
-
-                        Cash On Delivery
-
-                      </h4>
-
-                      <p className="text-gray-400 mt-2">
-
-                        Pay when order arrives
-
-                      </p>
-
-                    </button>
-
-                  </div>
+                  ))}
 
                 </div>
 
-                {/* TOTAL */}
+              </div>
 
-                <div className="flex items-center justify-between mt-8">
+              {/* TOTAL */}
 
-                  <span className="text-2xl font-bold text-white">
+              <div className="border-t border-white/10 mt-10 pt-6">
+
+                <div className="flex items-center justify-between">
+
+                  <span className="text-xl font-semibold">
 
                     Total
 
                   </span>
 
-                  <span className="text-4xl font-bold text-[#D4AF37]">
+                  <span className="text-3xl font-bold text-[#D4AF37]">
 
                     ₹{total}
 
@@ -936,12 +773,10 @@ export default function CheckoutPage() {
 
                 </div>
 
-                {/* BUTTON */}
-
                 <button
                   onClick={placeOrder}
                   disabled={loading}
-                  className="w-full mt-8 bg-[#D4AF37] text-black py-5 rounded-2xl text-lg font-bold hover:opacity-90 transition"
+                  className="w-full mt-6 bg-[#D4AF37] text-black py-4 rounded-2xl font-semibold hover:opacity-90 transition"
                 >
 
                   {loading

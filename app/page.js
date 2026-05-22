@@ -39,13 +39,13 @@ export default function Home() {
         </video>
 
         {/* OVERLAY */}
-        <div className="absolute inset-0 bg-black/60 z-0" />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/50 to-black z-0" />
 
         {/* CONTENT */}
         <div className="relative z-10 flex flex-col items-center justify-center min-h-[100dvh] px-6 text-center">
 
           {/* TITLE */}
-          <h1 className="text-white text-5xl sm:text-7xl md:text-8xl font-bold tracking-[0.15em] leading-tight">
+          <h1 className="text-white text-5xl sm:text-7xl md:text-8xl font-semibold tracking-[0.25em] leading-tight">
 
             ANAMYST
 
@@ -61,7 +61,7 @@ export default function Home() {
           {/* BUTTON */}
           <Link href="/shop">
 
-            <button className="mt-10 bg-[#D4AF37] hover:bg-[#c19b2e] text-black text-lg sm:text-xl px-8 sm:px-10 py-4 sm:py-5 rounded-2xl shadow-2xl transition-all duration-300 hover:scale-105 font-semibold">
+            <button className="mt-10 bg-[#D4AF37] hover:bg-[#c19b2e] text-black text-lg sm:text-xl px-8 sm:px-10 py-4 sm:py-5 rounded-full shadow-2xl transition-all duration-500 hover:scale-105 font-semibold tracking-wide">
 
               Explore Collection
 
@@ -332,7 +332,7 @@ export default function Home() {
 
             <Link href="/shop">
 
-              <button className="bg-[#D4AF37] hover:bg-[#c19b2e] text-black px-10 py-5 rounded-2xl text-lg font-bold transition duration-300 hover:scale-105">
+              <button className="mt-10 bg-[#D4AF37] hover:bg-[#c19b2e] text-black text-lg sm:text-xl px-8 sm:px-10 py-4 sm:py-5 rounded-full shadow-2xl transition-all duration-500 hover:scale-105 font-semibold tracking-wide">
 
                 Explore All Collections
 
@@ -345,6 +345,95 @@ export default function Home() {
         </div>
 
       </section>
+              {/* WHY CHOOSE ANAMYST */}
+        <section className="px-6 py-24 border-t border-white/10 bg-gradient-to-b from-black to-[#0b0b0b]">
+
+          <div className="max-w-7xl mx-auto">
+
+            {/* HEADER */}
+            <div className="text-center mb-16">
+
+              <p className="uppercase tracking-[6px] text-[#D4AF37] text-xs mb-5">
+
+                Why Choose Us
+
+              </p>
+
+              <h2 className="text-4xl md:text-6xl font-bold mb-6">
+
+                The ANAMYST Experience
+
+              </h2>
+
+              <p className="text-gray-400 text-lg max-w-3xl mx-auto leading-9">
+
+                Crafted with premium fragrance oils, luxury presentation,
+                and timeless elegance for unforgettable impressions.
+
+              </p>
+
+            </div>
+
+            {/* FEATURES */}
+            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-8">
+
+              {[
+                {
+                  title: "Authentic Luxury",
+                  desc: "Premium perfumes and attars crafted with high-quality fragrance oils.",
+                },
+                {
+                  title: "Long Lasting",
+                  desc: "Designed for lasting presence throughout your day and evenings.",
+                },
+                {
+                  title: "Luxury Packaging",
+                  desc: "Elegant packaging created for premium gifting experiences.",
+                },
+                {
+                  title: "Secure Checkout",
+                  desc: "Fast, secure payments and reliable nationwide delivery.",
+                },
+              ].map((item, index) => (
+
+                <div
+                  key={index}
+                  className="group bg-white/5 border border-white/10 rounded-[32px] p-10 hover:border-[#D4AF37]/40 transition duration-500 relative overflow-hidden"
+                >
+
+                  <div className="absolute inset-0 bg-gradient-to-br from-[#D4AF37]/10 to-transparent opacity-0 group-hover:opacity-100 transition duration-500" />
+
+                  <div className="relative z-10">
+
+                    <div className="w-14 h-14 rounded-full bg-[#D4AF37]/10 border border-[#D4AF37]/30 flex items-center justify-center text-[#D4AF37] text-2xl mb-6">
+
+                      ✦
+
+                    </div>
+
+                    <h3 className="text-2xl font-bold mb-5">
+
+                      {item.title}
+
+                    </h3>
+
+                    <p className="text-gray-400 leading-8">
+
+                      {item.desc}
+
+                    </p>
+
+                  </div>
+
+                </div>
+
+              ))}
+
+            </div>
+
+          </div>
+
+        </section>
 
     </main>
 
