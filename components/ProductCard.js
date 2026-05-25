@@ -72,16 +72,35 @@ export default function ProductCard({ product }) {
 
               </div>
 
-          {/* RATINGS */}
-          <div className="flex items-center gap-2 mt-4">
+        {/* RATING */}
+          <div className="flex items-center gap-1 mt-4">
 
-            <div className="text-yellow-500 text-sm">
-              ★★★★★
-            </div>
+            {[1, 2, 3, 4, 5].map((star) => (
 
-            <span className="text-gray-600 text-sm">
+              <span
+                key={star}
+                className={`text-sm
 
-              {product.rating} ({product.reviews} reviews)
+                ${
+                  star <= product.rating
+
+                    ? "text-[#D4AF37]"
+
+                    : "text-gray-600"
+                }
+                `}
+              >
+
+                ★
+
+              </span>
+
+            ))}
+
+            {/* REVIEW COUNT */}
+            <span className="text-gray-500 text-xs ml-2">
+
+              ({product.reviews || 0})
 
             </span>
 
