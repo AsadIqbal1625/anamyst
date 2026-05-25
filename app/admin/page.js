@@ -27,6 +27,7 @@ export default function AdminPage() {
     oldPrice: "",
     image: "",
     category: "",
+    genderCategory: "",
     notesTags: "",
     badge: "",
     tag: "",
@@ -574,6 +575,43 @@ export default function AdminPage() {
                 </select>
 
               </div>
+
+              {/* GENDER CATEGORY */}
+            <div>
+
+              <label className="block text-white font-semibold mb-3">
+
+                Gender Category
+
+              </label>
+
+              <select
+                name="genderCategory"
+                value={form.genderCategory}
+                onChange={handleChange}
+                className="w-full border border-white/10 bg-black/40 text-white rounded-2xl px-5 py-4 outline-none focus:border-[#D4AF37]"
+                required
+              >
+
+                <option value="">
+                  Select Gender
+                </option>
+
+                <option value="Men">
+                  Men
+                </option>
+
+                <option value="Women">
+                  Women
+                </option>
+
+                <option value="Unisex">
+                  Unisex
+                </option>
+
+              </select>
+
+            </div>
 
               {/* NOTES */}
               <input

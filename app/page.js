@@ -75,7 +75,7 @@ export default function Home() {
 
       {/* SHOP BY COLLECTION */}
       <section className="relative px-6 py-24 border-t border-white/10">
-
+       
         {/* BACKGROUND GLOW */}
         <div className="absolute inset-0 bg-gradient-to-b from-[#D4AF37]/5 to-transparent pointer-events-none" />
 

@@ -30,6 +30,10 @@ const ProductSchema =
         type: String,
       },
 
+      genderCategory: {
+        type: String,
+      },
+
       notesTags: [
         {
           type: String,

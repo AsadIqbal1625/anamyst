@@ -7,8 +7,9 @@ import {
   useEffect,
 } from "react";
 
-import { useSearchParams }
-from "next/navigation";
+import {
+  useSearchParams,
+} from "next/navigation";
 
 import ProductCard
 from "../../components/ProductCard";
@@ -19,14 +20,21 @@ function ShopContent() {
     useSearchParams();
 
   const search =
-
     searchParams
       .get("search")
       ?.toLowerCase() || "";
 
-  const [selectedCategory,
-    setSelectedCategory] =
-    useState("All");
+  /* CATEGORY FILTER */
+  const [
+    selectedCategory,
+    setSelectedCategory,
+  ] = useState("All");
+
+  /* GENDER FILTER */
+  const [
+    selectedGender,
+    setSelectedGender,
+  ] = useState("All");
 
   const [products,
     setProducts] =
@@ -67,56 +75,77 @@ function ShopContent() {
 
   }, []);
 
-  /* FILTER */
+  /* FILTER PRODUCTS */
   const filteredProducts =
     useMemo(() => {
 
       return products.filter(
         (product) => {
 
+          /* CATEGORY MATCH */
           const matchesCategory =
 
-            selectedCategory ===
-              "All" ||
+            selectedCategory === "All" ||
 
             product.category
-              .toLowerCase() ===
+              ?.toLowerCase() ===
             selectedCategory
               .toLowerCase();
 
+          /* GENDER MATCH */
+          const matchesGender =
+
+            selectedGender === "All" ||
+
+            product.genderCategory
+              ?.toLowerCase() ===
+            selectedGender
+              .toLowerCase();
+
+          /* SEARCH MATCH */
           const matchesSearch =
 
             product.name
-              .toLowerCase()
+              ?.toLowerCase()
               .includes(search) ||
 
             product.description
-              .toLowerCase()
+              ?.toLowerCase()
               .includes(search) ||
 
             product.category
-              .toLowerCase()
+              ?.toLowerCase()
               .includes(search) ||
 
-            product.notesTags.some(
+            product.genderCategory
+              ?.toLowerCase()
+              .includes(search) ||
+
+            product.notesTags?.some(
               (tag) =>
                 tag
-                  .toLowerCase()
+                  ?.toLowerCase()
                   .includes(search)
             );
 
           return (
+
             matchesCategory &&
+            matchesGender &&
             matchesSearch
+
           );
 
         }
       );
 
     }, [
+
       products,
       search,
       selectedCategory,
+      selectedGender,
+
     ]);
 
   return (
@@ -155,46 +184,165 @@ function ShopContent() {
       </section>
 
       {/* FILTERS */}
-      <section className="px-6 py-10">
+        <section className="px-6 py-10">
 
-        <div className="max-w-6xl mx-auto flex flex-wrap justify-center gap-4">
+          {/* DESKTOP FILTERS */}
+          <div className="hidden md:flex flex-col items-center gap-5">
 
-          {[
-            "All",
-            "Men",
-            "Women",
-            "Unisex",
-          ].map((cat) => (
+            {/* CATEGORY */}
+            <div className="flex items-center gap-3 bg-white/[0.03] border border-white/10 rounded-full px-3 py-2">
 
-            <button
-              key={cat}
-              onClick={() =>
-                setSelectedCategory(
-                  cat
-                )
-              }
-              className={`px-7 py-3 rounded-full border transition duration-300 text-sm uppercase tracking-wide
+              {[
+                "All",
+                "Perfumes",
+                "Attars",
+                "Fresheners",
+                "Premium Gifts",
+                "Combos",
+              ].map((cat) => (
 
-              ${
-                selectedCategory ===
-                cat
+                <button
+                  key={cat}
+                  onClick={() =>
+                    setSelectedCategory(cat)
+                  }
+                  className={`px-5 py-2 rounded-full text-xs uppercase tracking-[0.18em] transition-all duration-300
 
-                  ? "bg-[#D4AF37] text-black border-[#D4AF37]"
+                  ${
+                    selectedCategory === cat
 
-                  : "bg-white/5 text-white border-white/10 hover:border-[#D4AF37]"
-              }
-              `}
-            >
+                      ? "bg-[#D4AF37] text-black"
 
-              {cat}
+                      : "text-gray-400 hover:text-white"
+                  }
+                  `}
+                >
 
-            </button>
+                  {cat}
 
-          ))}
+                </button>
 
-        </div>
+              ))}
 
-      </section>
+            </div>
+
+            {/* GENDER */}
+            <div className="flex items-center gap-3 bg-white/[0.03] border border-white/10 rounded-full px-3 py-2">
+
+              {[
+                "All",
+                "Men",
+                "Women",
+                "Unisex",
+              ].map((gender) => (
+
+                <button
+                  key={gender}
+                  onClick={() =>
+                    setSelectedGender(gender)
+                  }
+                  className={`px-5 py-2 rounded-full text-xs uppercase tracking-[0.18em] transition-all duration-300
+
+                  ${
+                    selectedGender === gender
+
+                      ? "bg-[#D4AF37] text-black"
+
+                      : "text-gray-400 hover:text-white"
+                  }
+                  `}
+                >
+
+                  {gender}
+
+                </button>
+
+              ))}
+
+            </div>
+
+          </div>
+              {/* MOBILE FILTERS */}
+          <div className="md:hidden flex flex-col items-center gap-5 px-2">
+
+            {/* CATEGORY */}
+            <div className="flex flex-wrap justify-center gap-3 max-w-sm">
+
+              {[
+                "All",
+                "Perfumes",
+                "Attars",
+                "Fresheners",
+                "Premium Gifts",
+                "Combos",
+              ].map((cat) => (
+
+                <button
+                  key={cat}
+                  onClick={() =>
+                    setSelectedCategory(cat)
+                  }
+                  className={`px-4 py-2 rounded-full text-[10px] uppercase tracking-[0.18em] transition-all duration-300 border
+
+                  ${
+                    selectedCategory === cat
+
+                      ? "bg-[#D4AF37] text-black border-[#D4AF37]"
+
+                      : "bg-white/[0.03] text-gray-400 border-white/10"
+                  }
+                  `}
+                >
+
+                  {cat}
+
+                </button>
+
+              ))}
+
+            </div>
+
+            {/* GENDER */}
+            <div className="flex items-center justify-center gap-2 bg-white/[0.03] border border-white/10 rounded-full px-2 py-2">
+
+              {[
+                "All",
+                "Men",
+                "Women",
+                "Unisex",
+              ].map((gender) => (
+
+                <button
+                  key={gender}
+                  onClick={() =>
+                    setSelectedGender(
+                      gender
+                    )
+                  }
+                  className={`px-4 py-2 rounded-full text-[10px] uppercase tracking-[0.18em] transition-all duration-300
+
+                  ${
+                    selectedGender === gender
+
+                      ? "bg-[#D4AF37] text-black"
+
+                      : "text-gray-400"
+                  }
+                  `}
+                >
+
+                  {gender}
+
+                </button>
+
+              ))}
+
+            </div>
+
+          </div>
+          
+
+        </section>
 
       {/* SEARCH RESULT */}
       {search && (
