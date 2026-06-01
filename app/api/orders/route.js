@@ -76,13 +76,15 @@ export async function POST(req) {
 
       });
 
-    return Response.json({
+    await sendOrderEmail(order);
 
-      success: true,
+        return Response.json({
 
-      order,
+          success: true,
 
-    });
+          order,
+
+        });
 
   } catch (error) {
 
