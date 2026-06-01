@@ -1,6 +1,8 @@
 import { connectDB }
 from "../../../lib/mongodb";
-
+import {
+  sendOrderEmail,
+} from "../../../lib/sendOrderEmail";
 import Order
 from "../../../models/Order";
 
@@ -16,6 +18,7 @@ export async function GET() {
         .sort({
           createdAt: -1,
         });
+        await sendOrderEmail(order);
 
     return Response.json({
 
@@ -24,6 +27,7 @@ export async function GET() {
       orders,
 
     });
+    
 
   } catch (error) {
 
