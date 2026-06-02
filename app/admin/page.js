@@ -21,21 +21,31 @@ export default function AdminPage() {
 
   const emptyForm = {
 
-    name: "",
-    description: "",
-    price: "",
-    oldPrice: "",
-    image: "",
-    category: "",
-    genderCategory: "",
-    notesTags: "",
-    badge: "",
-    tag: "",
-    rating: "",
-    reviews: "",
-    stock: "",
+      name: "",
+      description: "",
+      price: "",
+      oldPrice: "",
+      image: "",
+      category: "",
+      genderCategory: "",
+      notesTags: "",
 
-  };
+      topNotes: "",
+      heartNotes: "",
+      baseNotes: "",
+
+      longevity: "",
+      projection: "",
+      occasion: "",
+      season: "",
+
+      badge: "",
+      tag: "",
+      rating: "",
+      reviews: "",
+      stock: "",
+
+    };
 
   const [form,
     setForm] =
@@ -619,6 +629,75 @@ export default function AdminPage() {
                 name="notesTags"
                 placeholder="Woody, Oud, Luxury"
                 value={form.notesTags}
+                onChange={handleChange}
+                className="w-full border border-white/10 bg-black/40 text-white placeholder:text-gray-400 rounded-2xl px-5 py-4 outline-none focus:border-[#D4AF37]"
+              />
+              {/* TOP NOTES */}
+              <input
+                type="text"
+                name="topNotes"
+                placeholder="Top Notes (Bergamot, Lemon)"
+                value={form.topNotes}
+                onChange={handleChange}
+                className="w-full border border-white/10 bg-black/40 text-white placeholder:text-gray-400 rounded-2xl px-5 py-4 outline-none focus:border-[#D4AF37]"
+              />
+
+              {/* HEART NOTES */}
+              <input
+                type="text"
+                name="heartNotes"
+                placeholder="Heart Notes (Rose, Jasmine)"
+                value={form.heartNotes}
+                onChange={handleChange}
+                className="w-full border border-white/10 bg-black/40 text-white placeholder:text-gray-400 rounded-2xl px-5 py-4 outline-none focus:border-[#D4AF37]"
+              />
+
+              {/* BASE NOTES */}
+              <input
+                type="text"
+                name="baseNotes"
+                placeholder="Base Notes (Oud, Amber, Musk)"
+                value={form.baseNotes}
+                onChange={handleChange}
+                className="w-full border border-white/10 bg-black/40 text-white placeholder:text-gray-400 rounded-2xl px-5 py-4 outline-none focus:border-[#D4AF37]"
+              />
+
+              {/* LONGEVITY */}
+              <input
+                type="text"
+                name="longevity"
+                placeholder="Longevity (8-10 Hours)"
+                value={form.longevity}
+                onChange={handleChange}
+                className="w-full border border-white/10 bg-black/40 text-white placeholder:text-gray-400 rounded-2xl px-5 py-4 outline-none focus:border-[#D4AF37]"
+              />
+
+              {/* PROJECTION */}
+              <input
+                type="text"
+                name="projection"
+                placeholder="Projection (Strong)"
+                value={form.projection}
+                onChange={handleChange}
+                className="w-full border border-white/10 bg-black/40 text-white placeholder:text-gray-400 rounded-2xl px-5 py-4 outline-none focus:border-[#D4AF37]"
+              />
+
+              {/* OCCASION */}
+              <input
+                type="text"
+                name="occasion"
+                placeholder="Occasion (Date Night, Office)"
+                value={form.occasion}
+                onChange={handleChange}
+                className="w-full border border-white/10 bg-black/40 text-white placeholder:text-gray-400 rounded-2xl px-5 py-4 outline-none focus:border-[#D4AF37]"
+              />
+
+              {/* SEASON */}
+              <input
+                type="text"
+                name="season"
+                placeholder="Season (Winter, Summer, All Season)"
+                value={form.season}
                 onChange={handleChange}
                 className="w-full border border-white/10 bg-black/40 text-white placeholder:text-gray-400 rounded-2xl px-5 py-4 outline-none focus:border-[#D4AF37]"
               />

@@ -263,7 +263,98 @@ export default function ProductPage() {
               )}
 
             </div>
+              {/* FRAGRANCE PROFILE */}
 
+            <div className="mb-10">
+
+              <h3 className="text-2xl font-bold text-white mb-6">
+
+                Fragrance Profile
+
+              </h3>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+
+                {product.topNotes && (
+                  <div className="bg-black/40 border border-[#D4AF37]/20 rounded-3xl p-5 hover:border-[#D4AF37]/50 transition duration-300">
+                    <p className="text-[#D4AF37] text-sm uppercase tracking-[3px] mb-2">
+                      Top Notes
+                    </p>
+                    <p className="text-white">
+                      {product.topNotes}
+                    </p>
+                  </div>
+                )}
+
+                {product.heartNotes && (
+                  <div className="bg-black/40 border border-[#D4AF37]/20 rounded-3xl p-5 hover:border-[#D4AF37]/50 transition duration-300">
+                    <p className="text-[#D4AF37] text-sm uppercase tracking-[3px] mb-2">
+                      Heart Notes
+                    </p>
+                    <p className="text-white">
+                      {product.heartNotes}
+                    </p>
+                  </div>
+                )}
+
+                {product.baseNotes && (
+                  <div className="bg-black/40 border border-[#D4AF37]/20 rounded-3xl p-5 hover:border-[#D4AF37]/50 transition duration-300">
+                    <p className="text-[#D4AF37] text-sm uppercase tracking-[3px] mb-2">
+                      Base Notes
+                    </p>
+                    <p className="text-white">
+                      {product.baseNotes}
+                    </p>
+                  </div>
+                )}
+
+                {product.longevity && (
+                  <div className="bg-black/40 border border-[#D4AF37]/20 rounded-3xl p-5 hover:border-[#D4AF37]/50 transition duration-300">
+                    <p className="text-[#D4AF37] text-sm uppercase tracking-[3px] mb-2">
+                      Longevity
+                    </p>
+                    <p className="text-white">
+                      {product.longevity}
+                    </p>
+                  </div>
+                )}
+
+                {product.projection && (
+                  <div className="bg-black/40 border border-[#D4AF37]/20 rounded-3xl p-5 hover:border-[#D4AF37]/50 transition duration-300">
+                    <p className="text-[#D4AF37] text-sm uppercase tracking-[3px] mb-2">
+                      Projection
+                    </p>
+                    <p className="text-white">
+                      {product.projection}
+                    </p>
+                  </div>
+                )}
+
+                {product.occasion && (
+                  <div className="bg-black/40 border border-[#D4AF37]/20 rounded-3xl p-5 hover:border-[#D4AF37]/50 transition duration-300">
+                    <p className="text-[#D4AF37] text-sm uppercase tracking-[3px] mb-2">
+                      Occasion
+                    </p>
+                    <p className="text-white">
+                      {product.occasion}
+                    </p>
+                  </div>
+                )}
+
+                {product.season && (
+                  <div className="bg-black/40 border border-[#D4AF37]/20 rounded-3xl p-5 hover:border-[#D4AF37]/50 transition duration-300">
+                    <p className="text-[#D4AF37] text-sm uppercase tracking-[3px] mb-2">
+                      Season
+                    </p>
+                    <p className="text-white">
+                      {product.season}
+                    </p>
+                  </div>
+                )}
+
+              </div>
+
+            </div>
             {/* PRICE */}
             <div className="flex items-center justify-between flex-wrap gap-4 mb-8">
 
