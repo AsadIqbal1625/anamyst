@@ -40,6 +40,43 @@ const ProductSchema =
         },
       ],
 
+      /* NEW FRAGRANCE PROFILE */
+
+      topNotes: {
+        type: String,
+        default: "",
+      },
+
+      heartNotes: {
+        type: String,
+        default: "",
+      },
+
+      baseNotes: {
+        type: String,
+        default: "",
+      },
+
+      longevity: {
+        type: String,
+        default: "",
+      },
+
+      projection: {
+        type: String,
+        default: "",
+      },
+
+      occasion: {
+        type: String,
+        default: "",
+      },
+
+      season: {
+        type: String,
+        default: "",
+      },
+
       badge: {
         type: String,
       },
