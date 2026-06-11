@@ -1,3 +1,41 @@
+const faqSchema = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Are ANAMYST fragrances long lasting?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. ANAMYST luxury fragrances are designed to provide long-lasting performance with premium-quality fragrance oils."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Do you ship across India?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. ANAMYST ships premium fragrances across India with secure packaging and reliable delivery."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Are your products authentic?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. Every ANAMYST product is an authentic luxury fragrance crafted with carefully selected ingredients."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How can I contact ANAMYST?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "You can contact ANAMYST through WhatsApp or the Contact page for fragrance recommendations and order support."
+      }
+    }
+  ]
+};
 export default function FAQPage() {
 
   const faqs = [
@@ -24,7 +62,15 @@ export default function FAQPage() {
 
   ];
 
-  return (
+return (
+  <>
+    <script
+      id="faq-schema"
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{
+        __html: JSON.stringify(faqSchema),
+      }}
+    />
 
     <div className="min-h-screen bg-gradient-to-br from-[#f5f5f5] via-[#faf7f2] to-[#f3f3f3] px-6 py-20">
 
@@ -72,7 +118,7 @@ export default function FAQPage() {
       </div>
 
     </div>
-
-  );
+  </>
+);
 
 }

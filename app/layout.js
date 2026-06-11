@@ -5,8 +5,38 @@ import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 
 export const metadata = {
-  title: "ANAMYST",
-  description: "Luxury Fragrance Store",
+  metadataBase: new URL("https://anamyst.com"),
+
+  title: "ANAMYST | Luxury Perfumes & Premium Fragrances India",
+
+  description:
+    "Discover premium luxury perfumes by ANAMYST. Long-lasting fragrances crafted for elegance, sophistication, and everyday luxury.",
+
+  openGraph: {
+    title: "ANAMYST | Luxury Perfumes & Premium Fragrances India",
+    description:
+      "Discover premium luxury perfumes by ANAMYST. Long-lasting fragrances crafted for elegance, sophistication, and everyday luxury.",
+    url: "https://anamyst.com",
+    siteName: "ANAMYST",
+    images: [
+      {
+        url: "/logo.jpeg",
+        width: 1200,
+        height: 630,
+        alt: "ANAMYST Luxury Fragrances",
+      },
+    ],
+    locale: "en_IN",
+    type: "website",
+  },
+
+  twitter: {
+    card: "summary_large_image",
+    title: "ANAMYST | Luxury Perfumes & Premium Fragrances India",
+    description:
+      "Discover premium luxury perfumes by ANAMYST.",
+    images: ["/logo.jpeg"],
+  },
 };
 
 export default function RootLayout({ children }) {
@@ -14,6 +44,34 @@ export default function RootLayout({ children }) {
     <html lang="en" data-scroll-behavior="smooth">
 
       <body className="min-h-screen flex flex-col bg-black text-white">
+
+                <script
+                 id="organization-schema"
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "Organization",
+              name: "ANAMYST",
+              url: "https://anamyst.com",
+              logo: "https://anamyst.com/logo.jpeg",
+              description:
+                "ANAMYST is a premium luxury fragrance brand offering long-lasting perfumes crafted for elegance and sophistication.",
+              email: "support@anamyst.com",
+              telephone: "+91-8840305018",
+              contactPoint: {
+                "@type": "ContactPoint",
+                telephone: "+91-8840305018",
+                contactType: "customer support",
+                areaServed: "IN",
+                availableLanguage: ["English", "Hindi"],
+              },
+              sameAs: [
+                "https://www.instagram.com/anamyst.in"
+              ],
+            }),
+          }}
+        />
 
         {/* NAVBAR */}
 
