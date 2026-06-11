@@ -76,7 +76,36 @@ if (!mongoose.Types.ObjectId.isValid(id)) {
       itemCondition: "https://schema.org/NewCondition",
     },
   };
-
+  const breadcrumbSchema = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  itemListElement: [
+    {
+      "@type": "ListItem",
+      position: 1,
+      name: "Home",
+      item: "https://anamyst.com",
+    },
+    {
+      "@type": "ListItem",
+      position: 2,
+      name: "Shop",
+      item: "https://anamyst.com/shop",
+    },
+    {
+      "@type": "ListItem",
+      position: 3,
+      name: product.category || "Products",
+      item: `https://anamyst.com/shop/${(product.category || "").toLowerCase().replace(/\s+/g, "-")}`,
+    },
+    {
+      "@type": "ListItem",
+      position: 4,
+      name: product.name,
+      item: `https://anamyst.com/product/${id}`,
+    },
+  ],
+};
   return (
     <>
       <script
@@ -86,7 +115,13 @@ if (!mongoose.Types.ObjectId.isValid(id)) {
           __html: JSON.stringify(productSchema),
         }}
       />
-
+          <script
+      id="breadcrumb-schema"
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{
+        __html: JSON.stringify(breadcrumbSchema),
+      }}
+    />
       <ProductClient productId={id} />
     </>
   );

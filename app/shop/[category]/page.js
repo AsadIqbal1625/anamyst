@@ -1,199 +1,47 @@
-"use client";
+import { connectDB } from "../../../lib/mongodb";
+import Product from "../../../models/Product";
+import CategoryClient from "./CategoryClient";
 
-import {
-  useEffect,
-  useState,
-} from "react";
+export async function generateMetadata({ params }) {
+  const { category } = await params;
 
-import Link from "next/link";
+  const categoryName = decodeURIComponent(category)
+    .replace(/-/g, " ")
+    .replace(/\b\w/g, (char) => char.toUpperCase());
 
-import { useParams }
-from "next/navigation";
+  return {
+    title: `${categoryName} | ANAMYST Luxury Fragrances`,
+    description: `Explore the ${categoryName} collection by ANAMYST. Discover premium luxury fragrances crafted for elegance and sophistication.`,
+    alternates: {
+      canonical: `https://anamyst.com/shop/${category}`,
+    },
+  };
+}
 
-import ProductCard
-from "../../../components/ProductCard";
+export default async function CategoryPage({ params }) {
+  const { category } = await params;
 
-export default function CategoryPage() {
+  await connectDB();
 
-  const params =
-    useParams();
+  const products = await Product.find({}).lean();
 
-  const [products,
-    setProducts] =
-    useState([]);
-
-  const [loading,
-    setLoading] =
-    useState(true);
-
-  const category =
-    decodeURIComponent(
-      params.category
-    );
-
-  /* FETCH PRODUCTS */
-  useEffect(() => {
-
-    async function fetchProducts() {
-
-      try {
-
-        const res =
-          await fetch(
-            "/api/products"
-          );
-
-        const data =
-          await res.json();
-
-        if (data.success) {
-
-          const filtered =
-            data.products.filter(
-              (product) =>
-
-                product.category
-                  ?.toLowerCase()
-                  .replace(/\s+/g, "-")
-
-                ===
-
-                category.toLowerCase()
-
-            );
-
-          setProducts(
-            filtered
-          );
-
-        }
-
-      } catch (error) {
-
-        console.log(error);
-
-      } finally {
-
-        setLoading(false);
-
-      }
-
-    }
-
-    fetchProducts();
-
-  }, [category]);
-
-  /* LOADING */
-  if (loading) {
-
-    return (
-
-      <div className="min-h-screen bg-black text-white flex items-center justify-center text-3xl font-bold">
-
-        Loading...
-
-      </div>
-
-    );
-
-  }
+  const filteredProducts = products
+    .filter(
+      (product) =>
+        product.category
+          ?.toLowerCase()
+          .replace(/\s+/g, "-") ===
+        decodeURIComponent(category).toLowerCase()
+    )
+    .map((product) => ({
+      ...product,
+      _id: product._id.toString(),
+    }));
 
   return (
-
-    <div className="min-h-screen bg-black text-white overflow-hidden">
-
-      {/* HERO */}
-      <section className="relative px-6 py-20 border-b border-[#D4AF37]/20">
-
-        <div className="absolute inset-0 bg-gradient-to-b from-[#D4AF37]/10 to-transparent" />
-
-        <div className="relative max-w-6xl mx-auto text-center">
-
-          <p className="uppercase tracking-[6px] text-[#D4AF37] text-xs mb-5">
-
-            ANAMYST Collection
-
-          </p>
-
-          <h1 className="text-5xl md:text-7xl font-bold mb-8 capitalize">
-
-            {category.replace(
-              /-/g,
-              " "
-            )}
-
-          </h1>
-
-          <p className="text-gray-300 text-lg max-w-3xl mx-auto leading-9">
-
-            Discover premium luxury
-            fragrance collections
-            crafted for timeless elegance.
-
-          </p>
-
-        </div>
-
-      </section>
-
-      {/* PRODUCTS */}
-      <section className="px-6 py-16">
-
-        <div className="max-w-7xl mx-auto">
-
-          {products.length === 0 ? (
-
-            <div className="text-center py-20">
-
-              <h2 className="text-4xl font-bold mb-5">
-
-                No Products Found
-
-              </h2>
-
-              <p className="text-gray-400 mb-8">
-
-                Products will appear here soon.
-
-              </p>
-
-              <Link
-                href="/shop"
-                className="inline-block bg-[#D4AF37] text-black px-8 py-4 rounded-2xl font-semibold hover:opacity-90 transition"
-              >
-
-                Back to Shop
-
-              </Link>
-
-            </div>
-
-          ) : (
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-
-              {products.map(
-                (product) => (
-
-                  <ProductCard
-                    key={product._id}
-                    product={product}
-                  />
-
-                )
-              )}
-
-            </div>
-
-          )}
-
-        </div>
-
-      </section>
-
-    </div>
-
+    <CategoryClient
+      category={category}
+      initialProducts={filteredProducts}
+    />
   );
-
 }
