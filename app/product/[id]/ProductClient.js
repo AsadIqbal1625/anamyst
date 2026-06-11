@@ -147,7 +147,7 @@ export default function ProductClient({ productId }) {
 
         <div className="absolute inset-0 bg-gradient-to-b from-[#D4AF37]/10 to-transparent" />
 
-        <div className="relative grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-10 items-start max-w-7xl mx-auto">
+        <div className="relative grid grid-cols-1 md:grid-cols-[1fr_1fr] gap-6 lg:gap-8 items-stretch max-w-7xl mx-auto">
 
           {/* PRODUCT IMAGE */}
           <div className="bg-white/5 border border-white/10 rounded-[36px] backdrop-blur-xl p-4 md:p-6 relative overflow-hidden">
@@ -181,9 +181,9 @@ export default function ProductClient({ productId }) {
           </div>
 
           {/* PRODUCT DETAILS */}
-          <div className="bg-white/5 border border-white/10 rounded-[36px] backdrop-blur-xl p-5 md:p-8">
+          <div className="bg-white/5 border border-white/10 rounded-[28px] backdrop-blur-xl p-4 md:p-5">
 
-            <p className="uppercase tracking-[5px] text-[#D4AF37] text-xs mb-5">
+            <p className="uppercase tracking-[4px] text-[#D4AF37] text-[10px] mb-3">
 
               ANAMYST Luxury Collection
 
@@ -195,24 +195,24 @@ export default function ProductClient({ productId }) {
 
             </h1>
 
-            <p className="text-gray-300 text-lg mb-6">
+            <p className="text-gray-400 text-sm mb-4">
 
               Premium Luxury Fragrance Collection
 
             </p>
 
             {/* RATING */}
-            <div className="flex items-center justify-between flex-wrap gap-3 mb-7">
+            <div className="flex items-center justify-between flex-wrap gap-2 mb-4">
 
               <div className="flex items-center gap-3">
 
-                <span className="text-[#D4AF37] text-xl">
+                <span className="text-[#D4AF37] text-lg">
 
                   ★★★★★
 
                 </span>
 
-                <span className="text-gray-400">
+                <span className="text-gray-400 text-sm">
 
                   {product.rating}
                   {" "}
@@ -234,21 +234,21 @@ export default function ProductClient({ productId }) {
             </div>
 
             {/* DESCRIPTION */}
-            <p className="text-gray-300 leading-9 mb-8">
+            <p className="text-gray-300 text-sm leading-6 mb-5">
 
               {product.description}
 
             </p>
 
             {/* NOTES */}
-            <div className="flex flex-wrap gap-3 mb-8">
+            <div className="flex flex-wrap gap-2 mb-5">
 
               {product.notesTags?.map(
                 (note, index) => (
 
                   <span
                     key={index}
-                    className="bg-black text-[#D4AF37] border border-[#D4AF37]/20 px-5 py-2 rounded-full text-sm font-semibold tracking-wide"
+                    className="bg-black text-[#D4AF37] border border-[#D4AF37]/20 px-3 py-1 rounded-full text-xs font-medium"
                   >
 
                     {note}
@@ -259,110 +259,56 @@ export default function ProductClient({ productId }) {
               )}
 
             </div>
-              {/* FRAGRANCE PROFILE */}
+            {/* FRAGRANCE PROFILE */}
 
-            <div className="mb-10">
+          <div className="mb-4">
 
-              <h3 className="text-2xl font-bold text-white mb-6">
+            <h3 className="text-lg font-semibold text-white mb-2">
+              Fragrance Profile
+            </h3>
 
-                Fragrance Profile
+            <div className="grid grid-cols-2 gap-2">
 
-              </h3>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-
-                {product.topNotes && (
-                  <div className="bg-black/40 border border-[#D4AF37]/20 rounded-3xl p-5 hover:border-[#D4AF37]/50 transition duration-300">
-                    <p className="text-[#D4AF37] text-sm uppercase tracking-[3px] mb-2">
-                      Top Notes
+              {[
+                { label: "Top Notes", value: product.topNotes },
+                { label: "Heart Notes", value: product.heartNotes },
+                { label: "Base Notes", value: product.baseNotes },
+                { label: "Longevity", value: product.longevity },
+                { label: "Projection", value: product.projection },
+                { label: "Occasion", value: product.occasion },
+                { label: "Season", value: product.season },
+              ]
+                .filter((item) => item.value)
+                .map((item, index) => (
+                  <div
+                    key={index}
+                    className="bg-black/30 border border-[#D4AF37]/15 rounded-xl px-3 py-2 hover:border-[#D4AF37]/40 transition-all duration-300"
+                  >
+                    <p className="text-[#D4AF37] text-[9px] uppercase tracking-[1.5px] mb-0.5">
+                      {item.label}
                     </p>
-                    <p className="text-white">
-                      {product.topNotes}
+
+                    <p className="text-white text-xs leading-5">
+                      {item.value}
                     </p>
                   </div>
-                )}
-
-                {product.heartNotes && (
-                  <div className="bg-black/40 border border-[#D4AF37]/20 rounded-3xl p-5 hover:border-[#D4AF37]/50 transition duration-300">
-                    <p className="text-[#D4AF37] text-sm uppercase tracking-[3px] mb-2">
-                      Heart Notes
-                    </p>
-                    <p className="text-white">
-                      {product.heartNotes}
-                    </p>
-                  </div>
-                )}
-
-                {product.baseNotes && (
-                  <div className="bg-black/40 border border-[#D4AF37]/20 rounded-3xl p-5 hover:border-[#D4AF37]/50 transition duration-300">
-                    <p className="text-[#D4AF37] text-sm uppercase tracking-[3px] mb-2">
-                      Base Notes
-                    </p>
-                    <p className="text-white">
-                      {product.baseNotes}
-                    </p>
-                  </div>
-                )}
-
-                {product.longevity && (
-                  <div className="bg-black/40 border border-[#D4AF37]/20 rounded-3xl p-5 hover:border-[#D4AF37]/50 transition duration-300">
-                    <p className="text-[#D4AF37] text-sm uppercase tracking-[3px] mb-2">
-                      Longevity
-                    </p>
-                    <p className="text-white">
-                      {product.longevity}
-                    </p>
-                  </div>
-                )}
-
-                {product.projection && (
-                  <div className="bg-black/40 border border-[#D4AF37]/20 rounded-3xl p-5 hover:border-[#D4AF37]/50 transition duration-300">
-                    <p className="text-[#D4AF37] text-sm uppercase tracking-[3px] mb-2">
-                      Projection
-                    </p>
-                    <p className="text-white">
-                      {product.projection}
-                    </p>
-                  </div>
-                )}
-
-                {product.occasion && (
-                  <div className="bg-black/40 border border-[#D4AF37]/20 rounded-3xl p-5 hover:border-[#D4AF37]/50 transition duration-300">
-                    <p className="text-[#D4AF37] text-sm uppercase tracking-[3px] mb-2">
-                      Occasion
-                    </p>
-                    <p className="text-white">
-                      {product.occasion}
-                    </p>
-                  </div>
-                )}
-
-                {product.season && (
-                  <div className="bg-black/40 border border-[#D4AF37]/20 rounded-3xl p-5 hover:border-[#D4AF37]/50 transition duration-300">
-                    <p className="text-[#D4AF37] text-sm uppercase tracking-[3px] mb-2">
-                      Season
-                    </p>
-                    <p className="text-white">
-                      {product.season}
-                    </p>
-                  </div>
-                )}
-
-              </div>
+                ))}
 
             </div>
+
+          </div>
             {/* PRICE */}
-            <div className="flex items-center justify-between flex-wrap gap-4 mb-8">
+            <div className="flex items-center justify-between flex-wrap gap-2 mb-5">
 
               <div className="flex items-center gap-4 flex-wrap">
 
-                <span className="text-4xl font-bold text-white">
+                <span className="text-3xl font-bold text-white">
 
                   ₹{product.price}
 
                 </span>
 
-                <span className="text-2xl text-gray-500 line-through">
+                <span className="text-lg text-gray-500 line-through">
 
                   ₹{product.oldPrice}
 
@@ -370,7 +316,7 @@ export default function ProductClient({ productId }) {
 
               </div>
 
-              <span className="text-green-400 font-semibold text-xl">
+             <span className="text-green-400 font-semibold text-sm">
 
                 Save ₹
                 {product.oldPrice -
@@ -381,32 +327,24 @@ export default function ProductClient({ productId }) {
             </div>
 
             {/* SHIPPING */}
-            <div className="bg-black/40 border border-white/10 rounded-[28px] p-6 mb-8">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mt-3 mb-4">
 
-              <div className="space-y-4 text-gray-300">
+          <div className="border border-white/10 rounded-xl py-2 text-center text-xs text-gray-300">
+            🚚 Shipping all over India
+          </div>
 
-                <p>
-                  🚚 Shipping Across India
-                </p>
+          <div className="border border-white/10 rounded-xl py-2 text-center text-xs text-gray-300">
+            🔒 Secure Checkout
+          </div>
 
-                <p>
-                  🔒 Secure Checkout
-                </p>
+          <div className="border border-white/10 rounded-xl py-2 text-center text-xs text-gray-300">
+            💯 Authentic
+          </div>
 
-                <p>
-                  💯 Authentic Luxury Fragrance
-                </p>
-
-                <p>
-                  📦 Easy WhatsApp Support
-                </p>
-
-              </div>
-
-            </div>
+        </div>
 
             {/* QUANTITY */}
-            <div className="flex items-center justify-between flex-wrap gap-4 mb-8">
+            <div className="flex items-center justify-between flex-wrap gap-2 mb-5">
 
               <div className="flex items-center border border-white/10 rounded-2xl overflow-hidden bg-black">
 
@@ -473,7 +411,7 @@ export default function ProductClient({ productId }) {
                   );
 
                 }}
-                className="w-full bg-[#D4AF37] text-black py-4 rounded-2xl text-lg font-semibold hover:opacity-90 transition duration-300"
+                className="w-full bg-[#D4AF37] text-black py-3 rounded-xl text-base font-semibold hover:opacity-90 transition duration-300"
               >
 
                 Add to Cart
@@ -489,7 +427,7 @@ export default function ProductClient({ productId }) {
                     "/checkout";
 
                 }}
-                className="w-full border border-[#D4AF37] text-[#D4AF37] py-4 rounded-2xl text-lg font-semibold hover:bg-[#D4AF37] hover:text-black transition duration-300"
+                className="w-full border border-[#D4AF37] text-[#D4AF37] py-3 rounded-xl text-base font-semibold hover:bg-[#D4AF37] hover:text-black transition duration-300"
               >
 
                 Buy Now
