@@ -12,6 +12,11 @@ export const metadata = {
   description:
     "Discover premium luxury perfumes by ANAMYST. Long-lasting fragrances crafted for elegance, sophistication, and everyday luxury.",
 
+      verification: {
+    other: {
+      "msvalidate.01": "76B6550D116B1E5435C45F1489EB3A75", // Replace with your actual Bing code
+    },
+  },
   openGraph: {
     title: "ANAMYST | Luxury Perfumes & Premium Fragrances India",
     description:

@@ -96,7 +96,7 @@ export default function ContactPage() {
 
             <p className="text-[#D4AF37] text-lg mb-3">
 
-              +91 8957851141
+              +91 8840305018
 
             </p>
 
