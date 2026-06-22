@@ -46,9 +46,17 @@ const OrderSchema =
           price: Number,
         },
       ],
-     orderId: {
+    orderId: {
       type: String,
-      },
+    },
+
+    customerId: {
+      type: String,
+    },
+
+    invoiceId: {
+      type: String,
+    },
       totalAmount: {
         type: Number,
         required: true,

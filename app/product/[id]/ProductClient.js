@@ -67,46 +67,72 @@ export default function ProductClient({ productId }) {
 
   }, [productId]);
 
-  /* FETCH RELATED PRODUCTS */
-  useEffect(() => {
+         /* FETCH RELATED PRODUCTS */
+          useEffect(() => {
 
-    async function fetchProducts() {
+            async function fetchProducts() {
 
-      try {
+              try {
 
-        const res =
-          await fetch(
-            "/api/products"
-          );
+                const res =
+                  await fetch("/api/products");
 
-        const data =
-          await res.json();
+                const data =
+                  await res.json();
 
-        if (data.success && product) {
+                if (data.success && product) {
 
-          const filtered =
-            data.products.filter(
-              (p) =>
-                p._id !== product._id
-            );
+                  let related =
+                    data.products.filter(
+                      (p) =>
+                        p._id !== product._id &&
+                        (
+                          p.category === product.category ||
+                          p.genderCategory === product.genderCategory
+                        )
+                    );
 
-          setRelatedProducts(
-            filtered.slice(0, 3)
-          );
+                  // If less than 8 products found
+                  if (related.length < 8) {
 
-        }
+                    const extra =
+                      data.products.filter(
+                        (p) =>
+                          p._id !== product._id &&
+                          !related.some(
+                            (r) => r._id === p._id
+                          )
+                      );
 
-      } catch (error) {
+                    related = [
+                      ...related,
+                      ...extra,
+                    ];
 
-        console.log(error);
+                  }
 
-      }
+                  // Randomize
+                  related.sort(
+                    () => Math.random() - 0.5
+                  );
 
-    }
+                  setRelatedProducts(
+                    related.slice(0, 8)
+                  );
 
-    fetchProducts();
+                }
 
-  }, [product]);
+              } catch (error) {
+
+                console.log(error);
+
+              }
+
+            }
+
+            fetchProducts();
+
+          }, [product]);
 
   /* LOADING */
   if (loading) {
@@ -448,12 +474,10 @@ export default function ProductClient({ productId }) {
         <div className="max-w-7xl mx-auto">
 
           <h2 className="text-4xl font-bold mb-12 text-center">
-
-            You May Also Like
-
+            Discover More Fragrances
           </h2>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 ">
 
             {relatedProducts.map(
               (item) => (
