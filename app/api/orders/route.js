@@ -23,7 +23,7 @@ export async function GET() {
       orders,
     });
   } catch (error) {
-    console.log(error);
+    console.error("ORDER ERROR:", error);
 
     return Response.json({
       success: false,
@@ -33,8 +33,9 @@ export async function GET() {
 }
 
 /* CREATE ORDER */
-export async function POST(req) {
 
+export async function POST(req) {
+console.log("=== ORDER API HIT ===");
   try {
 
     await connectDB();
@@ -43,6 +44,7 @@ export async function POST(req) {
       await req.json();
       console.log("Order Request Received");
 
+    console.log("Searching customer...");
     let customer =
       await Customer.findOne({
         mobile: body.phone,
@@ -50,42 +52,33 @@ export async function POST(req) {
 
     /* NEW CUSTOMER */
 
-    if (!customer) {
+          if (!customer) {
+            console.log("Creating customer...");
+          customer = await Customer.create({
 
-      customer =
-        await Customer.create({
+        customerId: await generateCustomerId(),
 
-          customerId:
-            await generateCustomerId(),
+        name: body.customerName,
 
-          name:
-            body.customerName,
+        mobile: body.phone,
 
-          mobile:
-            body.phone,
+        email: body.email,
 
-          email:
-            body.email,
+        city: body.city,
 
-          city:
-            body.city,
+        state: body.state,
 
-          state:
-            body.state,
+        address: body.address,
 
-          address:
-            body.address,
+        totalOrders: 1,
 
-          totalOrders: 1,
+        totalSpent: body.totalAmount,
 
-          totalSpent:
-            body.totalAmount,
+        lastOrderDate: new Date(),
 
-          lastOrderDate:
-            new Date(),
+      });
 
-        })
-        console.log("Customer Created:", customer.customerId);
+      console.log("Customer Created:", customer.customerId);
         ;
 
     }
@@ -107,22 +100,19 @@ export async function POST(req) {
     }
 
     /* CREATE ORDER */
-
-    const order =
-      await Order.create({
+            console.log("Creating order...");
+        const order = await Order.create({
 
         ...body,
 
-        customerId:
-          customer.customerId,
+        customerId: customer.customerId,
 
-        orderId:
-          await generateOrderId(),
+        orderId: await generateOrderId(),
 
-        invoiceId:
-          await generateInvoiceId(),
+        invoiceId: await generateInvoiceId(),
 
-      })
+      });
+
       console.log("Order Created:", order.orderId);
       ;
 
