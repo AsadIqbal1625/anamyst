@@ -37,6 +37,34 @@ export default function CheckoutPage() {
     setPaymentMethod] =
     useState("RAZORPAY");
 
+  const [codEnabled,
+    setCodEnabled] =
+    useState(true);
+
+  /* STORE SETTINGS (COD availability) */
+
+  useEffect(() => {
+
+    fetch("/api/settings")
+      .then((res) => res.json())
+      .then((data) => {
+
+        if (
+          data.success &&
+          data.settings?.codEnabled === false
+        ) {
+
+          setCodEnabled(false);
+
+          setPaymentMethod("RAZORPAY");
+
+        }
+
+      })
+      .catch(() => {});
+
+  }, []);
+
   const [mounted,
     setMounted] =
     useState(false);
@@ -115,6 +143,112 @@ export default function CheckoutPage() {
 
   }, [cart]);
 
+  /* COUPON */
+
+  const [couponInput,
+    setCouponInput] =
+    useState("");
+
+  const [appliedCoupon,
+    setAppliedCoupon] =
+    useState(null);
+
+  const [discount,
+    setDiscount] =
+    useState(0);
+
+  const [applying,
+    setApplying] =
+    useState(false);
+
+  const payable =
+    Math.max(total - discount, 0);
+
+  async function applyCoupon() {
+
+    if (!couponInput.trim()) {
+
+      toast.error(
+        "Please enter a coupon code"
+      );
+
+      return;
+
+    }
+
+    setApplying(true);
+
+    try {
+
+      const res = await fetch(
+        "/api/coupons/validate",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type":
+              "application/json",
+          },
+          body: JSON.stringify({
+            code: couponInput,
+            total,
+          }),
+        }
+      );
+
+      const data =
+        await res.json();
+
+      if (data.success) {
+
+        setAppliedCoupon(
+          data.coupon
+        );
+
+        setDiscount(
+          data.discount
+        );
+
+        toast.success(
+          `Coupon applied — you save ₹${data.discount}`
+        );
+
+      } else {
+
+        setAppliedCoupon(null);
+
+        setDiscount(0);
+
+        toast.error(
+          data.error ||
+            "Invalid coupon"
+        );
+
+      }
+
+    } catch {
+
+      toast.error(
+        "Could not apply coupon"
+      );
+
+    } finally {
+
+      setApplying(false);
+
+    }
+
+  }
+
+  function removeCoupon() {
+
+    setAppliedCoupon(null);
+
+    setDiscount(0);
+
+    setCouponInput("");
+
+  }
+
   if (!mounted) return null;
 
   const placeOrder =
@@ -178,7 +312,12 @@ export default function CheckoutPage() {
               cart,
 
             totalAmount:
-              total,
+              payable,
+
+            couponCode:
+              appliedCoupon?.code || "",
+
+            discount,
 
             paymentMethod:
               "COD",
@@ -251,7 +390,7 @@ export default function CheckoutPage() {
               body:
                 JSON.stringify({
 
-                  amount: total,
+                  amount: payable,
 
                 }),
 
@@ -372,7 +511,12 @@ export default function CheckoutPage() {
                   cart,
 
                 totalAmount:
-                  total,
+                  payable,
+
+                couponCode:
+                  appliedCoupon?.code || "",
+
+                discount,
 
                 paymentMethod:
                   "RAZORPAY",
@@ -630,15 +774,14 @@ export default function CheckoutPage() {
                       className="flex gap-4"
                     >
 
-                      <div className="bg-[#111] rounded-2xl overflow-hidden shrink-0">
+                      <div className="relative w-[72px] h-[72px] bg-[#111] rounded-2xl overflow-hidden shrink-0">
 
                         <Image
                           src={item.image}
                           alt={item.name}
-                          width={72}
-                          height={72}
+                          fill
                           loading="lazy"
-                          sizes="(max-width: 768px) 100vw, 50vw"
+                          sizes="72px"
                           className="object-contain"
                         />
 
@@ -705,15 +848,19 @@ export default function CheckoutPage() {
                         "UPI, Cards & Netbanking",
                     },
 
-                    {
-                      id: "COD",
+                    ...(codEnabled
+                      ? [
+                          {
+                            id: "COD",
 
-                      title:
-                        "Cash On Delivery",
+                            title:
+                              "Cash On Delivery",
 
-                      desc:
-                        "Pay after delivery",
-                    },
+                            desc:
+                              "Pay after delivery",
+                          },
+                        ]
+                      : []),
 
                   ].map((method) => (
 
@@ -755,9 +902,125 @@ export default function CheckoutPage() {
 
               </div>
 
+              {/* COUPON */}
+
+              <div className="mt-8">
+
+                <p className="uppercase tracking-[3px] text-[#D4AF37] text-[10px] mb-3">
+
+                  Have a coupon?
+
+                </p>
+
+                {appliedCoupon ? (
+
+                  <div className="flex items-center justify-between bg-[#D4AF37]/10 border border-[#D4AF37]/40 rounded-2xl px-4 py-3">
+
+                    <div>
+
+                      <p className="text-[#D4AF37] font-semibold text-sm">
+
+                        {appliedCoupon.code} applied
+
+                      </p>
+
+                      <p className="text-green-400 text-xs mt-0.5">
+
+                        You save ₹{discount}
+
+                      </p>
+
+                    </div>
+
+                    <button
+                      type="button"
+                      onClick={removeCoupon}
+                      className="text-gray-400 hover:text-red-400 text-xs uppercase tracking-[2px] transition"
+                    >
+
+                      Remove
+
+                    </button>
+
+                  </div>
+
+                ) : (
+
+                  <div className="flex gap-3">
+
+                    <input
+                      value={couponInput}
+                      onChange={(e) =>
+                        setCouponInput(
+                          e.target.value.toUpperCase()
+                        )
+                      }
+                      placeholder="Enter code"
+                      className="flex-1 bg-black border border-white/10 rounded-2xl px-4 py-3 text-sm outline-none focus:border-[#D4AF37] transition uppercase"
+                    />
+
+                    <button
+                      type="button"
+                      onClick={applyCoupon}
+                      disabled={applying}
+                      className="px-5 py-3 rounded-2xl border border-[#D4AF37]/50 text-[#D4AF37] text-sm font-semibold hover:bg-[#D4AF37] hover:text-black transition disabled:opacity-50"
+                    >
+
+                      {applying
+                        ? "..."
+                        : "Apply"}
+
+                    </button>
+
+                  </div>
+
+                )}
+
+              </div>
+
               {/* TOTAL */}
 
-              <div className="border-t border-white/10 mt-10 pt-6">
+              <div className="border-t border-white/10 mt-8 pt-6">
+
+                {discount > 0 && (
+
+                  <div className="flex items-center justify-between text-sm mb-3">
+
+                    <span className="text-gray-400">
+
+                      Subtotal
+
+                    </span>
+
+                    <span className="text-gray-400">
+
+                      ₹{total}
+
+                    </span>
+
+                  </div>
+
+                )}
+
+                {discount > 0 && (
+
+                  <div className="flex items-center justify-between text-sm mb-4">
+
+                    <span className="text-green-400">
+
+                      Discount ({appliedCoupon?.code})
+
+                    </span>
+
+                    <span className="text-green-400">
+
+                      −₹{discount}
+
+                    </span>
+
+                  </div>
+
+                )}
 
                 <div className="flex items-center justify-between">
 
@@ -769,7 +1032,7 @@ export default function CheckoutPage() {
 
                   <span className="text-3xl font-bold text-[#D4AF37]">
 
-                    ₹{total}
+                    ₹{payable}
 
                   </span>
 

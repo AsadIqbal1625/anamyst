@@ -139,7 +139,11 @@ export default function MarketingPage() {
             onChange={(e) =>
               setForm({ ...form, expiresAt: e.target.value })
             }
+            onClick={(e) =>
+              e.target.showPicker && e.target.showPicker()
+            }
             type="date"
+            title="Expiry date (optional)"
             className="bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-sm outline-none focus:border-[#D4AF37]/60"
           />
         </div>

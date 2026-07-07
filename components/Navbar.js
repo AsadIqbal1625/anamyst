@@ -19,6 +19,9 @@ import {
 import MobileMenu
 from "./MobileMenu";
 
+import PromoBar
+from "./PromoBar";
+
 export default function Navbar() {
 
   const router =
@@ -60,6 +63,15 @@ export default function Navbar() {
       measure
     );
 
+    /* re-measure when navbar content changes (e.g. promo bar loads) */
+
+    const observer =
+      new ResizeObserver(measure);
+
+    if (navRef.current) {
+      observer.observe(navRef.current);
+    }
+
     let lastY = window.scrollY;
 
     const onScroll = () => {
@@ -99,6 +111,8 @@ export default function Navbar() {
         "scroll",
         onScroll
       );
+
+      observer.disconnect();
 
     };
 
@@ -171,6 +185,9 @@ export default function Navbar() {
             : "translate-y-0"
         }`}
       >
+
+        {/* PROMO BAR */}
+        <PromoBar />
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3">
 

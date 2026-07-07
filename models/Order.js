@@ -62,6 +62,16 @@ const OrderSchema =
         required: true,
       },
 
+      couponCode: {
+        type: String,
+        default: "",
+      },
+
+      discount: {
+        type: Number,
+        default: 0,
+      },
+
       paymentMethod: {
         type: String,
         default: "COD",

@@ -1,7 +1,6 @@
 "use client";
 
 import { usePathname } from "next/navigation";
-import Link from "next/link";
 
 export default function AdminTopbar() {
 
@@ -35,22 +34,7 @@ export default function AdminTopbar() {
 
       </div>
 
-      <div className="flex items-center gap-5">
-
-        {pathname === "/admin/products" && (
-
-          <Link
-            href="/admin/products"
-            className="px-4 py-2 rounded-xl bg-[#D4AF37] text-black font-semibold hover:opacity-90 transition"
-          >
-
-            + Add Product
-
-          </Link>
-
-        )}
-
-      </div>
+      <div className="flex items-center gap-5" />
 
     </header>
 

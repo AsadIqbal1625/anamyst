@@ -207,29 +207,38 @@ export default function CartPage() {
 
       )}
 
-      {/* HERO */}
+      {/* HEADER (compact) */}
 
-      <section className="relative px-6 py-8">
+      <section className="relative px-6 py-8 border-b border-[#D4AF37]/20">
 
-        <div className="absolute inset-0 bg-gradient-to-b from-[#D4AF37]/5 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-b from-[#D4AF37]/10 to-transparent" />
 
-        <div className="relative max-w-5xl mx-auto text-center">
+        <div className="relative max-w-7xl mx-auto flex flex-wrap items-end justify-between gap-3">
 
-          <p className="uppercase tracking-[5px] text-[#D4AF37] text-xs mb-3">
+          <div>
 
-            ANAMYST Checkout
+            <p className="uppercase tracking-[5px] text-[#D4AF37] text-[10px] mb-2">
 
-          </p>
+              ANAMYST Checkout
 
-          <h1 className="text-4xl md:text-5xl font-bold mb-3">
+            </p>
 
-            Your Cart
+            <h1 className="text-3xl md:text-4xl font-bold">
 
-          </h1>
+              Shopping Cart
 
-          <p className="text-gray-400 max-w-xl mx-auto">
+            </h1>
 
-            Review your luxury fragrance collection before checkout.
+          </div>
+
+          <p className="text-gray-400 text-sm">
+
+            {cart.reduce(
+              (sum, i) =>
+                sum + (Number(i.quantity) || 1),
+              0
+            )}{" "}
+            item(s)
 
           </p>
 
@@ -315,169 +324,137 @@ export default function CartPage() {
 
                     <div
                       key={`${item._id}-${index}`}
-                      className="bg-[#0B0B0B] rounded-3xl overflow-hidden border border-white/10"
+                      className="bg-white/5 border border-white/10 rounded-[24px] p-4 md:p-5 flex gap-4 md:gap-6 items-center hover:border-[#D4AF37]/30 transition duration-300"
                     >
 
-                      <div className="flex flex-col md:flex-row">
+                      {/* IMAGE */}
 
-                        {/* IMAGE */}
+                      <div className="relative w-24 h-24 md:w-32 md:h-32 rounded-2xl overflow-hidden bg-black/40 shrink-0">
 
-                        <div className="relative md:w-[220px] h-[220px] bg-black">
+                        <Image
+                          src={item.image}
+                          alt={item.name}
+                          fill
+                          loading="lazy"
+                          sizes="128px"
+                          className="object-cover"
+                        />
 
-                          <Image
-                            src={item.image}
-                            alt={item.name}
-                            fill
-                            loading="lazy"
-                            sizes="(max-width: 768px) 100vw, 50vw"
-                            className="object-contain p-5"
-                          />
+                      </div>
+
+                      {/* INFO */}
+
+                      <div className="flex-1 min-w-0">
+
+                        <p className="uppercase tracking-[3px] text-[#D4AF37] text-[9px] mb-1.5">
+
+                          ANAMYST Luxury
+
+                        </p>
+
+                        <h2 className="text-base md:text-xl font-semibold leading-snug mb-2 line-clamp-2">
+
+                          {item.name}
+
+                        </h2>
+
+                        <div className="flex items-center gap-3">
+
+                          <p className="text-lg font-bold">
+
+                            ₹{price}
+
+                          </p>
+
+                          {Number(item.oldPrice) > 0 && (
+
+                            <p className="text-gray-500 line-through text-sm">
+
+                              ₹{Number(item.oldPrice)}
+
+                            </p>
+
+                          )}
 
                         </div>
 
-                        {/* CONTENT */}
+                        <button
+                          onClick={() =>
+                            setConfirmItem(item)
+                          }
+                          className="text-red-400/80 hover:text-red-400 transition text-xs mt-2 uppercase tracking-[2px]"
+                        >
 
-                        <div className="flex-1 p-6">
+                          Remove
 
-                          <p className="uppercase tracking-[4px] text-[#D4AF37] text-xs mb-3">
+                        </button>
 
-                            ANAMYST Luxury
+                      </div>
 
-                          </p>
+                      {/* QUANTITY + LINE TOTAL */}
 
-                          <h2 className="text-2xl md:text-3xl font-bold mb-3">
+                      <div className="flex flex-col items-end gap-3 shrink-0">
 
-                            {item.name}
+                        <div className="flex items-center border border-white/15 rounded-full overflow-hidden bg-black/40">
 
-                          </h2>
+                          <button
+                            onClick={() => {
 
-                          <p className="text-gray-400 mb-5">
+                              if (quantity === 1) {
 
-                            Crafted for timeless elegance.
+                                /* last piece → ask first */
+                                setConfirmItem(item);
 
-                          </p>
+                              } else {
 
-                          {/* PRICE */}
+                                updateQuantity(
+                                  item._id,
+                                  "decrease"
+                                );
 
-                          <div className="flex items-center gap-4 mb-7">
+                                loadCart();
 
-                            <p className="text-3xl font-bold">
-
-                              ₹{price}
-
-                            </p>
-
-                            <p className="text-gray-500 line-through">
-
-                              ₹
-                              {Number(
-                                item.oldPrice
-                              ) ||
-                                price + 500}
-
-                            </p>
-
-                          </div>
-
-                          {/* ACTIONS */}
-
-                          <div className="flex flex-wrap items-center justify-between gap-5">
-
-                            {/* QUANTITY */}
-
-                            <div className="flex items-center gap-3">
-
-                              <button
-                                onClick={() => {
-
-                                  if (
-                                    quantity === 1
-                                  ) {
-
-                                    /* last piece → ask first */
-                                    setConfirmItem(item);
-
-                                  } else {
-
-                                    updateQuantity(
-                                      item._id,
-                                      "decrease"
-                                    );
-
-                                    loadCart();
-
-                                  }
-
-                                }}
-                                className="w-10 h-10 rounded-xl bg-black border border-white/10 hover:bg-[#D4AF37] hover:text-black transition"
-                              >
-
-                                -
-
-                              </button>
-
-                              <span className="text-lg font-semibold">
-
-                                {quantity}
-
-                              </span>
-
-                              <button
-                                onClick={() => {
-
-                                  updateQuantity(
-                                    item._id,
-                                    "increase"
-                                  );
-
-                                  loadCart();
-
-                                }}
-                                className="w-10 h-10 rounded-xl bg-black border border-white/10 hover:bg-[#D4AF37] hover:text-black transition"
-                              >
-
-                                +
-
-                              </button>
-
-                            </div>
-
-                            {/* REMOVE */}
-
-                            <button
-                              onClick={() =>
-                                setConfirmItem(item)
                               }
-                              className="text-red-400 hover:text-red-300 transition text-sm"
-                            >
 
-                              Remove
+                            }}
+                            className="w-9 h-9 flex items-center justify-center hover:bg-[#D4AF37] hover:text-black transition"
+                          >
 
-                            </button>
+                            −
 
-                            {/* TOTAL */}
+                          </button>
 
-                            <div className="text-right">
+                          <span className="w-8 text-center text-sm font-semibold">
 
-                              <p className="text-gray-500 text-sm">
+                            {quantity}
 
-                                Total
+                          </span>
 
-                              </p>
+                          <button
+                            onClick={() => {
 
-                              <p className="text-2xl font-bold">
+                              updateQuantity(
+                                item._id,
+                                "increase"
+                              );
 
-                                ₹
-                                {price *
-                                  quantity}
+                              loadCart();
 
-                              </p>
+                            }}
+                            className="w-9 h-9 flex items-center justify-center hover:bg-[#D4AF37] hover:text-black transition"
+                          >
 
-                            </div>
+                            +
 
-                          </div>
+                          </button>
 
                         </div>
+
+                        <p className="text-lg md:text-xl font-bold text-[#D4AF37]">
+
+                          ₹{price * quantity}
+
+                        </p>
 
                       </div>
 
@@ -494,7 +471,13 @@ export default function CartPage() {
 
             <div>
 
-              <div className="bg-[#0B0B0B] rounded-3xl p-7 sticky top-24 border border-white/10">
+              <div className="bg-white/5 rounded-[24px] p-7 sticky top-24 border border-white/10">
+
+                <p className="uppercase tracking-[4px] text-[#D4AF37] text-[10px] mb-2">
+
+                  Summary
+
+                </p>
 
                 <h2 className="text-2xl font-bold mb-7">
 
@@ -571,25 +554,26 @@ export default function CartPage() {
 
                 </div>
 
-                <div className="bg-black rounded-2xl p-5 mb-7 space-y-3 text-gray-400 text-sm">
+                <div className="space-y-2.5 mb-7">
 
-                  <p>
+                  {[
+                    "Shipping Across India",
+                    "Secure Checkout",
+                    "Authentic Luxury Fragrances",
+                  ].map((t) => (
 
-                    🚚 Shipping Across India
+                    <div
+                      key={t}
+                      className="flex items-center gap-3 text-gray-400 text-xs"
+                    >
 
-                  </p>
+                      <span className="w-5 h-[1px] bg-[#D4AF37]" />
 
-                  <p>
+                      <span>{t}</span>
 
-                    🔒 Secure Checkout
+                    </div>
 
-                  </p>
-
-                  <p>
-
-                    ✨ Authentic Luxury Fragrances
-
-                  </p>
+                  ))}
 
                 </div>
 
@@ -600,6 +584,15 @@ export default function CartPage() {
                     Proceed to Checkout
 
                   </button>
+
+                </Link>
+
+                <Link
+                  href="/shop"
+                  className="block text-center text-gray-400 hover:text-[#D4AF37] text-sm mt-4 transition"
+                >
+
+                  ← Continue Shopping
 
                 </Link>
 

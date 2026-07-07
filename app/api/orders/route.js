@@ -8,6 +8,7 @@ import {
 import { connectDB } from "../../../lib/mongodb";
 import { sendOrderEmail } from "../../../lib/sendOrderEmail";
 import Order from "../../../models/Order";
+import Coupon from "../../../models/Coupon";
 
 /* GET ORDERS */
 export async function GET() {
@@ -114,6 +115,17 @@ export async function POST(req) {
 
      
       ;
+
+    /* COUNT COUPON USAGE */
+
+    if (body.couponCode) {
+
+      await Coupon.updateOne(
+        { code: body.couponCode },
+        { $inc: { usedCount: 1 } }
+      ).catch(() => {});
+
+    }
 
     /* SEND EMAIL */
 

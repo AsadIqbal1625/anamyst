@@ -37,3 +37,29 @@ body {
 
   box-sizing: border-box;
 }
+
+/* Allow selecting/editing text inside form fields */
+input,
+textarea {
+  -webkit-user-select: text;
+  user-select: text;
+}
+
+/* Date inputs: visible calendar icon on dark theme */
+input[type="date"] {
+  color-scheme: dark;
+  cursor: pointer;
+}
+
+/* Keep dark theme on browser-autofilled inputs (Chrome/Edge/Safari) */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+textarea:-webkit-autofill,
+select:-webkit-autofill {
+  -webkit-box-shadow: 0 0 0 1000px #000000 inset;
+  box-shadow: 0 0 0 1000px #000000 inset;
+  -webkit-text-fill-color: #ffffff;
+  caret-color: #ffffff;
+  transition: background-color 9999s ease-in-out 0s;
+}
