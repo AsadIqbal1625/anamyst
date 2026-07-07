@@ -2,10 +2,28 @@
 
 import Link from "next/link";
 
+const collections = [
+  { title: "Perfumes", href: "/shop/perfumes" },
+  { title: "Attars", href: "/shop/attars" },
+  { title: "Fresheners", href: "/shop/fresheners" },
+  { title: "Premium Gifts", href: "/shop/premium-gifts" },
+  { title: "Combos", href: "/shop/combos" },
+];
+
+const pages = [
+  { title: "Home", href: "/" },
+  { title: "About", href: "/about" },
+  { title: "FAQ", href: "/faq" },
+  { title: "Track Order", href: "/track-order" },
+  { title: "Cart", href: "/cart" },
+];
+
 export default function MobileMenu({
   isOpen,
   setIsOpen,
 }) {
+
+  const close = () => setIsOpen(false);
 
   return (
 
@@ -13,9 +31,7 @@ export default function MobileMenu({
 
       {/* OVERLAY */}
       <div
-        onClick={() =>
-          setIsOpen(false)
-        }
+        onClick={close}
         className={`fixed inset-0 bg-black/70 backdrop-blur-md z-[998] transition-all duration-500 ${
           isOpen
             ? "opacity-100 visible"
@@ -25,253 +41,155 @@ export default function MobileMenu({
 
       {/* SIDEBAR */}
       <div
-        className={`fixed top-0 left-0 h-screen w-[88%] max-w-[360px]
-        bg-gradient-to-b from-black via-[#111111] to-black
-        border-r border-white/10
+        className={`fixed top-0 left-0 h-[100dvh] w-[85%] max-w-[340px]
+        bg-black
+        border-r border-[#D4AF37]/20
         z-[999]
-        shadow-2xl
+        shadow-[0_0_100px_rgba(0,0,0,0.9)]
         transform transition-transform duration-500 ease-out
-        overflow-y-auto ${
+        flex flex-col ${
           isOpen
             ? "translate-x-0"
             : "-translate-x-full"
         }`}
       >
 
-        {/* TOP GLOW */}
-        <div className="absolute top-0 left-0 w-full h-[240px] bg-[#D4AF37]/10 blur-3xl pointer-events-none" />
-
         {/* HEADER */}
-        <div className="relative px-6 pt-10 pb-8 border-b border-white/10">
+        <div className="relative px-8 pt-8 pb-6 border-b border-white/10 shrink-0">
 
-          {/* CLOSE BUTTON */}
+          {/* CLOSE */}
           <button
-            onClick={() =>
-              setIsOpen(false)
-            }
-            className="absolute top-6 right-6 text-white/70 hover:text-[#D4AF37] text-4xl font-light transition duration-300"
+            onClick={close}
+            aria-label="Close menu"
+            className="absolute top-7 right-6 text-white/60 hover:text-[#D4AF37] text-3xl font-light transition duration-300"
           >
 
             ×
 
           </button>
 
-          {/* SMALL TEXT */}
-          <p className="text-gray-500 text-xs tracking-[0.35em] uppercase mb-5">
+          <p className="text-[#D4AF37] text-[10px] tracking-[5px] uppercase mb-3">
 
-            Welcome To
+            Luxury Fragrance House
 
           </p>
 
-          {/* LOGO */}
-          <h1 className="text-white text-[52px] font-semibold tracking-[0.18em] leading-none">
+          <p className="text-white text-2xl font-semibold tracking-[0.3em]">
 
             ANAMYST
-
-          </h1>
-
-          {/* SUBTEXT */}
-          <p className="text-gray-400 text-sm mt-6 leading-7 max-w-[260px]">
-
-            Discover premium fragrances crafted for elegance,
-            luxury, and unforgettable presence.
 
           </p>
 
         </div>
 
-        {/* NAVIGATION */}
-        <div className="py-4">
+        {/* SCROLLABLE NAV */}
+        <div className="flex-1 overflow-y-auto">
 
-          {/* HOME */}
-          <Link
-            href="/"
-            onClick={() =>
-              setIsOpen(false)
-            }
-            className="flex items-center justify-between px-6 py-5 border-b border-white/5 hover:bg-white/[0.03] transition-all duration-500 group"
-          >
+          {/* COLLECTIONS */}
+          <div className="px-8 pt-8 pb-2">
 
-            <span className="text-white text-2xl font-light">
-
-              Home
-
-            </span>
-
-            <span className="text-[#D4AF37] opacity-0 group-hover:opacity-100 transition duration-500">
-
-              →
-
-            </span>
-
-          </Link>
-
-          {/* ALL COLLECTIONS */}
-          <Link
-            href="/shop"
-            onClick={() =>
-              setIsOpen(false)
-            }
-            className="block mx-4 mt-6 mb-6 bg-[#D4AF37]/10 border border-[#D4AF37]/20 rounded-[28px] px-5 py-5 hover:bg-[#D4AF37]/20 transition duration-500 relative overflow-hidden group"
-          >
-
-            {/* CARD GLOW */}
-            <div className="absolute inset-0 bg-gradient-to-br from-[#D4AF37]/10 to-transparent opacity-0 group-hover:opacity-100 transition duration-500" />
-
-            <div className="relative z-10 flex items-center justify-between">
-
-              <div>
-
-                <p className="text-[#D4AF37] text-xl font-medium">
-
-                  All Collections
-
-                </p>
-
-                <p className="text-gray-400 text-sm mt-2 leading-6">
-
-                  Explore every ANAMYST collection
-
-                </p>
-
-              </div>
-
-              <span className="text-[#D4AF37] text-2xl">
-
-                →
-
-              </span>
-
-            </div>
-
-          </Link>
-
-          {/* COLLECTION TITLE */}
-          <div className="px-6 pb-5">
-
-            <p className="text-[#D4AF37] text-xs tracking-[0.35em] uppercase">
+            <p className="text-gray-500 text-[10px] tracking-[4px] uppercase mb-4">
 
               Collections
 
             </p>
 
-          </div>
-
-          {/* COLLECTION CARDS */}
-          {[
-            {
-              title: "Perfumes",
-              desc: "Signature luxury fragrances",
-              href: "/shop/perfumes",
-            },
-            {
-              title: "Attars",
-              desc: "Traditional premium attars",
-              href: "/shop/attars",
-            },
-            {
-              title: "Fresheners",
-              desc: "Refresh your surroundings",
-              href: "/shop/fresheners",
-            },
-            {
-              title: "Premium Gifts",
-              desc: "Elegant gifting collections",
-              href: "/shop/premium-gifts",
-            },
-            {
-              title: "Combos",
-              desc: "Curated fragrance bundles",
-              href: "/shop/combos",
-            },
-          ].map((item) => (
-
             <Link
-              key={item.title}
-              href={item.href}
-              onClick={() =>
-                setIsOpen(false)
-              }
-              className="block mx-4 mb-5 rounded-[28px] px-5 py-5 transition-all duration-500 overflow-hidden relative group bg-white/[0.03] border border-white/10 hover:border-[#D4AF37]/40 hover:bg-[#D4AF37]/5"
+              href="/shop"
+              onClick={close}
+              className="flex items-center justify-between py-3.5 border-b border-white/5 group"
             >
 
-              {/* CARD GLOW */}
-              <div className="absolute inset-0 bg-gradient-to-br from-[#D4AF37]/10 to-transparent opacity-0 group-hover:opacity-100 transition duration-500" />
+              <span className="text-[#D4AF37] text-lg tracking-[2px] uppercase font-medium">
 
-              <div className="relative z-10 flex items-center justify-between">
+                Shop All
 
-                <div>
+              </span>
 
-                  <p className="text-white text-xl font-medium">
+              <span className="text-[#D4AF37]">→</span>
 
-                    {item.title}
+            </Link>
 
-                  </p>
+            {collections.map((item) => (
 
-                  <p className="text-gray-400 text-sm mt-2 leading-6">
+              <Link
+                key={item.title}
+                href={item.href}
+                onClick={close}
+                className="flex items-center justify-between py-3.5 border-b border-white/5 group"
+              >
 
-                    {item.desc}
+                <span className="text-white/90 text-lg tracking-[2px] uppercase font-light group-hover:text-[#D4AF37] transition duration-300">
 
-                  </p>
+                  {item.title}
 
-                </div>
+                </span>
 
-                <span className="text-[#D4AF37] text-2xl">
+                <span className="text-[#D4AF37] opacity-0 group-hover:opacity-100 transition duration-300">
 
                   →
 
                 </span>
 
-              </div>
+              </Link>
 
-            </Link>
+            ))}
 
-          ))}
+          </div>
 
-          {/* EXTRA LINKS */}
-          {[
-            {
-              title: "About",
-              href: "/about",
-            },
-            {
-              title: "FAQ",
-              href: "/faq",
-            },
-            {
-              title: "Track Order",
-              href: "/track-order",
-            },
-            {
-              title: "Cart",
-              href: "/cart",
-            },
-          ].map((item) => (
+          {/* PAGES */}
+          <div className="px-8 pt-8 pb-6">
 
-            <Link
-              key={item.title}
-              href={item.href}
-              onClick={() =>
-                setIsOpen(false)
-              }
-              className="flex items-center justify-between px-6 py-5 border-t border-white/5 hover:bg-white/[0.03] transition-all duration-500 group"
-            >
+            <p className="text-gray-500 text-[10px] tracking-[4px] uppercase mb-4">
 
-              <span className="text-white text-2xl font-light">
+              Menu
 
-                {item.title}
+            </p>
 
-              </span>
+            {pages.map((item) => (
 
-              <span className="text-[#D4AF37] opacity-0 group-hover:opacity-100 transition duration-500">
+              <Link
+                key={item.title}
+                href={item.href}
+                onClick={close}
+                className="flex items-center justify-between py-3 group"
+              >
 
-                →
+                <span className="text-gray-400 text-sm tracking-[2px] uppercase group-hover:text-white transition duration-300">
 
-              </span>
+                  {item.title}
 
-            </Link>
+                </span>
 
-          ))}
+              </Link>
+
+            ))}
+
+          </div>
+
+        </div>
+
+        {/* FOOTER */}
+        <div className="px-8 py-6 border-t border-white/10 shrink-0">
+
+          <p className="text-gray-500 text-xs leading-6">
+
+            Discover fragrances that
+            define your presence.
+
+          </p>
+
+          <div className="flex items-center gap-2 mt-3">
+
+            <span className="w-6 h-[1px] bg-[#D4AF37]" />
+
+            <span className="text-[#D4AF37] text-[10px] tracking-[3px] uppercase">
+
+              ANAMYST
+
+            </span>
+
+          </div>
 
         </div>
 

@@ -35,16 +35,16 @@ export async function GET() {
 /* CREATE ORDER */
 
 export async function POST(req) {
-console.log("=== ORDER API HIT ===");
+
   try {
 
     await connectDB();
 
     const body =
       await req.json();
-      console.log("Order Request Received");
+      
 
-    console.log("Searching customer...");
+    
     let customer =
       await Customer.findOne({
         mobile: body.phone,
@@ -53,7 +53,7 @@ console.log("=== ORDER API HIT ===");
     /* NEW CUSTOMER */
 
           if (!customer) {
-            console.log("Creating customer...");
+         
           customer = await Customer.create({
 
         customerId: await generateCustomerId(),
@@ -78,7 +78,6 @@ console.log("=== ORDER API HIT ===");
 
       });
 
-      console.log("Customer Created:", customer.customerId);
         ;
 
     }
@@ -100,7 +99,7 @@ console.log("=== ORDER API HIT ===");
     }
 
     /* CREATE ORDER */
-            console.log("Creating order...");
+            
         const order = await Order.create({
 
         ...body,
@@ -113,7 +112,7 @@ console.log("=== ORDER API HIT ===");
 
       });
 
-      console.log("Order Created:", order.orderId);
+     
       ;
 
     /* SEND EMAIL */

@@ -1,892 +1,190 @@
 "use client";
 
-import AdminProtection
-from "../../components/AdminProtection";
+import { useEffect, useState } from "react";
+import Link from "next/link";
 
-import {
-  useEffect,
-  useState,
-} from "react";
+const statusColor = {
+  Pending: "text-yellow-400",
+  Delivered: "text-green-400",
+  Cancelled: "text-red-400",
+};
 
-import Image from "next/image";
-
-import {
-  useRouter,
-} from "next/navigation";
-
-export default function AdminPage() {
-
-  const router =
-    useRouter();
-
-  const emptyForm = {
-
-      name: "",
-      description: "",
-      price: "",
-      oldPrice: "",
-      image: "",
-      category: "",
-      genderCategory: "",
-      notesTags: "",
-
-      topNotes: "",
-      heartNotes: "",
-      baseNotes: "",
-
-      longevity: "",
-      projection: "",
-      occasion: "",
-      season: "",
-
-      badge: "",
-      tag: "",
-      rating: "",
-      reviews: "",
-      stock: "",
-
-    };
-
-  const [form,
-    setForm] =
-    useState(emptyForm);
-
-  const [products,
-    setProducts] =
-    useState([]);
-
-  const [editingId,
-    setEditingId] =
-    useState(null);
-
-  const [uploading,
-    setUploading] =
-    useState(false);
-
-  /* FETCH PRODUCTS */
-  async function fetchProducts() {
-
-    try {
-
-      const res =
-        await fetch(
-          "/api/products"
-        );
-
-      const data =
-        await res.json();
-
-      if (data.success) {
-
-        setProducts(
-          data.products
-        );
-
-      }
-
-    } catch (error) {
-
-      console.log(error);
-
-    }
-
-  }
+export default function DashboardPage() {
+  const [stats, setStats] = useState(null);
+  const [recentOrders, setRecentOrders] = useState([]);
+  const [lowStock, setLowStock] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-
-    fetchProducts();
-
+    async function fetchDashboard() {
+      try {
+        const res = await fetch("/api/dashboard");
+        const data = await res.json();
+        if (data.success) {
+          setStats(data.stats);
+          setRecentOrders(data.recentOrders || []);
+          setLowStock(data.lowStock || []);
+        }
+      } catch (err) {
+        console.log(err);
+      } finally {
+        setLoading(false);
+      }
+    }
+    fetchDashboard();
   }, []);
 
-  /* IMAGE UPLOAD */
-  async function handleImageUpload(
-    e
-  ) {
-
-    const file =
-      e.target.files[0];
-
-    if (!file) return;
-
-    try {
-
-      setUploading(true);
-
-      const formData =
-        new FormData();
-
-      formData.append(
-        "file",
-        file
-      );
-
-      const res =
-        await fetch(
-
-          "/api/upload",
-
-          {
-
-            method: "POST",
-
-            body: formData,
-
-          }
-
-        );
-
-      const data =
-        await res.json();
-
-      if (data.success) {
-
-        setForm((prev) => ({
-
-          ...prev,
-
-          image:
-            data.imageUrl,
-
-        }));
-
-      }
-
-    } catch (error) {
-
-      console.log(error);
-
-    } finally {
-
-      setUploading(false);
-
-    }
-
-  }
-
-  /* HANDLE CHANGE */
-  function handleChange(e) {
-
-    setForm({
-
-      ...form,
-
-      [e.target.name]:
-        e.target.value,
-
-    });
-
-  }
-
-  /* SUBMIT */
-  async function handleSubmit(
-    e
-  ) {
-
-    e.preventDefault();
-
-    try {
-
-      const payload = {
-
-        ...form,
-
-        price:
-          Number(form.price),
-
-        oldPrice:
-          Number(form.oldPrice),
-
-        rating:
-          Number(form.rating),
-
-        reviews:
-          Number(form.reviews),
-
-        stock:
-          Number(form.stock),
-
-        notesTags:
-          form.notesTags
-            .split(",")
-            .map((tag) =>
-              tag.trim()
-            ),
-
-      };
-
-      let res;
-
-      if (editingId) {
-
-        res = await fetch(
-
-          `/api/products/${editingId}`,
-
-          {
-
-            method: "PATCH",
-
-            headers: {
-
-              "Content-Type":
-                "application/json",
-
-            },
-
-            body: JSON.stringify(
-              payload
-            ),
-
-          }
-
-        );
-
-      } else {
-
-        res = await fetch(
-
-          "/api/products",
-
-          {
-
-            method: "POST",
-
-            headers: {
-
-              "Content-Type":
-                "application/json",
-
-            },
-
-            body: JSON.stringify(
-              payload
-            ),
-
-          }
-
-        );
-
-      }
-
-      const data =
-        await res.json();
-
-      if (data.success) {
-
-        alert(
-
-          editingId
-            ? "Product Updated"
-            : "Product Added"
-
-        );
-
-        setForm(emptyForm);
-
-        setEditingId(null);
-
-        fetchProducts();
-
-      }
-
-    } catch (error) {
-
-      console.log(error);
-
-    }
-
-  }
-
-  /* DELETE */
-  async function deleteProduct(
-    id
-  ) {
-
-    const confirmDelete =
-      confirm(
-        "Delete this product?"
-      );
-
-    if (!confirmDelete)
-      return;
-
-    try {
-
-      const res =
-        await fetch(
-
-          `/api/products/${id}`,
-
-          {
-
-            method: "DELETE",
-
-          }
-
-        );
-
-      const data =
-        await res.json();
-
-      if (data.success) {
-
-        fetchProducts();
-
-      }
-
-    } catch (error) {
-
-      console.log(error);
-
-    }
-
-  }
-
-  /* EDIT */
-  function editProduct(
-    product
-  ) {
-
-    setEditingId(
-      product._id
+  if (loading) {
+    return (
+      <div className="p-10 text-white text-xl">Loading dashboard...</div>
     );
-
-    setForm({
-
-      ...product,
-
-      notesTags:
-        product.notesTags.join(
-          ", "
-        ),
-
-    });
-
-    window.scrollTo({
-
-      top: 0,
-
-      behavior: "smooth",
-
-    });
-
   }
+
+  const cards = [
+    {
+      label: "Total Revenue",
+      value: `₹${(stats?.revenue || 0).toLocaleString("en-IN")}`,
+      accent: "text-[#D4AF37]",
+    },
+    {
+      label: "This Month",
+      value: `₹${(stats?.monthRevenue || 0).toLocaleString("en-IN")}`,
+      accent: "text-[#D4AF37]",
+    },
+    {
+      label: "Total Orders",
+      value: stats?.orders || 0,
+      accent: "text-white",
+    },
+    {
+      label: "Pending Orders",
+      value: stats?.pending || 0,
+      accent: "text-yellow-400",
+    },
+    {
+      label: "Delivered",
+      value: stats?.delivered || 0,
+      accent: "text-green-400",
+    },
+    {
+      label: "Cancelled",
+      value: stats?.cancelled || 0,
+      accent: "text-red-400",
+    },
+    {
+      label: "Customers",
+      value: stats?.customers || 0,
+      accent: "text-white",
+    },
+    {
+      label: "Products",
+      value: stats?.products || 0,
+      accent: "text-white",
+    },
+  ];
 
   return (
-
-    <AdminProtection>
-
-      <div className="min-h-screen bg-black text-white px-4 py-10">
-
-        <div className="max-w-7xl mx-auto">
-
-          {/* HEADER */}
-          <div className="mb-12 flex flex-col md:flex-row md:items-center md:justify-between gap-5">
-
-            <div>
-
-              <p className="uppercase tracking-[6px] text-[#D4AF37] text-xs mb-4">
-
-                ANAMYST ADMIN
-
-              </p>
-
-              <h1 className="text-5xl font-bold text-white mb-4">
-
-                Admin Panel
-
-              </h1>
-
-              <p className="text-gray-400 text-lg">
-
-                Manage ANAMYST Products
-
-              </p>
-
-            </div>
-
-            {/* BUTTONS */}
-            <div className="flex gap-4 flex-wrap">
-
-              {/* VIEW ORDERS */}
-              <button
-
-                onClick={() => {
-
-                  router.push(
-                    "/admin/orders"
-                  );
-
-                }}
-
-                className="bg-[#D4AF37] hover:opacity-90 text-black px-6 py-3 rounded-2xl font-semibold transition"
-
-              >
-
-                View Orders
-
-              </button>
-
-              {/* LOGOUT */}
-              <button
-
-                onClick={() => {
-
-                  document.cookie =
-
-                    "admin-auth=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-
-                  router.push(
-                    "/admin-login"
-                  );
-
-                }}
-
-                className="bg-red-500 hover:bg-red-600 text-white px-6 py-3 rounded-2xl font-semibold transition"
-
-              >
-
-                Logout
-
-              </button>
-
-            </div>
-
-          </div>
-
-          {/* FORM */}
-          <form
-            onSubmit={handleSubmit}
-            className="bg-white/5 border border-[#D4AF37]/20 rounded-[32px] backdrop-blur-xl p-6 md:p-8 mb-12"
+    <div className="p-8 text-white space-y-10">
+      {/* STAT CARDS */}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-5">
+        {cards.map((card) => (
+          <div
+            key={card.label}
+            className="bg-white/5 border border-white/10 rounded-2xl p-6 hover:border-[#D4AF37]/40 transition"
           >
-
-            <div className="grid md:grid-cols-2 gap-5">
-
-              {/* NAME */}
-              <input
-                type="text"
-                name="name"
-                placeholder="Product Name"
-                value={form.name}
-                onChange={handleChange}
-                className="w-full border border-white/10 bg-black/40 text-white placeholder:text-gray-400 rounded-2xl px-5 py-4 outline-none focus:border-[#D4AF37]"
-                required
-              />
-
-              {/* IMAGE */}
-              <div className="space-y-3">
-
-                <label className="text-white font-semibold">
-
-                  Product Image
-
-                </label>
-
-                <input
-                  type="file"
-                  accept="image/*"
-                  onChange={
-                    handleImageUpload
-                  }
-                  className="w-full border border-white/10 bg-black/40 text-white rounded-2xl px-5 py-4 outline-none"
-                />
-
-                {uploading && (
-
-                  <p className="text-[#D4AF37]">
-
-                    Uploading image...
-
-                  </p>
-
-                )}
-
-                {form.image && (
-
-                  <div className="relative w-full h-[220px] rounded-2xl overflow-hidden border border-[#D4AF37]/20 bg-black/30">
-
-                    <Image
-                      fill
-                      sizes="(max-width: 768px) 100vw, 50vw"
-                      src={form.image}
-                      alt="Preview"
-                      className="object-contain"
-                      loading="lazy"
-                    />
-
-                  </div>
-
-                )}
-
-              </div>
-
-              {/* PRICE */}
-              <input
-                type="number"
-                name="price"
-                placeholder="Price"
-                value={form.price}
-                onChange={handleChange}
-                className="w-full border border-white/10 bg-black/40 text-white placeholder:text-gray-400 rounded-2xl px-5 py-4 outline-none focus:border-[#D4AF37]"
-                required
-              />
-
-              {/* OLD PRICE */}
-              <input
-                type="number"
-                name="oldPrice"
-                placeholder="Old Price"
-                value={form.oldPrice}
-                onChange={handleChange}
-                className="w-full border border-white/10 bg-black/40 text-white placeholder:text-gray-400 rounded-2xl px-5 py-4 outline-none focus:border-[#D4AF37]"
-              />
-
-              {/* CATEGORY */}
-              <div>
-
-                <label className="block text-white font-semibold mb-3">
-
-                  Product Category
-
-                </label>
-
-                <select
-                  name="category"
-                  value={form.category}
-                  onChange={handleChange}
-                  className="w-full border border-white/10 bg-black/40 text-white rounded-2xl px-5 py-4 outline-none focus:border-[#D4AF37]"
-                  required
-                >
-
-                  <option value="">
-                    Select Category
-                  </option>
-
-                  <option value="Perfumes">
-                    Perfumes
-                  </option>
-
-                  <option value="Attars">
-                    Attars
-                  </option>
-
-                  <option value="Fresheners">
-                    Fresheners
-                  </option>
-
-                  <option value="Premium Gifts">
-                    Premium Gifts
-                  </option>
-
-                  <option value="Combos">
-                    Combos
-                  </option>
-
-                </select>
-
-              </div>
-
-              {/* GENDER CATEGORY */}
-            <div>
-
-              <label className="block text-white font-semibold mb-3">
-
-                Gender Category
-
-              </label>
-
-              <select
-                name="genderCategory"
-                value={form.genderCategory}
-                onChange={handleChange}
-                className="w-full border border-white/10 bg-black/40 text-white rounded-2xl px-5 py-4 outline-none focus:border-[#D4AF37]"
-                required
-              >
-
-                <option value="">
-                  Select Gender
-                </option>
-
-                <option value="Men">
-                  Men
-                </option>
-
-                <option value="Women">
-                  Women
-                </option>
-
-                <option value="Unisex">
-                  Unisex
-                </option>
-
-              </select>
-
-            </div>
-
-              {/* NOTES */}
-              <input
-                type="text"
-                name="notesTags"
-                placeholder="Woody, Oud, Luxury"
-                value={form.notesTags}
-                onChange={handleChange}
-                className="w-full border border-white/10 bg-black/40 text-white placeholder:text-gray-400 rounded-2xl px-5 py-4 outline-none focus:border-[#D4AF37]"
-              />
-              {/* TOP NOTES */}
-              <input
-                type="text"
-                name="topNotes"
-                placeholder="Top Notes (Bergamot, Lemon)"
-                value={form.topNotes}
-                onChange={handleChange}
-                className="w-full border border-white/10 bg-black/40 text-white placeholder:text-gray-400 rounded-2xl px-5 py-4 outline-none focus:border-[#D4AF37]"
-              />
-
-              {/* HEART NOTES */}
-              <input
-                type="text"
-                name="heartNotes"
-                placeholder="Heart Notes (Rose, Jasmine)"
-                value={form.heartNotes}
-                onChange={handleChange}
-                className="w-full border border-white/10 bg-black/40 text-white placeholder:text-gray-400 rounded-2xl px-5 py-4 outline-none focus:border-[#D4AF37]"
-              />
-
-              {/* BASE NOTES */}
-              <input
-                type="text"
-                name="baseNotes"
-                placeholder="Base Notes (Oud, Amber, Musk)"
-                value={form.baseNotes}
-                onChange={handleChange}
-                className="w-full border border-white/10 bg-black/40 text-white placeholder:text-gray-400 rounded-2xl px-5 py-4 outline-none focus:border-[#D4AF37]"
-              />
-
-              {/* LONGEVITY */}
-              <input
-                type="text"
-                name="longevity"
-                placeholder="Longevity (8-10 Hours)"
-                value={form.longevity}
-                onChange={handleChange}
-                className="w-full border border-white/10 bg-black/40 text-white placeholder:text-gray-400 rounded-2xl px-5 py-4 outline-none focus:border-[#D4AF37]"
-              />
-
-              {/* PROJECTION */}
-              <input
-                type="text"
-                name="projection"
-                placeholder="Projection (Strong)"
-                value={form.projection}
-                onChange={handleChange}
-                className="w-full border border-white/10 bg-black/40 text-white placeholder:text-gray-400 rounded-2xl px-5 py-4 outline-none focus:border-[#D4AF37]"
-              />
-
-              {/* OCCASION */}
-              <input
-                type="text"
-                name="occasion"
-                placeholder="Occasion (Date Night, Office)"
-                value={form.occasion}
-                onChange={handleChange}
-                className="w-full border border-white/10 bg-black/40 text-white placeholder:text-gray-400 rounded-2xl px-5 py-4 outline-none focus:border-[#D4AF37]"
-              />
-
-              {/* SEASON */}
-              <input
-                type="text"
-                name="season"
-                placeholder="Season (Winter, Summer, All Season)"
-                value={form.season}
-                onChange={handleChange}
-                className="w-full border border-white/10 bg-black/40 text-white placeholder:text-gray-400 rounded-2xl px-5 py-4 outline-none focus:border-[#D4AF37]"
-              />
-
-              {/* BADGE */}
-              <input
-                type="text"
-                name="badge"
-                placeholder="Premium / Luxury"
-                value={form.badge}
-                onChange={handleChange}
-                className="w-full border border-white/10 bg-black/40 text-white placeholder:text-gray-400 rounded-2xl px-5 py-4 outline-none focus:border-[#D4AF37]"
-              />
-
-              {/* TAG */}
-              <input
-                type="text"
-                name="tag"
-                placeholder="Trending / Bestseller"
-                value={form.tag}
-                onChange={handleChange}
-                className="w-full border border-white/10 bg-black/40 text-white placeholder:text-gray-400 rounded-2xl px-5 py-4 outline-none focus:border-[#D4AF37]"
-              />
-
-              {/* RATING */}
-              <input
-                type="number"
-                step="0.1"
-                name="rating"
-                placeholder="Rating"
-                value={form.rating}
-                onChange={handleChange}
-                className="w-full border border-white/10 bg-black/40 text-white placeholder:text-gray-400 rounded-2xl px-5 py-4 outline-none focus:border-[#D4AF37]"
-              />
-
-              {/* REVIEWS */}
-              <input
-                type="number"
-                name="reviews"
-                placeholder="Reviews"
-                value={form.reviews}
-                onChange={handleChange}
-                className="w-full border border-white/10 bg-black/40 text-white placeholder:text-gray-400 rounded-2xl px-5 py-4 outline-none focus:border-[#D4AF37]"
-              />
-
-              {/* STOCK */}
-              <input
-                type="number"
-                name="stock"
-                placeholder="Stock"
-                value={form.stock}
-                onChange={handleChange}
-                className="w-full border border-white/10 bg-black/40 text-white placeholder:text-gray-400 rounded-2xl px-5 py-4 outline-none focus:border-[#D4AF37]"
-              />
-
-            </div>
-
-            {/* DESCRIPTION */}
-            <textarea
-              name="description"
-              placeholder="Product Description"
-              value={form.description}
-              onChange={handleChange}
-              rows={5}
-              className="w-full border border-white/10 bg-black/40 text-white placeholder:text-gray-400 rounded-2xl px-5 py-4 outline-none mt-5 focus:border-[#D4AF37]"
-            />
-
-            {/* BUTTON */}
-            <button
-              type="submit"
-              disabled={uploading}
-              className="mt-6 bg-[#D4AF37] text-black px-8 py-4 rounded-2xl hover:opacity-90 transition duration-300 font-semibold disabled:opacity-50"
-            >
-
-              {uploading
-                ? "Uploading..."
-                : editingId
-                ? "Update Product"
-                : "Add Product"}
-
-            </button>
-
-          </form>
-
-          {/* PRODUCTS */}
-          <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-8">
-
-            {products.map(
-              (product) => (
-
-                <div
-                  key={product._id}
-                  className="bg-white/5 border border-[#D4AF37]/20 rounded-[32px] overflow-hidden backdrop-blur-xl"
-                >
-
-                  <div className="relative h-[320px] bg-black/30">
-
-                    <Image
-                      src={product.image}
-                      alt={product.name}
-                      fill
-                      loading="lazy"
-                      sizes="(max-width: 768px) 100vw, 50vw"
-                      className="object-contain p-5"
-                    />
-
-                  </div>
-
-                  <div className="p-6">
-
-                    <h2 className="text-2xl font-bold text-white">
-
-                      {product.name}
-
-                    </h2>
-
-                    <p className="text-gray-400 mt-2 line-clamp-2">
-
-                      {product.description}
-
-                    </p>
-
-                    <div className="mt-5 flex items-center justify-between">
-
-                      <div>
-
-                        <p className="text-3xl font-bold text-[#D4AF37]">
-
-                          ₹{product.price}
-
-                        </p>
-
-                        <p className="text-green-400 font-semibold mt-1">
-
-                          Stock:
-                          {" "}
-                          {product.stock}
-
-                        </p>
-
-                      </div>
-
-                      <div className="flex gap-3">
-
-                        <button
-                          onClick={() =>
-                            editProduct(
-                              product
-                            )
-                          }
-                          className="bg-[#D4AF37] text-black px-5 py-2 rounded-xl hover:opacity-90 transition font-semibold"
-                        >
-
-                          Edit
-
-                        </button>
-
-                        <button
-                          onClick={() =>
-                            deleteProduct(
-                              product._id
-                            )
-                          }
-                          className="bg-red-500 text-white px-5 py-2 rounded-xl hover:bg-red-600 transition"
-                        >
-
-                          Delete
-
-                        </button>
-
-                      </div>
-
-                    </div>
-
-                  </div>
-
-                </div>
-
-              )
-            )}
-
+            <p className="text-gray-400 text-sm mb-2">{card.label}</p>
+            <p className={`text-3xl font-bold ${card.accent}`}>
+              {card.value}
+            </p>
           </div>
-
-        </div>
-
+        ))}
       </div>
 
-    </AdminProtection>
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        {/* RECENT ORDERS */}
+        <div className="lg:col-span-2 bg-white/5 border border-white/10 rounded-2xl p-6">
+          <div className="flex items-center justify-between mb-5">
+            <h2 className="text-xl font-bold">Recent Orders</h2>
+            <Link
+              href="/admin/orders"
+              className="text-[#D4AF37] text-sm hover:underline"
+            >
+              View All →
+            </Link>
+          </div>
 
+          {recentOrders.length === 0 ? (
+            <p className="text-gray-400">No orders yet.</p>
+          ) : (
+            <div className="overflow-x-auto">
+              <table className="w-full text-sm">
+                <thead>
+                  <tr className="text-left text-gray-400 border-b border-white/10">
+                    <th className="py-3 pr-4">Order ID</th>
+                    <th className="py-3 pr-4">Customer</th>
+                    <th className="py-3 pr-4">Amount</th>
+                    <th className="py-3 pr-4">Status</th>
+                    <th className="py-3">Date</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {recentOrders.map((o) => (
+                    <tr
+                      key={o._id}
+                      className="border-b border-white/5"
+                    >
+                      <td className="py-3 pr-4 text-[#D4AF37]">
+                        {o.orderId || o._id.slice(-6)}
+                      </td>
+                      <td className="py-3 pr-4">{o.customerName}</td>
+                      <td className="py-3 pr-4">
+                        ₹{(o.totalAmount || 0).toLocaleString("en-IN")}
+                      </td>
+                      <td
+                        className={`py-3 pr-4 font-semibold ${
+                          statusColor[o.orderStatus] || "text-gray-300"
+                        }`}
+                      >
+                        {o.orderStatus}
+                      </td>
+                      <td className="py-3 text-gray-400">
+                        {new Date(o.createdAt).toLocaleDateString("en-IN")}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+        </div>
+
+        {/* LOW STOCK */}
+        <div className="bg-white/5 border border-white/10 rounded-2xl p-6">
+          <h2 className="text-xl font-bold mb-5">Low Stock Alerts</h2>
+
+          {lowStock.length === 0 ? (
+            <p className="text-gray-400">All products well stocked ✅</p>
+          ) : (
+            <div className="space-y-4">
+              {lowStock.map((p) => (
+                <div
+                  key={p._id}
+                  className="flex items-center justify-between border border-white/10 rounded-xl px-4 py-3"
+                >
+                  <span className="text-sm">{p.name}</span>
+                  <span
+                    className={`text-sm font-bold ${
+                      p.stock === 0 ? "text-red-400" : "text-yellow-400"
+                    }`}
+                  >
+                    {p.stock === 0 ? "Out of stock" : `${p.stock} left`}
+                  </span>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
   );
-
 }

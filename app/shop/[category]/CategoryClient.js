@@ -63,32 +63,35 @@ export default function CategoryClient({
 
     <div className="min-h-screen bg-black text-white overflow-hidden">
 
-      {/* HERO */}
-      <section className="relative px-6 py-20 border-b border-[#D4AF37]/20">
+      {/* HEADER (compact) */}
+      <section className="relative px-6 py-8 md:py-10 border-b border-[#D4AF37]/20">
 
         <div className="absolute inset-0 bg-gradient-to-b from-[#D4AF37]/10 to-transparent" />
 
-        <div className="relative max-w-6xl mx-auto text-center">
+        <div className="relative max-w-7xl mx-auto flex flex-wrap items-end justify-between gap-4">
 
-          <p className="uppercase tracking-[6px] text-[#D4AF37] text-xs mb-5">
+          <div>
 
-            ANAMYST Collection
+            <p className="uppercase tracking-[5px] text-[#D4AF37] text-[10px] mb-2">
 
-          </p>
+              ANAMYST Collection
 
-          <h1 className="text-5xl md:text-7xl font-bold mb-8 capitalize">
+            </p>
 
-            {category.replace(
-              /-/g,
-              " "
-            )}
+            <h1 className="text-3xl md:text-5xl font-bold capitalize">
 
-          </h1>
+              {category.replace(
+                /-/g,
+                " "
+              )}
 
-          <p className="text-gray-300 text-lg max-w-3xl mx-auto leading-9">
+            </h1>
 
-            Discover premium luxury
-            fragrance collections
+          </div>
+
+          <p className="text-gray-400 text-sm max-w-md leading-6">
+
+            Premium luxury fragrances
             crafted for timeless elegance.
 
           </p>
@@ -98,7 +101,7 @@ export default function CategoryClient({
       </section>
 
       {/* PRODUCTS */}
-      <section className="px-6 py-16">
+      <section className="px-6 py-10">
 
         <div className="max-w-7xl mx-auto">
 

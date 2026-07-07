@@ -33,6 +33,12 @@ export default function CartPage() {
     setProducts] =
     useState([]);
 
+  /* REMOVE CONFIRMATION */
+
+  const [confirmItem,
+    setConfirmItem] =
+    useState(null);
+
   /* HYDRATION FIX */
 
   useEffect(() => {
@@ -124,6 +130,82 @@ export default function CartPage() {
   return (
 
     <div className="min-h-screen bg-black text-white">
+
+      {/* REMOVE CONFIRMATION MODAL */}
+      {confirmItem && (
+
+        <div
+          className="fixed inset-0 z-[1000] flex items-center justify-center px-6 bg-black/70 backdrop-blur-sm"
+          onClick={() =>
+            setConfirmItem(null)
+          }
+        >
+
+          <div
+            onClick={(e) =>
+              e.stopPropagation()
+            }
+            className="w-full max-w-sm bg-black border border-[#D4AF37]/30 rounded-[28px] p-8 text-center shadow-[0_0_80px_rgba(0,0,0,0.9)]"
+          >
+
+            <p className="uppercase tracking-[4px] text-[#D4AF37] text-[10px] mb-4">
+
+              Remove Item
+
+            </p>
+
+            <h3 className="text-xl font-semibold mb-2">
+
+              {confirmItem.name}
+
+            </h3>
+
+            <p className="text-gray-400 text-sm mb-8">
+
+              Are you sure you want to remove
+              this item from your cart?
+
+            </p>
+
+            <div className="grid grid-cols-2 gap-4">
+
+              <button
+                onClick={() =>
+                  setConfirmItem(null)
+                }
+                className="py-3 rounded-xl border border-white/20 text-white hover:border-[#D4AF37] transition"
+              >
+
+                Keep It
+
+              </button>
+
+              <button
+                onClick={() => {
+
+                  removeFromCart(
+                    confirmItem._id
+                  );
+
+                  loadCart();
+
+                  setConfirmItem(null);
+
+                }}
+                className="py-3 rounded-xl bg-red-500/90 text-white font-semibold hover:bg-red-500 transition"
+              >
+
+                Remove
+
+              </button>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      )}
 
       {/* HERO */}
 
@@ -312,9 +394,8 @@ export default function CartPage() {
                                     quantity === 1
                                   ) {
 
-                                    removeFromCart(
-                                      item._id
-                                    );
+                                    /* last piece → ask first */
+                                    setConfirmItem(item);
 
                                   } else {
 
@@ -323,9 +404,9 @@ export default function CartPage() {
                                       "decrease"
                                     );
 
-                                  }
+                                    loadCart();
 
-                                  loadCart();
+                                  }
 
                                 }}
                                 className="w-10 h-10 rounded-xl bg-black border border-white/10 hover:bg-[#D4AF37] hover:text-black transition"
@@ -364,15 +445,9 @@ export default function CartPage() {
                             {/* REMOVE */}
 
                             <button
-                              onClick={() => {
-
-                                removeFromCart(
-                                  item._id
-                                );
-
-                                loadCart();
-
-                              }}
+                              onClick={() =>
+                                setConfirmItem(item)
+                              }
                               className="text-red-400 hover:text-red-300 transition text-sm"
                             >
 

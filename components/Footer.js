@@ -124,6 +124,15 @@ export default function Footer() {
               </Link>
 
               <Link
+                href="/shipping-policy"
+                className="hover:text-[#D4AF37] transition"
+              >
+
+                Shipping Policy
+
+              </Link>
+
+              <Link
                 href="/terms-and-conditions"
                 className="hover:text-[#D4AF37] transition"
               >
@@ -173,7 +182,7 @@ export default function Footer() {
 
                 <span>
 
-                  +91 8957851141
+                  +91 8840305018
 
                 </span>
 

@@ -18,6 +18,8 @@ import {
   clearCart,
 } from "../../lib/cart";
 
+import toast from "react-hot-toast";
+
 export default function CheckoutPage() {
 
   const router =
@@ -130,7 +132,7 @@ export default function CheckoutPage() {
 
       ) {
 
-        alert(
+        toast.error(
           "Please fill all fields"
         );
 
@@ -335,7 +337,7 @@ export default function CheckoutPage() {
                 !verifyData.success
               ) {
 
-                alert(
+                toast.error(
                   "Payment verification failed"
                 );
 
@@ -466,7 +468,7 @@ export default function CheckoutPage() {
 
         console.log(error);
 
-        alert(
+        toast.error(
           "Something went wrong"
         );
 

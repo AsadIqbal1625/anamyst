@@ -21,8 +21,8 @@ export default function Home() {
 
     <main className="w-full bg-black overflow-hidden text-white">
 
-      {/* HERO SECTION */}
-      <section className="relative w-full min-h-[100dvh] overflow-hidden">
+      {/* ================= MOBILE HERO (full-screen video) ================= */}
+      <section className="relative w-full min-h-[100dvh] overflow-hidden lg:hidden">
 
         {/* VIDEO */}
         <video
@@ -30,6 +30,7 @@ export default function Home() {
           muted
           loop
           playsInline
+          preload="metadata"
           className="absolute inset-0 w-full h-full object-cover"
         >
           <source
@@ -39,26 +40,23 @@ export default function Home() {
         </video>
 
         {/* OVERLAY */}
-        <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/50 to-black z-0" />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/40 to-black z-0" />
 
         {/* CONTENT */}
         <div className="relative z-10 flex flex-col items-center justify-center min-h-[100dvh] px-6 text-center">
 
-          {/* TITLE */}
-          <h1 className="text-white text-5xl sm:text-7xl md:text-8xl font-semibold tracking-[0.25em] leading-tight">
+          <h1 className="text-white text-5xl sm:text-7xl font-semibold tracking-[0.25em] leading-tight">
 
             ANAMYST
 
           </h1>
 
-          {/* SUBTITLE */}
           <p className="text-white/90 text-lg sm:text-2xl mt-6 max-w-2xl leading-relaxed">
 
             Discover fragrances that define your presence
 
           </p>
 
-          {/* BUTTON */}
           <Link href="/shop">
 
             <button className="mt-10 bg-[#D4AF37] hover:bg-[#c19b2e] text-black text-lg sm:text-xl px-8 sm:px-10 py-4 sm:py-5 rounded-full shadow-2xl transition-all duration-500 hover:scale-105 font-semibold tracking-wide">
@@ -68,6 +66,77 @@ export default function Home() {
             </button>
 
           </Link>
+
+        </div>
+
+      </section>
+
+      {/* ================= DESKTOP HERO (split layout) ================= */}
+      <section className="relative w-full min-h-[92vh] overflow-hidden hidden lg:flex items-center">
+
+        {/* BACKGROUND GLOW */}
+        <div className="absolute inset-0 bg-gradient-to-br from-[#D4AF37]/10 via-transparent to-[#D4AF37]/5 pointer-events-none" />
+
+        <div className="relative max-w-7xl mx-auto px-10 grid grid-cols-2 gap-16 items-center w-full">
+
+          {/* LEFT — BRAND */}
+          <div>
+
+            <p className="uppercase tracking-[8px] text-[#D4AF37] text-sm mb-8">
+
+              Luxury Fragrance House
+
+            </p>
+
+            <div className="text-white text-7xl xl:text-8xl font-semibold tracking-[0.2em] leading-tight mb-8">
+
+              ANAMYST
+
+            </div>
+
+            <p className="text-white/80 text-2xl max-w-xl leading-relaxed mb-12">
+
+              Discover fragrances that define your presence
+
+            </p>
+
+            <Link href="/shop">
+
+              <button className="bg-[#D4AF37] hover:bg-[#c19b2e] text-black text-xl px-12 py-5 rounded-full shadow-2xl transition-all duration-500 hover:scale-105 font-semibold tracking-wide">
+
+                Explore Collection
+
+              </button>
+
+            </Link>
+
+          </div>
+
+          {/* RIGHT — FRAMED VIDEO */}
+          <div className="flex justify-center">
+
+            <div className="relative rounded-[36px] overflow-hidden border border-[#D4AF37]/30 shadow-[0_0_80px_rgba(212,175,55,0.15)] max-h-[78vh]">
+
+              <video
+                autoPlay
+                muted
+                loop
+                playsInline
+                preload="metadata"
+                className="h-[78vh] w-auto object-cover"
+              >
+                <source
+                  src="/perfume.mp4"
+                  type="video/mp4"
+                />
+              </video>
+
+              {/* SUBTLE BOTTOM FADE */}
+              <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-black/60 to-transparent" />
+
+            </div>
+
+          </div>
 
         </div>
 

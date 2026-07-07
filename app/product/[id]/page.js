@@ -2,9 +2,17 @@ import { connectDB } from "../../../lib/mongodb";
 import Product from "../../../models/Product";
 import ProductClient from "./ProductClient";
 import mongoose from "mongoose";
+import { notFound } from "next/navigation";
 
 export async function generateMetadata({ params }) {
   const { id } = await params;
+
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    return {
+      title: "Product Not Found | ANAMYST",
+      description: "Luxury fragrances by ANAMYST.",
+    };
+  }
 
   await connectDB();
 
@@ -39,23 +47,58 @@ export async function generateMetadata({ params }) {
   };
 }
 
+/* Server-side related products:
+   same category / gender first, exclude current, randomized, max 8 */
+async function getRelatedProducts(product) {
+  const related = await Product.find({
+    _id: { $ne: product._id },
+    $or: [
+      { category: product.category },
+      { genderCategory: product.genderCategory },
+    ],
+  }).lean();
+
+  if (related.length < 8) {
+    const extra = await Product.find({
+      _id: {
+        $nin: [product._id, ...related.map((p) => p._id)],
+      },
+    })
+      .limit(8 - related.length)
+      .lean();
+
+    related.push(...extra);
+  }
+
+  // Fisher–Yates shuffle
+  for (let i = related.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [related[i], related[j]] = [related[j], related[i]];
+  }
+
+  return related.slice(0, 8);
+}
+
 export default async function ProductPage({ params }) {
   const { id } = await params;
 
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    notFound();
+  }
+
   await connectDB();
 
-
-if (!mongoose.Types.ObjectId.isValid(id)) {
-  return {
-    title: "Product Not Found | ANAMYST",
-    description: "Luxury fragrances by ANAMYST.",
-  };
-}
   const product = await Product.findById(id).lean();
 
   if (!product) {
-    return <ProductClient productId={id} />;
+    notFound();
   }
+
+  const relatedProducts = await getRelatedProducts(product);
+
+  // Serialize ObjectIds / Dates for the client component
+  const productData = JSON.parse(JSON.stringify(product));
+  const relatedData = JSON.parse(JSON.stringify(relatedProducts));
 
   const productSchema = {
     "@context": "https://schema.org",
@@ -77,35 +120,35 @@ if (!mongoose.Types.ObjectId.isValid(id)) {
     },
   };
   const breadcrumbSchema = {
-  "@context": "https://schema.org",
-  "@type": "BreadcrumbList",
-  itemListElement: [
-    {
-      "@type": "ListItem",
-      position: 1,
-      name: "Home",
-      item: "https://anamyst.com",
-    },
-    {
-      "@type": "ListItem",
-      position: 2,
-      name: "Shop",
-      item: "https://anamyst.com/shop",
-    },
-    {
-      "@type": "ListItem",
-      position: 3,
-      name: product.category || "Products",
-      item: `https://anamyst.com/shop/${(product.category || "").toLowerCase().replace(/\s+/g, "-")}`,
-    },
-    {
-      "@type": "ListItem",
-      position: 4,
-      name: product.name,
-      item: `https://anamyst.com/product/${id}`,
-    },
-  ],
-};
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      {
+        "@type": "ListItem",
+        position: 1,
+        name: "Home",
+        item: "https://anamyst.com",
+      },
+      {
+        "@type": "ListItem",
+        position: 2,
+        name: "Shop",
+        item: "https://anamyst.com/shop",
+      },
+      {
+        "@type": "ListItem",
+        position: 3,
+        name: product.category || "Products",
+        item: `https://anamyst.com/shop/${(product.category || "").toLowerCase().replace(/\s+/g, "-")}`,
+      },
+      {
+        "@type": "ListItem",
+        position: 4,
+        name: product.name,
+        item: `https://anamyst.com/product/${id}`,
+      },
+    ],
+  };
   return (
     <>
       <script
@@ -115,14 +158,18 @@ if (!mongoose.Types.ObjectId.isValid(id)) {
           __html: JSON.stringify(productSchema),
         }}
       />
-          <script
-      id="breadcrumb-schema"
-      type="application/ld+json"
-      dangerouslySetInnerHTML={{
-        __html: JSON.stringify(breadcrumbSchema),
-      }}
-    />
-      <ProductClient productId={id} />
+      <script
+        id="breadcrumb-schema"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(breadcrumbSchema),
+        }}
+      />
+      <ProductClient
+        productId={id}
+        initialProduct={productData}
+        initialRelated={relatedData}
+      />
     </>
   );
 }

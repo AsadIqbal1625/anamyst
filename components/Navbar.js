@@ -6,6 +6,7 @@ import Image from "next/image";
 import {
   useEffect,
   useState,
+  useRef,
 } from "react";
 
 import { getCart }
@@ -34,6 +35,74 @@ export default function Navbar() {
   const [isOpen,
     setIsOpen] =
     useState(false);
+
+  /* SMART NAVBAR (hide on scroll down, show on scroll up) */
+
+  const navRef = useRef(null);
+
+  const [hidden, setHidden] =
+    useState(false);
+
+  const [navHeight, setNavHeight] =
+    useState(0);
+
+  useEffect(() => {
+
+    const measure = () =>
+      setNavHeight(
+        navRef.current?.offsetHeight || 0
+      );
+
+    measure();
+
+    window.addEventListener(
+      "resize",
+      measure
+    );
+
+    let lastY = window.scrollY;
+
+    const onScroll = () => {
+
+      const y = window.scrollY;
+
+      if (y < 80 || y < lastY - 2) {
+
+        /* near top OR scrolling up → show */
+        setHidden(false);
+
+      } else if (y > lastY + 2) {
+
+        /* scrolling down → hide */
+        setHidden(true);
+
+      }
+
+      lastY = y;
+
+    };
+
+    window.addEventListener(
+      "scroll",
+      onScroll,
+      { passive: true }
+    );
+
+    return () => {
+
+      window.removeEventListener(
+        "resize",
+        measure
+      );
+
+      window.removeEventListener(
+        "scroll",
+        onScroll
+      );
+
+    };
+
+  }, []);
 
   /* CART COUNT */
   useEffect(() => {
@@ -90,8 +159,18 @@ export default function Navbar() {
         setIsOpen={setIsOpen}
       />
 
+      {/* SPACER (keeps page content below the fixed navbar) */}
+      <div style={{ height: navHeight }} />
+
       {/* NAVBAR */}
-      <nav className="sticky top-0 z-30 bg-black/95 backdrop-blur-xl border-b border-white/10 w-full">
+      <nav
+        ref={navRef}
+        className={`fixed top-0 left-0 right-0 z-30 bg-black/95 backdrop-blur-xl border-b border-white/10 w-full transition-transform duration-300 ${
+          hidden
+            ? "-translate-y-full"
+            : "translate-y-0"
+        }`}
+      >
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3">
 
@@ -168,127 +247,97 @@ export default function Navbar() {
                 </button>
 
                 {/* DROPDOWN */}
-                <div className="absolute top-full left-0 mt-5 w-[300px] bg-black/95 backdrop-blur-xl border border-white/10 rounded-3xl p-4 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 shadow-2xl">
+                <div className="absolute top-full left-0 pt-4 opacity-0 invisible translate-y-2 group-hover:opacity-100 group-hover:visible group-hover:translate-y-0 transition-all duration-300 ease-out">
 
-                  <div className="space-y-3">
+                  <div className="w-[400px] bg-black/95 backdrop-blur-2xl border border-[#D4AF37]/20 rounded-2xl shadow-[0_25px_80px_rgba(0,0,0,0.85)] overflow-hidden">
 
-                    {/* ALL COLLECTIONS */}
+                    {/* HEADER */}
+                    <div className="px-7 pt-6 pb-4 border-b border-white/5">
+
+                      <p className="text-[10px] tracking-[5px] text-[#D4AF37] uppercase">
+
+                        The Collections
+
+                      </p>
+
+                    </div>
+
+                    {/* ITEMS */}
+                    <div className="py-2">
+
+                      {[
+                        {
+                          href: "/shop/perfumes",
+                          name: "Perfumes",
+                          desc: "Signature luxury fragrances",
+                        },
+                        {
+                          href: "/shop/attars",
+                          name: "Attars",
+                          desc: "Traditional premium attars",
+                        },
+                        {
+                          href: "/shop/fresheners",
+                          name: "Fresheners",
+                          desc: "Refresh your surroundings",
+                        },
+                        {
+                          href: "/shop/premium-gifts",
+                          name: "Premium Gifts",
+                          desc: "Elegant gifting collections",
+                        },
+                        {
+                          href: "/shop/combos",
+                          name: "Combos",
+                          desc: "Curated fragrance bundles",
+                        },
+                      ].map((item) => (
+
+                        <Link
+                          key={item.href}
+                          href={item.href}
+                          className="group/item flex items-center justify-between px-7 py-4 hover:bg-[#D4AF37]/5 transition duration-300"
+                        >
+
+                          <div>
+
+                            <p className="text-white text-sm tracking-[3px] uppercase font-medium group-hover/item:text-[#D4AF37] transition duration-300">
+
+                              {item.name}
+
+                            </p>
+
+                            <p className="text-gray-500 text-xs mt-1 normal-case tracking-normal">
+
+                              {item.desc}
+
+                            </p>
+
+                          </div>
+
+                          <span className="text-[#D4AF37] opacity-0 -translate-x-2 group-hover/item:opacity-100 group-hover/item:translate-x-0 transition-all duration-300">
+
+                            →
+
+                          </span>
+
+                        </Link>
+
+                      ))}
+
+                    </div>
+
+                    {/* FOOTER — ALL COLLECTIONS */}
                     <Link
                       href="/shop"
-                      className="block bg-[#D4AF37]/10 border border-[#D4AF37]/20 rounded-2xl p-4 hover:bg-[#D4AF37]/20 transition duration-300"
+                      className="block px-7 py-5 border-t border-white/5 bg-[#D4AF37]/5 hover:bg-[#D4AF37]/10 transition duration-300"
                     >
 
-                      <p className="text-[#D4AF37] text-base font-semibold">
+                      <span className="text-[#D4AF37] text-xs tracking-[4px] uppercase font-semibold">
 
-                        All Collections
+                        View All Collections →
 
-                      </p>
-
-                      <p className="text-gray-400 text-xs mt-1">
-
-                        Explore every ANAMYST collection
-
-                      </p>
-
-                    </Link>
-
-                    {/* PERFUMES */}
-                    <Link
-                      href="/shop/perfumes"
-                      className="block bg-white/5 border border-white/5 rounded-2xl p-4 hover:border-[#D4AF37]/40 hover:bg-[#D4AF37]/5 transition duration-300"
-                    >
-
-                      <p className="text-white text-base font-semibold">
-
-                        Perfumes
-
-                      </p>
-
-                      <p className="text-gray-400 text-xs mt-1">
-
-                        Signature luxury fragrances
-
-                      </p>
-
-                    </Link>
-
-                    {/* ATTARS */}
-                    <Link
-                      href="/shop/attars"
-                      className="block bg-white/5 border border-white/5 rounded-2xl p-4 hover:border-[#D4AF37]/40 hover:bg-[#D4AF37]/5 transition duration-300"
-                    >
-
-                      <p className="text-white text-base font-semibold">
-
-                        Attars
-
-                      </p>
-
-                      <p className="text-gray-400 text-xs mt-1">
-
-                        Traditional premium attars
-
-                      </p>
-
-                    </Link>
-
-                    {/* FRESHENERS */}
-                    <Link
-                      href="/shop/fresheners"
-                      className="block bg-white/5 border border-white/5 rounded-2xl p-4 hover:border-[#D4AF37]/40 hover:bg-[#D4AF37]/5 transition duration-300"
-                    >
-
-                      <p className="text-white text-base font-semibold">
-
-                        Fresheners
-
-                      </p>
-
-                      <p className="text-gray-400 text-xs mt-1">
-
-                        Refresh your surroundings
-
-                      </p>
-
-                    </Link>
-
-                    {/* GIFTS */}
-                    <Link
-                      href="/shop/premium-gifts"
-                      className="block bg-white/5 border border-white/5 rounded-2xl p-4 hover:border-[#D4AF37]/40 hover:bg-[#D4AF37]/5 transition duration-300"
-                    >
-
-                      <p className="text-white text-base font-semibold">
-
-                        Premium Gifts
-
-                      </p>
-
-                      <p className="text-gray-400 text-xs mt-1">
-
-                        Elegant gifting collections
-
-                      </p>
-
-                    </Link>
-
-                    {/* COMBOS */}
-                    <Link
-                      href="/shop/combos"
-                      className="block bg-white/5 border border-white/5 rounded-2xl p-4 hover:border-[#D4AF37]/40 hover:bg-[#D4AF37]/5 transition duration-300"
-                    >
-
-                      <p className="text-white text-base font-semibold">
-
-                        Combos
-
-                      </p>
-
-                      <p className="text-gray-400 text-xs mt-1">
-
-                        Curated fragrance bundles
-
-                      </p>
+                      </span>
 
                     </Link>
 

@@ -1,3 +1,12 @@
+export const metadata = {
+  title: "FAQ | ANAMYST Luxury Fragrances",
+  description:
+    "Frequently asked questions about ANAMYST luxury fragrances — longevity, shipping across India, authenticity, and payment options.",
+  alternates: {
+    canonical: "https://anamyst.com/faq",
+  },
+};
+
 const faqSchema = {
   "@context": "https://schema.org",
   "@type": "FAQPage",
@@ -36,6 +45,7 @@ const faqSchema = {
     }
   ]
 };
+
 export default function FAQPage() {
 
   const faqs = [
@@ -62,63 +72,123 @@ export default function FAQPage() {
 
   ];
 
-return (
-  <>
-    <script
-      id="faq-schema"
-      type="application/ld+json"
-      dangerouslySetInnerHTML={{
-        __html: JSON.stringify(faqSchema),
-      }}
-    />
+  return (
+    <>
+      <script
+        id="faq-schema"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(faqSchema),
+        }}
+      />
 
-    <div className="min-h-screen bg-gradient-to-br from-[#f5f5f5] via-[#faf7f2] to-[#f3f3f3] px-6 py-20">
+      <div className="min-h-screen bg-black text-white overflow-hidden">
 
-      <div className="max-w-4xl mx-auto">
+        {/* HERO */}
+        <section className="relative px-6 py-20 border-b border-[#D4AF37]/20">
 
-        {/* TITLE */}
-        <div className="text-center mb-16">
+          <div className="absolute inset-0 bg-gradient-to-b from-[#D4AF37]/10 to-transparent" />
 
-          <h1 className="text-5xl md:text-6xl font-bold text-black mb-6">
-            Frequently Asked Questions
-          </h1>
+          <div className="relative max-w-5xl mx-auto text-center">
 
-          <div className="w-32 h-1 bg-[#D4AF37] mx-auto rounded-full"></div>
+            <p className="uppercase tracking-[6px] text-[#D4AF37] text-xs mb-5">
 
-        </div>
+              Help & Support
+
+            </p>
+
+            <h1 className="text-4xl md:text-6xl font-bold leading-tight mb-6">
+
+              Frequently Asked Questions
+
+            </h1>
+
+            <p className="text-gray-300 text-base md:text-lg max-w-2xl mx-auto leading-8">
+
+              Everything you need to know about
+              ANAMYST fragrances, shipping, and orders.
+
+            </p>
+
+          </div>
+
+        </section>
 
         {/* FAQ ITEMS */}
-        <div className="space-y-6">
+        <section className="px-6 py-16">
 
-          {faqs.map((faq, index) => (
+          <div className="max-w-3xl mx-auto space-y-6">
 
-            <div
-              key={index}
-              className="bg-white rounded-3xl shadow-lg p-8 border border-gray-200"
+            {faqs.map((faq, index) => (
+
+              <div
+                key={index}
+                className="bg-white/5 border border-white/10 rounded-[28px] p-8 hover:border-[#D4AF37]/40 transition duration-300"
+              >
+
+                <div className="flex items-start gap-4">
+
+                  <span className="text-[#D4AF37] text-sm font-semibold mt-1.5">
+
+                    {String(index + 1).padStart(2, "0")}
+
+                  </span>
+
+                  <div>
+
+                    <h2 className="text-xl md:text-2xl font-semibold mb-3">
+
+                      {faq.q}
+
+                    </h2>
+
+                    <p className="text-gray-300 leading-8">
+
+                      {faq.a}
+
+                    </p>
+
+                  </div>
+
+                </div>
+
+              </div>
+
+            ))}
+
+          </div>
+
+          {/* CONTACT CTA */}
+          <div className="max-w-3xl mx-auto mt-14 text-center bg-[#D4AF37]/5 border border-[#D4AF37]/20 rounded-[28px] p-10">
+
+            <p className="uppercase tracking-[5px] text-[#D4AF37] text-xs mb-4">
+
+              Still Have Questions?
+
+            </p>
+
+            <p className="text-gray-300 mb-6">
+
+              Our team is happy to help you choose
+              the perfect fragrance.
+
+            </p>
+
+            <a
+              href="/contact"
+              className="inline-block bg-[#D4AF37] text-black px-8 py-3.5 rounded-full font-semibold hover:opacity-90 transition"
             >
 
-              <h2 className="text-2xl font-bold text-black mb-4">
+              Contact Us
 
-                {faq.q}
+            </a>
 
-              </h2>
+          </div>
 
-              <p className="text-gray-700 leading-7 text-lg">
-
-                {faq.a}
-
-              </p>
-
-            </div>
-
-          ))}
-
-        </div>
+        </section>
 
       </div>
-
-    </div>
-  </>
-);
+    </>
+  );
 
 }

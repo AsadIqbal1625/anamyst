@@ -15,23 +15,31 @@ import Image from "next/image";
 import { addToCart }
 from "../../../lib/cart";
 
-export default function ProductClient({ productId }) {
+import toast from "react-hot-toast";
+
+export default function ProductClient({
+  productId,
+  initialProduct = null,
+  initialRelated = [],
+}) {
 
   const [product, setProduct] =
-    useState(null);
+    useState(initialProduct);
 
   const [relatedProducts,
     setRelatedProducts] =
-    useState([]);
+    useState(initialRelated);
 
   const [loading, setLoading] =
-    useState(true);
+    useState(!initialProduct);
 
   const [qty, setQty] =
     useState(1);
 
-  /* FETCH PRODUCT */
+  /* FETCH PRODUCT (fallback when not server rendered) */
   useEffect(() => {
+
+    if (initialProduct) return;
 
     async function fetchProduct() {
 
@@ -65,10 +73,12 @@ export default function ProductClient({ productId }) {
 
     fetchProduct();
 
-  }, [productId]);
+  }, [productId, initialProduct]);
 
-         /* FETCH RELATED PRODUCTS */
+         /* FETCH RELATED PRODUCTS (fallback when not server-rendered) */
           useEffect(() => {
+
+            if (initialRelated.length > 0) return;
 
             async function fetchProducts() {
 
@@ -132,7 +142,7 @@ export default function ProductClient({ productId }) {
 
             fetchProducts();
 
-          }, [product]);
+          }, [product, initialRelated.length]);
 
   /* LOADING */
   if (loading) {
@@ -175,19 +185,18 @@ export default function ProductClient({ productId }) {
 
         <div className="relative grid grid-cols-1 md:grid-cols-[1fr_1fr] gap-6 lg:gap-8 items-stretch max-w-7xl mx-auto">
 
-          {/* PRODUCT IMAGE */}
-          <div className="bg-white/5 border border-white/10 rounded-[36px] backdrop-blur-xl p-4 md:p-6 relative overflow-hidden">
+          {/* PRODUCT IMAGE (fills to match details height) */}
+          <div className="bg-white/5 border border-white/10 rounded-[36px] backdrop-blur-xl p-4 md:p-6 relative overflow-hidden flex">
 
-            <div className="flex items-center justify-center bg-black/40 rounded-[28px] overflow-hidden relative">
+            <div className="relative flex-1 bg-black/40 rounded-[28px] overflow-hidden min-h-[380px] md:min-h-[520px]">
 
               <Image
                 src={product.image}
                 alt={product.name}
-                width={700}
-                height={700}
+                fill
                 sizes="(max-width: 768px) 100vw, 50vw"
                 priority
-                className="w-full h-auto object-contain transition-transform duration-700 hover:scale-105"
+                className="object-cover transition-transform duration-700 hover:scale-105"
               />
 
               <span className="absolute top-4 left-4 bg-black text-white text-xs px-4 py-2 rounded-full z-10 border border-white/10">
@@ -432,8 +441,8 @@ export default function ProductClient({ productId }) {
 
                   }
 
-                  alert(
-                    "Added to cart ✅"
+                  toast.success(
+                    "Added to cart"
                   );
 
                 }}
@@ -485,49 +494,49 @@ export default function ProductClient({ productId }) {
                 <Link
                   key={item._id}
                   href={`/product/${item._id}`}
+                  className="h-full"
                 >
 
-                  <div className="bg-white/5 border border-white/10 rounded-[32px] overflow-hidden hover:border-[#D4AF37]/40 transition duration-300 backdrop-blur-xl">
+                  <div className="h-full flex flex-col bg-white/5 border border-white/10 rounded-[32px] overflow-hidden hover:border-[#D4AF37]/40 transition duration-300 backdrop-blur-xl group">
 
-                    <div className="bg-black/40 overflow-hidden flex items-center justify-center">
+                    <div className="relative h-56 md:h-64 bg-black/40 overflow-hidden">
 
                       <Image
                         src={item.image}
                         alt={item.name}
-                        width={500}
-                        height={500}
+                        fill
                         loading="lazy"
-                        sizes="(max-width: 768px) 100vw, 50vw"
-                        className="w-full h-auto max-h-72 object-contain hover:scale-105 transition-transform duration-700"
+                        sizes="(max-width: 768px) 50vw, 25vw"
+                        className="object-cover group-hover:scale-105 transition-transform duration-700"
                       />
 
                     </div>
 
-                    <div className="p-6">
+                    <div className="flex flex-col flex-1 p-5 md:p-6">
 
-                      <h3 className="text-2xl font-semibold mb-3 text-white">
+                      <h3 className="text-base md:text-lg font-semibold mb-2 text-white line-clamp-1">
 
                         {item.name}
 
                       </h3>
 
-                      <p className="text-gray-400 text-sm mb-5 leading-7">
+                      <p className="text-gray-400 text-sm mb-4 leading-6 line-clamp-2">
 
                         {item.description}
 
                       </p>
 
-                      <div className="flex items-center justify-between">
+                      <div className="mt-auto flex items-center justify-between">
 
-                        <span className="text-3xl font-bold text-white">
+                        <span className="text-xl md:text-2xl font-bold text-white">
 
                           ₹{item.price}
 
                         </span>
 
-                        <span className="text-green-400 font-medium">
+                        <span className="text-[#D4AF37] text-xs uppercase tracking-[2px] font-medium">
 
-                          In Stock
+                          View →
 
                         </span>
 

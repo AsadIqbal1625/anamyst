@@ -122,6 +122,46 @@ export default function OrdersPage() {
 
   }
 
+  /* UPDATE PAYMENT STATUS */
+  async function updatePayment(
+    id,
+    paymentStatus
+  ) {
+
+    try {
+
+      const res =
+        await fetch(
+          `/api/orders/${id}`,
+          {
+            method: "PATCH",
+            headers: {
+              "Content-Type":
+                "application/json",
+            },
+            body: JSON.stringify({
+              paymentStatus,
+            }),
+          }
+        );
+
+      const data =
+        await res.json();
+
+      if (data.success) {
+
+        fetchOrders();
+
+      }
+
+    } catch (error) {
+
+      console.log(error);
+
+    }
+
+  }
+
   /* FILTERED */
   const filteredOrders =
 
@@ -159,7 +199,7 @@ export default function OrdersPage() {
 
   return (
 
-    <AdminProtection>
+  
 
       <div className="min-h-screen bg-black text-white px-4 py-10">
 
@@ -452,6 +492,47 @@ export default function OrdersPage() {
 
                       </button>
 
+                      {/* PAYMENT STATUS */}
+                      <div className="flex items-center gap-3 border border-white/10 rounded-2xl px-4 py-2">
+
+                        <span className="text-sm text-gray-400">
+
+                          {order.paymentMethod || "COD"}:
+
+                        </span>
+
+                        <span
+                          className={`text-sm font-semibold ${
+                            order.paymentStatus === "Paid"
+                              ? "text-green-400"
+                              : "text-yellow-400"
+                          }`}
+                        >
+
+                          {order.paymentStatus || "Pending"}
+
+                        </span>
+
+                        <button
+                          onClick={() =>
+                            updatePayment(
+                              order._id,
+                              order.paymentStatus === "Paid"
+                                ? "Pending"
+                                : "Paid"
+                            )
+                          }
+                          className="text-xs px-3 py-1.5 rounded-lg border border-[#D4AF37]/40 text-[#D4AF37] hover:bg-[#D4AF37] hover:text-black transition"
+                        >
+
+                          {order.paymentStatus === "Paid"
+                            ? "Mark Pending"
+                            : "Mark Paid"}
+
+                        </button>
+
+                      </div>
+
                     </div>
 
                   </div>
@@ -586,9 +667,6 @@ export default function OrdersPage() {
         </div>
 
       </div>
-
-    </AdminProtection>
-
-  );
+  )
 
 }

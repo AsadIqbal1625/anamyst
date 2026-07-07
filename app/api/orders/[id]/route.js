@@ -24,15 +24,45 @@ export async function PATCH(
     const body =
       await request.json();
 
+    const update = {};
+
+    if (body.orderStatus) {
+      update.orderStatus =
+        body.orderStatus;
+    }
+
+    /* MANUAL PAYMENT STATUS UPDATE */
+
+    if (body.paymentStatus) {
+      update.paymentStatus =
+        body.paymentStatus;
+    }
+
+    /* COD ORDERS: delivered = cash collected = paid */
+
+    if (
+      body.orderStatus === "Delivered" &&
+      !body.paymentStatus
+    ) {
+
+      const existing =
+        await Order.findById(params.id);
+
+      if (
+        existing &&
+        existing.paymentMethod === "COD"
+      ) {
+        update.paymentStatus = "Paid";
+      }
+
+    }
+
     const updatedOrder =
       await Order.findByIdAndUpdate(
 
         params.id,
 
-        {
-          orderStatus:
-            body.orderStatus,
-        },
+        update,
 
         {
           returnDocument:
