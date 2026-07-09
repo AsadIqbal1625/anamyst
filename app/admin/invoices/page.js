@@ -142,71 +142,150 @@ export default function InvoicesPage() {
       {filtered.length === 0 ? (
         <p className="text-gray-400">No invoices found.</p>
       ) : (
-        <div className="overflow-x-auto bg-white/5 border border-white/10 rounded-2xl">
-          <table className="w-full text-sm">
-            <thead>
-              <tr className="text-left text-gray-400 border-b border-white/10">
-                <th className="p-4">Invoice ID</th>
-                <th className="p-4">Order ID</th>
-                <th className="p-4">Customer</th>
-                <th className="p-4">Date</th>
-                <th className="p-4">Amount</th>
-                <th className="p-4">Payment</th>
-                <th className="p-4">Order Status</th>
-                <th className="p-4">Action</th>
-              </tr>
-            </thead>
-            <tbody>
-              {filtered.map((o) => (
-                <tr key={o._id} className="border-b border-white/5">
-                  <td className="p-4 text-[#D4AF37]">
+        <>
+
+          {/* DESKTOP TABLE */}
+          <div className="hidden md:block overflow-x-auto bg-white/5 border border-white/10 rounded-2xl">
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="text-left text-gray-400 border-b border-white/10">
+                  <th className="p-4">Invoice ID</th>
+                  <th className="p-4">Order ID</th>
+                  <th className="p-4">Customer</th>
+                  <th className="p-4">Date</th>
+                  <th className="p-4">Amount</th>
+                  <th className="p-4">Payment</th>
+                  <th className="p-4">Order Status</th>
+                  <th className="p-4">Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                {filtered.map((o) => (
+                  <tr key={o._id} className="border-b border-white/5">
+                    <td className="p-4 text-[#D4AF37]">
+                      {o.invoiceId || "-"}
+                    </td>
+                    <td className="p-4">{o.orderId || "-"}</td>
+                    <td className="p-4">{o.customerName}</td>
+                    <td className="p-4 text-gray-400">
+                      {new Date(o.createdAt).toLocaleDateString("en-IN")}
+                    </td>
+                    <td className="p-4">
+                      ₹{(o.totalAmount || 0).toLocaleString("en-IN")}
+                    </td>
+                    <td className="p-4">
+                      <span
+                        className={
+                          o.paymentStatus === "Paid"
+                            ? "text-green-400"
+                            : "text-yellow-400"
+                        }
+                      >
+                        {o.paymentMethod || "-"} · {o.paymentStatus || "-"}
+                      </span>
+                    </td>
+                    <td className="p-4">
+                      <span
+                        className={
+                          o.orderStatus === "Delivered"
+                            ? "text-green-400"
+                            : o.orderStatus === "Cancelled"
+                            ? "text-red-400"
+                            : "text-yellow-400"
+                        }
+                      >
+                        {o.orderStatus || "-"}
+                      </span>
+                    </td>
+                    <td className="p-4">
+                      <button
+                        onClick={() => printInvoice(o)}
+                        className="px-4 py-2 rounded-lg bg-[#D4AF37] text-black text-xs font-semibold hover:opacity-90 transition"
+                      >
+                        Print / PDF
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+
+          {/* MOBILE CARDS */}
+          <div className="md:hidden space-y-4">
+
+            {filtered.map((o) => (
+
+              <div
+                key={o._id}
+                className="bg-white/5 border border-white/10 rounded-2xl p-5"
+              >
+
+                <div className="flex items-center justify-between gap-3">
+
+                  <p className="text-[#D4AF37] font-semibold">
                     {o.invoiceId || "-"}
-                  </td>
-                  <td className="p-4">{o.orderId || "-"}</td>
-                  <td className="p-4">{o.customerName}</td>
-                  <td className="p-4 text-gray-400">
-                    {new Date(o.createdAt).toLocaleDateString("en-IN")}
-                  </td>
-                  <td className="p-4">
-                    ₹{(o.totalAmount || 0).toLocaleString("en-IN")}
-                  </td>
-                  <td className="p-4">
-                    <span
+                  </p>
+
+                  <span
+                    className={`text-xs font-semibold ${
+                      o.orderStatus === "Delivered"
+                        ? "text-green-400"
+                        : o.orderStatus === "Cancelled"
+                        ? "text-red-400"
+                        : "text-yellow-400"
+                    }`}
+                  >
+                    {o.orderStatus || "-"}
+                  </span>
+
+                </div>
+
+                <p className="text-sm text-white mt-1">
+                  {o.customerName}
+                </p>
+
+                <p className="text-xs text-gray-500 mt-1">
+                  Order {o.orderId || "-"} ·{" "}
+                  {new Date(o.createdAt).toLocaleDateString("en-IN")}
+                </p>
+
+                <div className="flex items-center justify-between mt-4">
+
+                  <div className="text-sm">
+
+                    <p className="text-white font-semibold">
+                      ₹{(o.totalAmount || 0).toLocaleString("en-IN")}
+                    </p>
+
+                    <p
                       className={
                         o.paymentStatus === "Paid"
-                          ? "text-green-400"
-                          : "text-yellow-400"
+                          ? "text-green-400 text-xs"
+                          : "text-yellow-400 text-xs"
                       }
                     >
                       {o.paymentMethod || "-"} · {o.paymentStatus || "-"}
-                    </span>
-                  </td>
-                  <td className="p-4">
-                    <span
-                      className={
-                        o.orderStatus === "Delivered"
-                          ? "text-green-400"
-                          : o.orderStatus === "Cancelled"
-                          ? "text-red-400"
-                          : "text-yellow-400"
-                      }
-                    >
-                      {o.orderStatus || "-"}
-                    </span>
-                  </td>
-                  <td className="p-4">
-                    <button
-                      onClick={() => printInvoice(o)}
-                      className="px-4 py-2 rounded-lg bg-[#D4AF37] text-black text-xs font-semibold hover:opacity-90 transition"
-                    >
-                      Print / PDF
-                    </button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+                    </p>
+
+                  </div>
+
+                  <button
+                    onClick={() => printInvoice(o)}
+                    className="px-4 py-2 rounded-lg bg-[#D4AF37] text-black text-xs font-semibold hover:opacity-90 transition"
+                  >
+                    Print / PDF
+                  </button>
+
+                </div>
+
+              </div>
+
+            ))}
+
+          </div>
+
+        </>
       )}
     </div>
   );

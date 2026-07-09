@@ -69,112 +69,149 @@ export default function CustomersPage() {
 
         </div>
 
-        <div className="overflow-x-auto rounded-2xl border border-[#D4AF37]/20">
+        {loading ? (
 
-          <table className="w-full">
+          <p className="text-center p-8 border border-[#D4AF37]/20 rounded-2xl">
+            Loading...
+          </p>
 
-            <thead className="bg-[#111]">
+        ) : filtered.length === 0 ? (
 
-              <tr>
+          <p className="text-center p-8 border border-[#D4AF37]/20 rounded-2xl">
+            No Customers Found
+          </p>
 
-                <th className="text-left p-4">Customer ID</th>
-                <th className="text-left p-4">Name</th>
-                <th className="text-left p-4">Mobile</th>
-                <th className="text-left p-4">City</th>
-                <th className="text-left p-4">Orders</th>
-                <th className="text-left p-4">Spent</th>
-                <th className="text-left p-4">Last Order</th>
+        ) : (
 
-              </tr>
+          <>
 
-            </thead>
+            {/* DESKTOP TABLE */}
+            <div className="hidden md:block overflow-x-auto rounded-2xl border border-[#D4AF37]/20">
 
-            <tbody>
+              <table className="w-full">
 
-              {loading ? (
+                <thead className="bg-[#111]">
 
-                <tr>
+                  <tr>
 
-                  <td
-                    colSpan={7}
-                    className="text-center p-8"
-                  >
-                    Loading...
-                  </td>
-
-                </tr>
-
-              ) : filtered.length === 0 ? (
-
-                <tr>
-
-                  <td
-                    colSpan={7}
-                    className="text-center p-8"
-                  >
-                    No Customers Found
-                  </td>
-
-                </tr>
-
-              ) : (
-
-                filtered.map((customer) => (
-
-                  <tr
-                    key={customer._id}
-                    className="border-t border-[#D4AF37]/10 hover:bg-[#111]"
-                  >
-
-                    <td className="p-4 font-semibold text-[#D4AF37]">
-                      <Link
-                        href={`/admin/customers/${customer.customerId}`}
-                        className="hover:underline"
-                      >
-                        {customer.customerId}
-                      </Link>
-                    </td>
-
-                    <td className="p-4">
-                      <Link
-                        href={`/admin/customers/${customer.customerId}`}
-                        className="hover:underline hover:text-[#D4AF37]"
-                      >
-                        {customer.name}
-                      </Link>
-                    </td>
-
-                    <td className="p-4">
-                      {customer.mobile}
-                    </td>
-
-                    <td className="p-4">
-                      {customer.city}
-                    </td>
-
-                    <td className="p-4">
-                      {customer.totalOrders}
-                    </td>
-
-                    <td className="p-4">
-                      ₹{customer.totalSpent}
-                    </td>
-
-                    <td className="p-4">
-                      {new Date(customer.lastOrderDate).toLocaleDateString()}
-                    </td>
+                    <th className="text-left p-4">Customer ID</th>
+                    <th className="text-left p-4">Name</th>
+                    <th className="text-left p-4">Mobile</th>
+                    <th className="text-left p-4">City</th>
+                    <th className="text-left p-4">Orders</th>
+                    <th className="text-left p-4">Spent</th>
+                    <th className="text-left p-4">Last Order</th>
 
                   </tr>
 
-                ))
+                </thead>
 
-              )}
+                <tbody>
 
-            </tbody>
+                  {filtered.map((customer) => (
 
-          </table>
+                    <tr
+                      key={customer._id}
+                      className="border-t border-[#D4AF37]/10 hover:bg-[#111]"
+                    >
 
-        </div>
+                      <td className="p-4 font-semibold text-[#D4AF37]">
+                        <Link
+                          href={`/admin/customers/${customer.customerId}`}
+                          className="hover:underline"
+                        >
+                          {customer.customerId}
+                        </Link>
+                      </td>
+
+                      <td className="p-4">
+                        <Link
+                          href={`/admin/customers/${customer.customerId}`}
+                          className="hover:underline hover:text-[#D4AF37]"
+                        >
+                          {customer.name}
+                        </Link>
+                      </td>
+
+                      <td className="p-4">
+                        {customer.mobile}
+                      </td>
+
+                      <td className="p-4">
+                        {customer.city}
+                      </td>
+
+                      <td className="p-4">
+                        {customer.totalOrders}
+                      </td>
+
+                      <td className="p-4">
+                        ₹{customer.totalSpent}
+                      </td>
+
+                      <td className="p-4">
+                        {new Date(customer.lastOrderDate).toLocaleDateString()}
+                      </td>
+
+                    </tr>
+
+                  ))}
+
+                </tbody>
+
+              </table>
+
+            </div>
+
+            {/* MOBILE CARDS */}
+            <div className="md:hidden space-y-4">
+
+              {filtered.map((customer) => (
+
+                <Link
+                  key={customer._id}
+                  href={`/admin/customers/${customer.customerId}`}
+                  className="block bg-white/5 border border-[#D4AF37]/20 rounded-2xl p-5"
+                >
+
+                  <div className="flex items-center justify-between gap-3 mb-3">
+
+                    <p className="font-semibold text-white">
+                      {customer.name}
+                    </p>
+
+                    <span className="text-xs text-[#D4AF37] font-mono shrink-0">
+                      {customer.customerId}
+                    </span>
+
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-y-2 text-sm text-gray-400">
+
+                    <p>{customer.mobile}</p>
+                    <p className="text-right">{customer.city}</p>
+
+                    <p>{customer.totalOrders} orders</p>
+                    <p className="text-right text-[#D4AF37] font-semibold">
+                      ₹{customer.totalSpent}
+                    </p>
+
+                    <p className="col-span-2 text-xs text-gray-500">
+                      Last order:{" "}
+                      {new Date(customer.lastOrderDate).toLocaleDateString()}
+                    </p>
+
+                  </div>
+
+                </Link>
+
+              ))}
+
+            </div>
+
+          </>
+
+        )}
 
       </div>
 
