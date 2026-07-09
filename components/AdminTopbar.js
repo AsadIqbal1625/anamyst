@@ -2,7 +2,7 @@
 
 import { usePathname } from "next/navigation";
 
-export default function AdminTopbar() {
+export default function AdminTopbar({ onMenuClick = () => {} }) {
 
   const pathname = usePathname();
 
@@ -14,23 +14,35 @@ export default function AdminTopbar() {
 
   return (
 
-    <header className="h-20 border-b border-[#D4AF37]/20 bg-[#111] flex items-center justify-between px-8">
+    <header className="h-20 border-b border-[#D4AF37]/20 bg-[#111] flex items-center justify-between px-4 md:px-8 gap-4">
 
-      <div>
+      <div className="flex items-center gap-4 min-w-0">
 
-        <h2 className="text-3xl font-bold capitalize text-white">
+        {/* HAMBURGER (mobile only) */}
+        <button
+          onClick={onMenuClick}
+          className="lg:hidden text-white text-2xl shrink-0"
+        >
+          ☰
+        </button>
 
-          {pageName === "admin"
-            ? "Dashboard"
-            : pageName}
+        <div className="min-w-0">
 
-        </h2>
+          <h2 className="text-xl md:text-3xl font-bold capitalize text-white truncate">
 
-        <p className="text-sm text-gray-400">
+            {pageName === "admin"
+              ? "Dashboard"
+              : pageName}
 
-          Welcome back to ANAMYST Admin
+          </h2>
 
-        </p>
+          <p className="text-sm text-gray-400 hidden sm:block">
+
+            Welcome back to ANAMYST Admin
+
+          </p>
+
+        </div>
 
       </div>
 

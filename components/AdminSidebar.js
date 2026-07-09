@@ -56,7 +56,7 @@ const menus = [
   },
 ];
 
-export default function AdminSidebar() {
+export default function AdminSidebar({ isOpen = false, onClose = () => {} }) {
   const pathname = usePathname();
   const router = useRouter();
 
@@ -66,67 +66,100 @@ export default function AdminSidebar() {
   }
 
   return (
-    <aside className="w-72 min-h-screen bg-[#111] border-r border-[#D4AF37]/20 flex flex-col">
+    <>
 
-      <div className="p-8">
+      {/* MOBILE BACKDROP */}
+      {isOpen && (
 
-        <h1 className="font-brand text-3xl text-white tracking-widest">
-          ANAMYST
-        </h1>
+        <div
+          onClick={onClose}
+          className="fixed inset-0 bg-black/70 z-40 lg:hidden"
+        />
 
-        <p className="text-[#D4AF37] text-sm mt-2">
-          Admin Dashboard
-        </p>
+      )}
 
-      </div>
+      <aside
+        className={`w-72 min-h-screen bg-[#111] border-r border-[#D4AF37]/20 flex flex-col
+          fixed inset-y-0 left-0 z-50 transform transition-transform duration-300 overflow-y-auto
+          lg:static lg:translate-x-0
+          ${isOpen ? "translate-x-0" : "-translate-x-full"}
+        `}
+      >
 
-      <nav className="px-4 flex-1">
+        <div className="p-8 flex items-center justify-between">
 
-        {menus.map((menu) => (
+          <div>
 
-          <Link
-            key={menu.href}
-            href={menu.href}
-            className={`flex items-center gap-3 px-5 py-4 rounded-xl mb-2 transition
+            <h1 className="font-brand text-3xl text-white tracking-widest">
+              ANAMYST
+            </h1>
 
-            ${
-              pathname === menu.href
-                ? "bg-[#D4AF37] text-black font-semibold"
-                : "text-gray-300 hover:bg-[#D4AF37]/10 hover:text-white"
-            }
-            `}
+            <p className="text-[#D4AF37] text-sm mt-2">
+              Admin Dashboard
+            </p>
+
+          </div>
+
+          {/* CLOSE (mobile only) */}
+          <button
+            onClick={onClose}
+            className="lg:hidden text-white text-2xl leading-none"
+          >
+            ×
+          </button>
+
+        </div>
+
+        <nav className="px-4 flex-1">
+
+          {menus.map((menu) => (
+
+            <Link
+              key={menu.href}
+              href={menu.href}
+              onClick={onClose}
+              className={`flex items-center gap-3 px-5 py-4 rounded-xl mb-2 transition
+
+              ${
+                pathname === menu.href
+                  ? "bg-[#D4AF37] text-black font-semibold"
+                  : "text-gray-300 hover:bg-[#D4AF37]/10 hover:text-white"
+              }
+              `}
+            >
+              <span className="text-xl">
+                {menu.icon}
+              </span>
+
+              <span>
+                {menu.title}
+              </span>
+
+            </Link>
+
+          ))}
+
+        </nav>
+
+        <div className="p-4 border-t border-white/10">
+
+          <button
+            onClick={handleLogout}
+            className="w-full flex items-center gap-3 px-5 py-4 rounded-xl text-red-400 hover:bg-red-500/10 hover:text-red-300 transition"
           >
             <span className="text-xl">
-              {menu.icon}
+              🚪
             </span>
 
             <span>
-              {menu.title}
+              Logout
             </span>
+          </button>
 
-          </Link>
+        </div>
 
-        ))}
+      </aside>
 
-      </nav>
-
-      <div className="p-4 border-t border-white/10">
-
-        <button
-          onClick={handleLogout}
-          className="w-full flex items-center gap-3 px-5 py-4 rounded-xl text-red-400 hover:bg-red-500/10 hover:text-red-300 transition"
-        >
-          <span className="text-xl">
-            🚪
-          </span>
-
-          <span>
-            Logout
-          </span>
-        </button>
-
-      </div>
-
-    </aside>
+    </>
   );
 }
