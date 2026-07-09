@@ -25,7 +25,7 @@ const toasterProps = {
   },
 };
 
-export default function SiteShell({ children }) {
+export default function SiteShell({ children, initialCoupon = null }) {
 
   const pathname = usePathname();
 
@@ -51,7 +51,7 @@ export default function SiteShell({ children }) {
 
       <Tracker />
 
-      <Navbar />
+      <Navbar initialCoupon={initialCoupon} />
 
       <main className="flex-1">
         {children}

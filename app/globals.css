@@ -28,6 +28,12 @@ body {
   user-select: none;
 }
 
+/* Brand wordmark font (Anton stand-in for Vonique64 Bold) */
+.font-brand {
+  font-family: var(--font-brand), Arial, Helvetica, sans-serif;
+  font-weight: 400;
+}
+
 * {
   -webkit-user-select: none;
   -moz-user-select: none;

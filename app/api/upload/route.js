@@ -27,6 +27,19 @@ export async function POST(
 
     }
 
+    if (file.size > 15 * 1024 * 1024) {
+
+      return Response.json({
+
+        success: false,
+
+        error:
+          "Image is too large (max 15MB). Try a smaller photo.",
+
+      });
+
+    }
+
     const bytes =
       await file.arrayBuffer();
 
@@ -43,6 +56,9 @@ export async function POST(
 
           folder:
             "anamyst",
+
+          timeout:
+            90000,
 
         }
       );
@@ -63,7 +79,9 @@ export async function POST(
       success: false,
 
       error:
-        error.message,
+        error?.error?.message ||
+        error?.message ||
+        "Upload failed",
 
     });
 

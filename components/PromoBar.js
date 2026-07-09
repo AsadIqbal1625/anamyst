@@ -3,9 +3,9 @@
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 
-export default function PromoBar() {
+export default function PromoBar({ initialCoupon = null }) {
 
-  const [coupon, setCoupon] = useState(null);
+  const [coupon, setCoupon] = useState(initialCoupon);
   const [timeLeft, setTimeLeft] = useState(null);
 
   /* LIVE COUNTDOWN */

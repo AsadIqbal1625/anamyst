@@ -25,44 +25,63 @@ export default function AdminLogin() {
     setError] =
     useState("");
 
-  function handleLogin(
+  const [loading,
+    setLoading] =
+    useState(false);
+
+  async function handleLogin(
     e
   ) {
 
     e.preventDefault();
 
-    /* CHANGE THESE */
-    const adminEmail =
-      "admin@anamyst.com";
+    setError("");
 
-    const adminPassword =
-      "anamyst123";
+    setLoading(true);
 
-    if (
+    try {
 
-      email === adminEmail &&
+      const res =
+        await fetch(
+          "/api/admin/login",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type":
+                "application/json",
+            },
+            body: JSON.stringify({
+              email,
+              password,
+            }),
+          }
+        );
 
-      password === adminPassword
+      const data =
+        await res.json();
 
-    ) {
+      if (data.success) {
 
-      localStorage.setItem(
+        router.push("/admin");
 
-        "anamystAdmin",
+      } else {
 
-        "true"
+        setError(
+          data.error ||
+            "Invalid credentials"
+        );
 
-      );
+      }
 
-     document.cookie =
-      "admin-auth=true; path=/";
-    router.push("/admin");
-
-    } else {
+    } catch {
 
       setError(
-        "Invalid credentials"
+        "Something went wrong"
       );
+
+    } finally {
+
+      setLoading(false);
 
     }
 
@@ -133,10 +152,13 @@ export default function AdminLogin() {
           {/* BUTTON */}
           <button
             type="submit"
-            className="w-full bg-[#D4AF37] text-black py-4 rounded-2xl font-bold hover:opacity-90 transition"
+            disabled={loading}
+            className="w-full bg-[#D4AF37] text-black py-4 rounded-2xl font-bold hover:opacity-90 transition disabled:opacity-50"
           >
 
-            Login
+            {loading
+              ? "Logging in..."
+              : "Login"}
 
           </button>
 

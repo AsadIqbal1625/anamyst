@@ -22,7 +22,7 @@ from "./MobileMenu";
 import PromoBar
 from "./PromoBar";
 
-export default function Navbar() {
+export default function Navbar({ initialCoupon = null }) {
 
   const router =
     useRouter();
@@ -187,7 +187,7 @@ export default function Navbar() {
       >
 
         {/* PROMO BAR */}
-        <PromoBar />
+        <PromoBar initialCoupon={initialCoupon} />
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3">
 
@@ -225,7 +225,7 @@ export default function Navbar() {
                   className="rounded-lg object-cover"
                 />
 
-                <h1 className="text-white text-2xl sm:text-4xl font-bold tracking-[0.2em]">
+                <h1 className="font-brand text-white text-2xl sm:text-4xl tracking-[0.2em]">
 
                   ANAMYST
 
@@ -363,6 +363,16 @@ export default function Navbar() {
                 </div>
 
               </div>
+
+              {/* NOTICES */}
+              <Link
+                href="/notices"
+                className="hover:text-[#D4AF37] transition duration-300"
+              >
+
+                New Launches
+
+              </Link>
 
               {/* ABOUT */}
               <Link

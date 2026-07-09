@@ -40,6 +40,16 @@ const menus = [
     icon: "📢",
   },
   {
+    title: "Testimonials",
+    href: "/admin/testimonials",
+    icon: "💬",
+  },
+  {
+    title: "Notices",
+    href: "/admin/notices",
+    icon: "📰",
+  },
+  {
     title: "Settings",
     href: "/admin/settings",
     icon: "⚙",
@@ -54,7 +64,7 @@ export default function AdminSidebar() {
 
       <div className="p-8">
 
-        <h1 className="text-3xl font-bold text-white tracking-widest">
+        <h1 className="font-brand text-3xl text-white tracking-widest">
           ANAMYST
         </h1>
 

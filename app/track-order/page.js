@@ -38,45 +38,31 @@ export default function TrackOrderPage() {
 
       const res =
         await fetch(
-          "/api/orders"
+          "/api/track-order",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type":
+                "application/json",
+            },
+            body: JSON.stringify({
+              query: search,
+            }),
+          }
         );
 
       const data =
         await res.json();
 
       if (data.success) {
-const filtered =
-  data.orders.filter(
-
-    (order) =>
-
-      order.orderId
-        ?.toLowerCase()
-        .includes(
-          search.toLowerCase()
-        )
-
-      ||
-
-      order.phone
-        ?.toLowerCase()
-        .includes(
-          search.toLowerCase()
-        )
-
-      ||
-
-      order.email
-        ?.toLowerCase()
-        .includes(
-          search.toLowerCase()
-        )
-
-  );
 
         setOrders(
-          filtered
+          data.orders
         );
+
+      } else {
+
+        setOrders([]);
 
       }
 

@@ -7,6 +7,8 @@ import {
 
 import Image from "next/image";
 
+import { compressImage } from "@/lib/compressImage";
+
 import {
   useRouter,
 } from "next/navigation";
@@ -22,7 +24,9 @@ export default function AdminPage() {
       description: "",
       price: "",
       oldPrice: "",
+      costPrice: "",
       image: "",
+      images: [],
       category: "",
       genderCategory: "",
       notesTags: "",
@@ -60,6 +64,21 @@ export default function AdminPage() {
     setUploading] =
     useState(false);
 
+  /* INVENTORY EXPORT DATE RANGE (defaults to current month) */
+  function toDateInput(date) {
+    return date.toISOString().slice(0, 10);
+  }
+
+  const today = new Date();
+
+  const [exportFrom, setExportFrom] = useState(
+    toDateInput(new Date(today.getFullYear(), today.getMonth(), 1))
+  );
+
+  const [exportTo, setExportTo] = useState(
+    toDateInput(new Date(today.getFullYear(), today.getMonth() + 1, 0))
+  );
+
   /* FETCH PRODUCTS */
   async function fetchProducts() {
 
@@ -95,58 +114,84 @@ export default function AdminPage() {
 
   }, []);
 
-  /* IMAGE UPLOAD */
+  /* IMAGE UPLOAD (multiple) */
   async function handleImageUpload(
     e
   ) {
 
-    const file =
-      e.target.files[0];
+    const files =
+      Array.from(e.target.files || []);
 
-    if (!file) return;
+    if (!files.length) return;
 
     try {
 
       setUploading(true);
 
-      const formData =
-        new FormData();
+      const uploadedUrls = [];
 
-      formData.append(
-        "file",
-        file
-      );
+      for (const file of files) {
 
-      const res =
-        await fetch(
+        const compressed =
+          await compressImage(file);
 
-          "/api/upload",
+        const formData =
+          new FormData();
 
-          {
-
-            method: "POST",
-
-            body: formData,
-
-          }
-
+        formData.append(
+          "file",
+          compressed
         );
 
-      const data =
-        await res.json();
+        const res =
+          await fetch(
 
-      if (data.success) {
+            "/api/upload",
 
-        setForm((prev) => ({
+            {
+
+              method: "POST",
+
+              body: formData,
+
+            }
+
+          );
+
+        const data =
+          await res.json();
+
+        if (data.success) {
+
+          uploadedUrls.push(
+            data.imageUrl
+          );
+
+        }
+
+      }
+
+      setForm((prev) => {
+
+        const images = [
+          ...prev.images,
+          ...uploadedUrls,
+        ];
+
+        return {
 
           ...prev,
 
+          images,
+
           image:
-            data.imageUrl,
+            prev.image ||
+            images[0] ||
+            "",
 
-        }));
+        };
 
-      }
+      });
 
     } catch (error) {
 
@@ -156,7 +201,34 @@ export default function AdminPage() {
 
       setUploading(false);
 
+      e.target.value = "";
+
     }
+
+  }
+
+  /* REMOVE IMAGE FROM GALLERY */
+  function removeImage(index) {
+
+    setForm((prev) => {
+
+      const images =
+        prev.images.filter(
+          (_, i) => i !== index
+        );
+
+      return {
+
+        ...prev,
+
+        images,
+
+        image:
+          images[0] || "",
+
+      };
+
+    });
 
   }
 
@@ -192,6 +264,9 @@ export default function AdminPage() {
 
         oldPrice:
           Number(form.oldPrice),
+
+        costPrice:
+          Number(form.costPrice) || 0,
 
         rating:
           Number(form.rating),
@@ -352,6 +427,13 @@ export default function AdminPage() {
 
       ...product,
 
+      images:
+        product.images?.length
+          ? product.images
+          : product.image
+          ? [product.image]
+          : [],
+
       notesTags:
         product.notesTags.join(
           ", "
@@ -401,7 +483,43 @@ export default function AdminPage() {
             </div>
 
             {/* BUTTONS */}
-            <div className="flex gap-4 flex-wrap">
+            <div className="flex gap-4 flex-wrap items-end">
+
+              {/* INVENTORY EXPORT DATE RANGE */}
+              <div className="flex gap-3 items-end bg-white/5 border border-white/10 rounded-2xl px-4 py-3">
+
+                <div>
+                  <label className="block text-gray-400 text-xs mb-1">
+                    Sales From
+                  </label>
+                  <input
+                    type="date"
+                    value={exportFrom}
+                    onChange={(e) => setExportFrom(e.target.value)}
+                    className="bg-black/40 border border-white/10 text-white rounded-xl px-3 py-2 text-sm outline-none focus:border-[#D4AF37]"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-gray-400 text-xs mb-1">
+                    Sales To
+                  </label>
+                  <input
+                    type="date"
+                    value={exportTo}
+                    onChange={(e) => setExportTo(e.target.value)}
+                    className="bg-black/40 border border-white/10 text-white rounded-xl px-3 py-2 text-sm outline-none focus:border-[#D4AF37]"
+                  />
+                </div>
+
+                <a
+                  href={`/api/inventory/export?from=${exportFrom}&to=${exportTo}`}
+                  className="bg-white/10 border border-[#D4AF37]/40 hover:bg-white/20 text-white px-6 py-3 rounded-2xl font-semibold transition whitespace-nowrap"
+                >
+                  Download Inventory (Excel)
+                </a>
+
+              </div>
 
               {/* VIEW ORDERS */}
               <button
@@ -425,11 +543,12 @@ export default function AdminPage() {
               {/* LOGOUT */}
               <button
 
-                onClick={() => {
+                onClick={async () => {
 
-                  document.cookie =
-
-                    "admin-auth=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+                  await fetch(
+                    "/api/admin/logout",
+                    { method: "POST" }
+                  ).catch(() => {});
 
                   router.push(
                     "/admin-login"
@@ -468,18 +587,19 @@ export default function AdminPage() {
                 required
               />
 
-              {/* IMAGE */}
+              {/* IMAGES */}
               <div className="space-y-3">
 
                 <label className="text-white font-semibold">
 
-                  Product Image
+                  Product Images (first = cover)
 
                 </label>
 
                 <input
                   type="file"
                   accept="image/*"
+                  multiple
                   onChange={
                     handleImageUpload
                   }
@@ -490,24 +610,59 @@ export default function AdminPage() {
 
                   <p className="text-[#D4AF37]">
 
-                    Uploading image...
+                    Uploading image(s)...
 
                   </p>
 
                 )}
 
-                {form.image && (
+                {form.images.length > 0 && (
 
-                  <div className="relative w-full h-[220px] rounded-2xl overflow-hidden border border-[#D4AF37]/20 bg-black/30">
+                  <div className="grid grid-cols-3 gap-3">
 
-                    <Image
-                      fill
-                      sizes="(max-width: 768px) 100vw, 50vw"
-                      src={form.image}
-                      alt="Preview"
-                      className="object-contain"
-                      loading="lazy"
-                    />
+                    {form.images.map(
+                      (img, index) => (
+
+                        <div
+                          key={img + index}
+                          className="relative h-[100px] rounded-xl overflow-hidden border border-[#D4AF37]/20 bg-black/30"
+                        >
+
+                          <Image
+                            fill
+                            sizes="150px"
+                            src={img}
+                            alt={`Preview ${index + 1}`}
+                            className="object-contain"
+                            loading="lazy"
+                          />
+
+                          {index === 0 && (
+
+                            <span className="absolute bottom-1 left-1 bg-[#D4AF37] text-black text-[10px] font-semibold px-2 py-0.5 rounded-full">
+
+                              Cover
+
+                            </span>
+
+                          )}
+
+                          <button
+                            type="button"
+                            onClick={() =>
+                              removeImage(index)
+                            }
+                            className="absolute top-1 right-1 bg-black/70 text-white w-6 h-6 rounded-full text-xs hover:bg-red-500 transition"
+                          >
+
+                            ×
+
+                          </button>
+
+                        </div>
+
+                      )
+                    )}
 
                   </div>
 
@@ -532,6 +687,16 @@ export default function AdminPage() {
                 name="oldPrice"
                 placeholder="Old Price"
                 value={form.oldPrice}
+                onChange={handleChange}
+                className="w-full border border-white/10 bg-black/40 text-white placeholder:text-gray-400 rounded-2xl px-5 py-4 outline-none focus:border-[#D4AF37]"
+              />
+
+              {/* COST PRICE */}
+              <input
+                type="number"
+                name="costPrice"
+                placeholder="Cost Price (for profit reports)"
+                value={form.costPrice}
                 onChange={handleChange}
                 className="w-full border border-white/10 bg-black/40 text-white placeholder:text-gray-400 rounded-2xl px-5 py-4 outline-none focus:border-[#D4AF37]"
               />

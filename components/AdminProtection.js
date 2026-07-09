@@ -1,39 +1,9 @@
 "use client";
 
-import {
-  useEffect,
-} from "react";
+/* Admin route protection is enforced server-side in proxy.js
+   (signed httpOnly session cookie). This wrapper stays only for
+   backwards compatibility with existing imports. */
 
-import {
-  useRouter,
-} from "next/navigation";
-
-export default function AdminProtection({
-
-  children,
-
-}) {
-
-  const router =
-    useRouter();
-
-  useEffect(() => {
-
-    const isAdmin =
-      localStorage.getItem(
-        "anamystAdmin"
-      );
-
-    if (!isAdmin) {
-
-      router.push(
-        "/admin-login"
-      );
-
-    }
-
-  }, []);
-
+export default function AdminProtection({ children }) {
   return children;
-
 }

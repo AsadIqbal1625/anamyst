@@ -21,7 +21,7 @@ export default function Footer() {
           {/* BRAND */}
           <div>
 
-            <h2 className="text-3xl font-bold tracking-[0.25em] mb-5">
+            <h2 className="font-brand text-3xl tracking-[0.25em] mb-5">
 
               ANAMYST
 
@@ -79,6 +79,13 @@ export default function Footer() {
                 className="hover:text-[#D4AF37] transition"
               >
                 Track Order
+              </Link>
+
+              <Link
+                href="/notices"
+                className="hover:text-[#D4AF37] transition"
+              >
+                New Launches
               </Link>
 
               <Link

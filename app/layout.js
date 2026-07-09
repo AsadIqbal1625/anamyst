@@ -1,7 +1,18 @@
 
 import "./globals.css";
 import Script from "next/script";
+import { Anton } from "next/font/google";
 import SiteShell from "../components/layout/SiteShell";
+import { connectDB } from "../lib/mongodb";
+import Coupon from "../models/Coupon";
+
+/* Free stand-in for Vonique64 (commercial font, not on Google Fonts)
+   until the real font file is dropped into /public/fonts */
+const brandFont = Anton({
+  subsets: ["latin"],
+  weight: "400",
+  variable: "--font-brand",
+});
 
 export const metadata = {
   metadataBase: new URL("https://anamyst.com"),
@@ -43,11 +54,54 @@ export const metadata = {
   },
 };
 
-export default function RootLayout({ children }) {
+/* Fetch the active promo coupon server-side so PromoBar renders with the
+   right height on first paint instead of popping in after a client fetch
+   (that pop-in was showing up as layout shift / CLS on mobile) */
+async function getActiveCoupon() {
+
+  try {
+
+    await connectDB();
+
+    const coupons = await Coupon.find({
+      active: true,
+      $or: [
+        { expiresAt: null },
+        { expiresAt: { $gte: new Date() } },
+      ],
+    })
+      .sort({ value: -1 })
+      .limit(1)
+      .lean();
+
+    if (!coupons.length) return null;
+
+    const c = coupons[0];
+
+    return {
+      code: c.code,
+      discountType: c.discountType,
+      value: c.value,
+      minOrder: c.minOrder || 0,
+      expiresAt: c.expiresAt ? c.expiresAt.toISOString() : null,
+    };
+
+  } catch {
+
+    return null;
+
+  }
+
+}
+
+export default async function RootLayout({ children }) {
+
+  const initialCoupon = await getActiveCoupon();
+
   return (
     <html lang="en" data-scroll-behavior="smooth">
 
-      <body className="min-h-screen flex flex-col bg-black text-white">
+      <body className={`${brandFont.variable} min-h-screen flex flex-col bg-black text-white`}>
 
                 <script
                  id="organization-schema"
@@ -79,7 +133,7 @@ export default function RootLayout({ children }) {
 
         {/* STORE CHROME (navbar/footer hidden on /admin routes) */}
 
-        <SiteShell>
+        <SiteShell initialCoupon={initialCoupon}>
           {children}
         </SiteShell>
 

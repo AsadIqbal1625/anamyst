@@ -309,7 +309,10 @@ export default function CheckoutPage() {
               form.pincode,
 
             products:
-              cart,
+              cart.map((item) => ({
+                ...item,
+                productId: item._id,
+              })),
 
             totalAmount:
               payable,
@@ -508,7 +511,10 @@ export default function CheckoutPage() {
                   form.pincode,
 
                 products:
-                  cart,
+                  cart.map((item) => ({
+                    ...item,
+                    productId: item._id,
+                  })),
 
                 totalAmount:
                   payable,

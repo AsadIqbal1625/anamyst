@@ -14,6 +14,8 @@ export const metadata = {
 };
 
 import Link from "next/link";
+import Testimonials from "../components/Testimonials";
+import LatestNotices from "../components/LatestNotices";
 
 export default function Home() {
 
@@ -45,7 +47,7 @@ export default function Home() {
         {/* CONTENT */}
         <div className="relative z-10 flex flex-col items-center justify-center min-h-[100dvh] px-6 text-center">
 
-          <h1 className="text-white text-5xl sm:text-7xl font-semibold tracking-[0.25em] leading-tight">
+          <h1 className="font-brand text-white text-5xl sm:text-7xl tracking-[0.25em] leading-tight">
 
             ANAMYST
 
@@ -88,7 +90,7 @@ export default function Home() {
 
             </p>
 
-            <div className="text-white text-7xl xl:text-8xl font-semibold tracking-[0.2em] leading-tight mb-8">
+            <div className="font-brand text-white text-7xl xl:text-8xl tracking-[0.2em] leading-tight mb-8">
 
               ANAMYST
 
@@ -503,6 +505,10 @@ export default function Home() {
           </div>
 
         </section>
+
+      <LatestNotices />
+
+      <Testimonials />
 
     </main>
 

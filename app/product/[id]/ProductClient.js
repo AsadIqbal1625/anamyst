@@ -36,6 +36,26 @@ export default function ProductClient({
   const [qty, setQty] =
     useState(1);
 
+  const [activeImage, setActiveImage] =
+    useState(0);
+
+  const [galleryProductId, setGalleryProductId] =
+    useState(product?._id);
+
+  if (product?._id !== galleryProductId) {
+
+    setGalleryProductId(product?._id);
+    setActiveImage(0);
+
+  }
+
+  const galleryImages =
+    product?.images?.length
+      ? product.images
+      : product?.image
+      ? [product.image]
+      : [];
+
   /* FETCH PRODUCT (fallback when not server rendered) */
   useEffect(() => {
 
@@ -185,17 +205,17 @@ export default function ProductClient({
 
         <div className="relative grid grid-cols-1 md:grid-cols-[1fr_1fr] gap-6 lg:gap-8 items-stretch max-w-7xl mx-auto">
 
-          {/* PRODUCT IMAGE (fills to match details height) */}
-          <div className="bg-white/5 border border-white/10 rounded-[36px] backdrop-blur-xl p-4 md:p-6 relative overflow-hidden flex">
+          {/* PRODUCT IMAGE CAROUSEL (fills to match details height) */}
+          <div className="bg-white/5 border border-white/10 rounded-[36px] backdrop-blur-xl p-4 md:p-6 relative overflow-hidden flex flex-col gap-4">
 
-            <div className="relative flex-1 bg-black/40 rounded-[28px] overflow-hidden min-h-[380px] md:min-h-[520px]">
+            <div className="relative flex-1 bg-black/40 rounded-[28px] overflow-hidden min-h-[380px] md:min-h-[460px]">
 
               <Image
-                src={product.image}
+                src={galleryImages[activeImage] || product.image}
                 alt={product.name}
                 fill
                 sizes="(max-width: 768px) 100vw, 50vw"
-                priority
+                preload={activeImage === 0}
                 className="object-cover transition-transform duration-700 hover:scale-105"
               />
 
@@ -211,7 +231,79 @@ export default function ProductClient({
 
               </span>
 
+              {galleryImages.length > 1 && (
+
+                <>
+
+                  <button
+                    type="button"
+                    onClick={() =>
+                      setActiveImage((i) =>
+                        (i - 1 + galleryImages.length) %
+                        galleryImages.length
+                      )
+                    }
+                    className="absolute left-3 top-1/2 -translate-y-1/2 z-10 bg-black/60 hover:bg-black text-white w-10 h-10 rounded-full flex items-center justify-center transition"
+                    aria-label="Previous image"
+                  >
+
+                    ‹
+
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() =>
+                      setActiveImage((i) =>
+                        (i + 1) % galleryImages.length
+                      )
+                    }
+                    className="absolute right-3 top-1/2 -translate-y-1/2 z-10 bg-black/60 hover:bg-black text-white w-10 h-10 rounded-full flex items-center justify-center transition"
+                    aria-label="Next image"
+                  >
+
+                    ›
+
+                  </button>
+
+                </>
+
+              )}
+
             </div>
+
+            {galleryImages.length > 1 && (
+
+              <div className="flex gap-3 overflow-x-auto">
+
+                {galleryImages.map((img, index) => (
+
+                  <button
+                    key={img + index}
+                    type="button"
+                    onClick={() => setActiveImage(index)}
+                    className={`relative shrink-0 w-16 h-16 rounded-xl overflow-hidden border transition ${
+                      activeImage === index
+                        ? "border-[#D4AF37]"
+                        : "border-white/10 opacity-70 hover:opacity-100"
+                    }`}
+                  >
+
+                    <Image
+                      src={img}
+                      alt={`${product.name} ${index + 1}`}
+                      fill
+                      sizes="64px"
+                      className="object-cover"
+                    />
+
+                  </button>
+
+                ))}
+
+              </div>
+
+            )}
 
           </div>
 

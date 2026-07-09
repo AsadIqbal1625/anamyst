@@ -5,7 +5,7 @@ import Image from "next/image";
 import { addToCart } from "../lib/cart";
 import toast from "react-hot-toast";
 
-export default function ProductCard({ product }) {
+export default function ProductCard({ product, priority = false }) {
 
   return (
 
@@ -20,9 +20,8 @@ export default function ProductCard({ product }) {
             fill
             src={product.image}
             alt={product.name}
-            priority
-            loading="eager"
-            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+            preload={priority}
+            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, (max-width: 1280px) 33vw, 25vw"
             className="object-cover group-hover:scale-105 transition-transform duration-700"
           />
 
