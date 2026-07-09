@@ -114,13 +114,10 @@ export default function TestimonialsAdminPage() {
   }
 
   return (
-    <div className="p-8 text-white space-y-10">
-      <div>
-        <h1 className="text-3xl font-bold mb-2">Testimonials</h1>
-        <p className="text-gray-400">
-          Manage customer testimonials shown on the homepage.
-        </p>
-      </div>
+    <div className="text-white space-y-10">
+      <p className="text-gray-400">
+        Manage customer testimonials shown on the homepage.
+      </p>
 
       {/* CREATE TESTIMONIAL */}
       <form

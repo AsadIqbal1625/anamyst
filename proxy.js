@@ -81,6 +81,7 @@ export const config = {
     "/api/notices/:path*",
     "/api/notices",
     "/api/inventory/:path*",
+    "/api/invoices/:path*",
   ],
 
 };

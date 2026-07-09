@@ -70,8 +70,15 @@ export default function AnalyticsPage() {
       statusBreakdown.Cancelled || 1;
 
   return (
-    <div className="p-8 text-white space-y-10">
-      <h1 className="text-3xl font-bold">Analytics</h1>
+    <div className="text-white space-y-10">
+      <div className="flex justify-end">
+        <a
+          href="/api/analytics/export"
+          className="bg-white/10 border border-[#D4AF37]/40 hover:bg-white/20 text-white px-5 py-2.5 rounded-xl text-sm font-semibold transition whitespace-nowrap"
+        >
+          Download Analytics (Excel)
+        </a>
+      </div>
 
       {/* SUMMARY */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-5">

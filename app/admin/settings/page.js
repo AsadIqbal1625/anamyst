@@ -68,8 +68,7 @@ export default function SettingsPage() {
   }
 
   return (
-    <div className="p-8 text-white max-w-3xl">
-      <h1 className="text-3xl font-bold mb-2">Settings</h1>
+    <div className="text-white max-w-3xl">
       <p className="text-gray-400 mb-8">
         Store information and checkout options.
       </p>

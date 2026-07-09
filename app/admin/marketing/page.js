@@ -74,13 +74,10 @@ export default function MarketingPage() {
   }
 
   return (
-    <div className="p-8 text-white space-y-10">
-      <div>
-        <h1 className="text-3xl font-bold mb-2">Marketing</h1>
-        <p className="text-gray-400">
-          Create and manage discount coupons for your store.
-        </p>
-      </div>
+    <div className="text-white space-y-10">
+      <p className="text-gray-400">
+        Create and manage discount coupons for your store.
+      </p>
 
       {/* CREATE COUPON */}
       <form

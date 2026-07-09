@@ -48,17 +48,26 @@ export default function CustomersPage() {
 
       <div className="text-white">
 
-        <h1 className="text-4xl font-bold mb-8">
-          Customers
-        </h1>
+        <div className="flex flex-col md:flex-row md:items-center gap-4 mb-8">
 
-        <input
-          type="text"
-          placeholder="Search by Name or Mobile..."
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          className="w-full mb-8 rounded-xl bg-[#111] border border-[#D4AF37]/30 px-5 py-3 outline-none"
-        />
+          <input
+            type="text"
+            placeholder="Search by Name or Mobile..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            className="flex-1 rounded-xl bg-[#111] border border-[#D4AF37]/30 px-5 py-3 outline-none"
+          />
+
+          {/* file download, not a page nav — <Link> would be wrong here */}
+          {/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
+          <a
+            href="/api/customers/export"
+            className="bg-white/10 border border-[#D4AF37]/40 hover:bg-white/20 text-white px-5 py-3 rounded-xl text-sm font-semibold transition whitespace-nowrap"
+          >
+            Download Customers (Excel)
+          </a>
+
+        </div>
 
         <div className="overflow-x-auto rounded-2xl border border-[#D4AF37]/20">
 

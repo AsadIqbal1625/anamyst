@@ -158,13 +158,10 @@ export default function NoticesAdminPage() {
   }
 
   return (
-    <div className="p-8 text-white space-y-10">
-      <div>
-        <h1 className="text-3xl font-bold mb-2">Notices / New Launches</h1>
-        <p className="text-gray-400">
-          Post announcements shown on the homepage and /notices.
-        </p>
-      </div>
+    <div className="text-white space-y-10">
+      <p className="text-gray-400">
+        Post announcements shown on the homepage and /notices.
+      </p>
 
       {/* CREATE / EDIT NOTICE */}
       <form

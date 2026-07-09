@@ -120,15 +120,24 @@ export default function InvoicesPage() {
   }
 
   return (
-    <div className="p-8 text-white">
-      <h1 className="text-3xl font-bold mb-6">Invoices</h1>
+    <div className="text-white">
+      <div className="flex flex-col md:flex-row md:items-center gap-4 mb-8">
 
-      <input
-        value={search}
-        onChange={(e) => setSearch(e.target.value)}
-        placeholder="Search by Invoice ID, Order ID or Customer..."
-        className="w-full bg-white/5 border border-white/10 rounded-xl px-5 py-3 mb-8 text-sm outline-none focus:border-[#D4AF37]/60"
-      />
+        <input
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          placeholder="Search by Invoice ID, Order ID or Customer..."
+          className="flex-1 bg-white/5 border border-white/10 rounded-xl px-5 py-3 text-sm outline-none focus:border-[#D4AF37]/60"
+        />
+
+        <a
+          href="/api/invoices/export"
+          className="bg-white/10 border border-[#D4AF37]/40 hover:bg-white/20 text-white px-5 py-3 rounded-xl text-sm font-semibold transition whitespace-nowrap"
+        >
+          Download Invoices (Excel)
+        </a>
+
+      </div>
 
       {filtered.length === 0 ? (
         <p className="text-gray-400">No invoices found.</p>

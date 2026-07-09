@@ -453,34 +453,18 @@ export default function AdminPage() {
 
   return (
 
-      <div className="min-h-screen bg-black text-white px-4 py-10">
+      <div className="text-white">
 
-        <div className="max-w-7xl mx-auto">
+        <div>
 
           {/* HEADER */}
-          <div className="mb-12 flex flex-col md:flex-row md:items-center md:justify-between gap-5">
+          <div className="mb-8 flex flex-col md:flex-row md:items-center md:justify-between gap-5">
 
-            <div>
+            <p className="text-gray-400">
 
-              <p className="uppercase tracking-[6px] text-[#D4AF37] text-xs mb-4">
+              Manage ANAMYST products and inventory.
 
-                ANAMYST ADMIN
-
-              </p>
-
-              <h1 className="text-5xl font-bold text-white mb-4">
-
-                Admin Panel
-
-              </h1>
-
-              <p className="text-gray-400 text-lg">
-
-                Manage ANAMYST Products
-
-              </p>
-
-            </div>
+            </p>
 
             {/* BUTTONS */}
             <div className="flex gap-4 flex-wrap items-end">
