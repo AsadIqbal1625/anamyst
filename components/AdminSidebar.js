@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 
 const menus = [
   {
@@ -58,9 +58,15 @@ const menus = [
 
 export default function AdminSidebar() {
   const pathname = usePathname();
+  const router = useRouter();
+
+  async function handleLogout() {
+    await fetch("/api/admin/logout", { method: "POST" }).catch(() => {});
+    router.push("/admin-login");
+  }
 
   return (
-    <aside className="w-72 min-h-screen bg-[#111] border-r border-[#D4AF37]/20">
+    <aside className="w-72 min-h-screen bg-[#111] border-r border-[#D4AF37]/20 flex flex-col">
 
       <div className="p-8">
 
@@ -74,7 +80,7 @@ export default function AdminSidebar() {
 
       </div>
 
-      <nav className="px-4">
+      <nav className="px-4 flex-1">
 
         {menus.map((menu) => (
 
@@ -103,6 +109,24 @@ export default function AdminSidebar() {
         ))}
 
       </nav>
+
+      <div className="p-4 border-t border-white/10">
+
+        <button
+          onClick={handleLogout}
+          className="w-full flex items-center gap-3 px-5 py-4 rounded-xl text-red-400 hover:bg-red-500/10 hover:text-red-300 transition"
+        >
+          <span className="text-xl">
+            🚪
+          </span>
+
+          <span>
+            Logout
+          </span>
+        </button>
+
+      </div>
+
     </aside>
   );
 }

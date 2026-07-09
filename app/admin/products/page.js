@@ -524,30 +524,6 @@ export default function AdminPage() {
 
               </button>
 
-              {/* LOGOUT */}
-              <button
-
-                onClick={async () => {
-
-                  await fetch(
-                    "/api/admin/logout",
-                    { method: "POST" }
-                  ).catch(() => {});
-
-                  router.push(
-                    "/admin-login"
-                  );
-
-                }}
-
-                className="bg-red-500 hover:bg-red-600 text-white px-6 py-3 rounded-2xl font-semibold transition"
-
-              >
-
-                Logout
-
-              </button>
-
             </div>
 
           </div>
