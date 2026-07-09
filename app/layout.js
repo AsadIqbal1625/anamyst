@@ -137,9 +137,8 @@ export default async function RootLayout({ children }) {
           {children}
         </SiteShell>
 
-        {/* RAZORPAY SCRIPT */}
-
-        <Script src="https://checkout.razorpay.com/v1/checkout.js" />
+        {/* Razorpay's checkout.js is loaded on the checkout page itself
+            (app/checkout/page.js) — no need to ship it on every page */}
 
         {/* GOOGLE ANALYTICS (active only when NEXT_PUBLIC_GA_ID is set) */}
 
