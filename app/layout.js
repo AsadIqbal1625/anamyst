@@ -12,6 +12,10 @@ const brandFont = Anton({
   subsets: ["latin"],
   weight: "400",
   variable: "--font-brand",
+  /* "optional" = use the fallback font if Anton isn't ready almost
+     instantly, and never swap it in later — avoids the heading
+     reflowing (layout shift) once the custom font finishes loading */
+  display: "optional",
 });
 
 export const metadata = {
