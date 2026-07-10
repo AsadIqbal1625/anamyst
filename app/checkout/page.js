@@ -41,6 +41,16 @@ export default function CheckoutPage() {
     setCodEnabled] =
     useState(true);
 
+  /* NOTIFICATION PREFERENCES */
+
+  const [notifyEmail,
+    setNotifyEmail] =
+    useState(true);
+
+  const [notifyWhatsapp,
+    setNotifyWhatsapp] =
+    useState(false);
+
   /* STORE SETTINGS (COD availability) */
 
   useEffect(() => {
@@ -274,6 +284,16 @@ export default function CheckoutPage() {
 
       }
 
+      if (!notifyEmail && !notifyWhatsapp) {
+
+        toast.error(
+          "Please select at least one way to be notified about your order"
+        );
+
+        return;
+
+      }
+
       try {
 
         setLoading(true);
@@ -330,6 +350,10 @@ export default function CheckoutPage() {
 
             orderStatus:
               "Pending",
+
+            notifyEmail,
+
+            notifyWhatsapp,
 
           };
 
@@ -540,6 +564,10 @@ export default function CheckoutPage() {
 
                 orderStatus:
                   "Pending",
+
+                notifyEmail,
+
+                notifyWhatsapp,
 
               };
 
@@ -754,6 +782,51 @@ export default function CheckoutPage() {
                 rows={5}
                 className="w-full mt-5 bg-black border border-white/10 rounded-2xl px-5 py-3 outline-none focus:border-[#D4AF37]"
               />
+
+              {/* NOTIFICATION PREFERENCES */}
+              <div className="mt-6 bg-black border border-white/10 rounded-2xl p-5">
+
+                <p className="text-sm text-gray-400 mb-4">
+
+                  How should we notify you about your order?
+
+                </p>
+
+                <div className="flex flex-col gap-3">
+
+                  <label className="flex items-center gap-3 cursor-pointer">
+
+                    <input
+                      type="checkbox"
+                      checked={notifyEmail}
+                      onChange={(e) =>
+                        setNotifyEmail(e.target.checked)
+                      }
+                      className="w-5 h-5 accent-[#D4AF37]"
+                    />
+
+                    <span>Notify by Email</span>
+
+                  </label>
+
+                  <label className="flex items-center gap-3 cursor-pointer">
+
+                    <input
+                      type="checkbox"
+                      checked={notifyWhatsapp}
+                      onChange={(e) =>
+                        setNotifyWhatsapp(e.target.checked)
+                      }
+                      className="w-5 h-5 accent-[#D4AF37]"
+                    />
+
+                    <span>Notify by WhatsApp</span>
+
+                  </label>
+
+                </div>
+
+              </div>
 
             </div>
 

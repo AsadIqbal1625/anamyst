@@ -7,6 +7,7 @@ import {
 } from "../../../lib/generateIds";
 import { connectDB } from "../../../lib/mongodb";
 import { sendOrderEmail } from "../../../lib/sendOrderEmail";
+import { sendWhatsAppOrderConfirmation } from "../../../lib/sendWhatsAppMessage";
 import Order from "../../../models/Order";
 import Coupon from "../../../models/Coupon";
 
@@ -127,9 +128,15 @@ export async function POST(req) {
 
     }
 
-    /* SEND EMAIL */
+    /* NOTIFY CUSTOMER (per their checkout preference) */
 
-    await sendOrderEmail(order);
+    if (order.notifyEmail !== false) {
+      await sendOrderEmail(order);
+    }
+
+    if (order.notifyWhatsapp) {
+      await sendWhatsAppOrderConfirmation(order);
+    }
 
     return Response.json({
 

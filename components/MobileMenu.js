@@ -12,6 +12,7 @@ const collections = [
 
 const pages = [
   { title: "Home", href: "/" },
+  { title: "New Launches", href: "/notices" },
   { title: "About", href: "/about" },
   { title: "FAQ", href: "/faq" },
   { title: "Track Order", href: "/track-order" },

@@ -94,6 +94,16 @@ const OrderSchema =
         default: "Pending",
       },
 
+      notifyEmail: {
+        type: Boolean,
+        default: true,
+      },
+
+      notifyWhatsapp: {
+        type: Boolean,
+        default: false,
+      },
+
     },
 
     {
