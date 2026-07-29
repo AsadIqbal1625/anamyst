@@ -1,3 +1,5 @@
+import crypto from "crypto";
+
 import Customer from "../../../models/Customer";
 
 import {
@@ -9,6 +11,7 @@ import { connectDB } from "../../../lib/mongodb";
 import { sendOrderEmail } from "../../../lib/sendOrderEmail";
 import { sendWhatsAppOrderConfirmation } from "../../../lib/sendWhatsAppMessage";
 import Order from "../../../models/Order";
+import Product from "../../../models/Product";
 import Coupon from "../../../models/Coupon";
 
 /* GET ORDERS */
@@ -44,9 +47,122 @@ export async function POST(req) {
 
     const body =
       await req.json();
-      
 
-    
+    /* ── SERVER-SIDE PRICING ──
+       Never trust prices/totals from the browser: rebuild every
+       line item from the DB and recompute the payable amount. */
+
+    const cartItems = Array.isArray(body.products)
+      ? body.products
+      : [];
+
+    if (cartItems.length === 0) {
+      return Response.json(
+        { success: false, error: "Cart is empty" },
+        { status: 400 }
+      );
+    }
+
+    const ids = cartItems.map((i) => i.productId).filter(Boolean);
+
+    const dbProducts = await Product.find({
+      _id: { $in: ids },
+    }).lean();
+
+    const productMap = Object.fromEntries(
+      dbProducts.map((p) => [String(p._id), p])
+    );
+
+    let subtotal = 0;
+
+    const products = [];
+
+    for (const item of cartItems) {
+
+      const db = productMap[String(item.productId)];
+
+      const quantity = Math.max(
+        1,
+        Math.floor(Number(item.quantity) || 1)
+      );
+
+      if (!db) {
+        return Response.json(
+          { success: false, error: "A product in your cart no longer exists. Please refresh your cart." },
+          { status: 400 }
+        );
+      }
+
+      subtotal += db.price * quantity;
+
+      products.push({
+        productId: String(db._id),
+        name: db.name,
+        image: db.image,
+        quantity,
+        price: db.price,
+      });
+
+    }
+
+    /* ── SERVER-SIDE COUPON ── */
+
+    let discount = 0;
+    let couponCode = "";
+
+    if (body.couponCode) {
+
+      const coupon = await Coupon.findOne({
+        code: String(body.couponCode).toUpperCase().trim(),
+      }).lean();
+
+      const valid =
+        coupon &&
+        coupon.active &&
+        (!coupon.expiresAt || new Date(coupon.expiresAt) >= new Date()) &&
+        (!coupon.minOrder || subtotal >= coupon.minOrder);
+
+      if (valid) {
+        couponCode = coupon.code;
+        discount =
+          coupon.discountType === "percent"
+            ? Math.round((subtotal * coupon.value) / 100)
+            : Math.min(coupon.value, subtotal);
+      }
+
+    }
+
+    const totalAmount = Math.max(subtotal - discount, 0);
+
+    /* ── SERVER-SIDE PAYMENT VERIFICATION ──
+       "Paid" is only accepted with a valid Razorpay signature. */
+
+    let paymentMethod = "COD";
+    let paymentStatus = "Pending";
+
+    if (body.paymentMethod === "RAZORPAY") {
+
+      const expected = crypto
+        .createHmac("sha256", process.env.RAZORPAY_KEY_SECRET)
+        .update(body.razorpayOrderId + "|" + body.paymentId)
+        .digest("hex");
+
+      if (
+        !body.razorpayOrderId ||
+        !body.paymentId ||
+        expected !== body.razorpaySignature
+      ) {
+        return Response.json(
+          { success: false, error: "Payment verification failed" },
+          { status: 400 }
+        );
+      }
+
+      paymentMethod = "RAZORPAY";
+      paymentStatus = "Paid";
+
+    }
+
     let customer =
       await Customer.findOne({
         mobile: body.phone,
@@ -74,7 +190,7 @@ export async function POST(req) {
 
         totalOrders: 1,
 
-        totalSpent: body.totalAmount,
+        totalSpent: totalAmount,
 
         lastOrderDate: new Date(),
 
@@ -91,7 +207,7 @@ export async function POST(req) {
       customer.totalOrders += 1;
 
       customer.totalSpent +=
-        body.totalAmount;
+        totalAmount;
 
       customer.lastOrderDate =
         new Date();
@@ -104,7 +220,28 @@ export async function POST(req) {
             
         const order = await Order.create({
 
-        ...body,
+        customerName: body.customerName,
+        email: body.email,
+        phone: body.phone,
+        address: body.address,
+        city: body.city,
+        state: body.state,
+        pincode: body.pincode,
+
+        products,
+        totalAmount,
+        couponCode,
+        discount,
+
+        paymentMethod,
+        paymentStatus,
+        orderStatus: "Pending",
+
+        paymentId: body.paymentId,
+        razorpayOrderId: body.razorpayOrderId,
+
+        notifyEmail: body.notifyEmail !== false,
+        notifyWhatsapp: Boolean(body.notifyWhatsapp),
 
         customerId: customer.customerId,
 
@@ -114,15 +251,12 @@ export async function POST(req) {
 
       });
 
-     
-      ;
-
     /* COUNT COUPON USAGE */
 
-    if (body.couponCode) {
+    if (couponCode) {
 
       await Coupon.updateOne(
-        { code: body.couponCode },
+        { code: couponCode },
         { $inc: { usedCount: 1 } }
       ).catch(() => {});
 

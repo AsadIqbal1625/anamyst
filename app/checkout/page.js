@@ -559,6 +559,10 @@ export default function CheckoutPage() {
                   response
                     .razorpay_payment_id,
 
+                razorpaySignature:
+                  response
+                    .razorpay_signature,
+
                 paymentStatus:
                   "Paid",
 
