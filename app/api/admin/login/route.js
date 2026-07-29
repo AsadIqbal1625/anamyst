@@ -1,9 +1,32 @@
 import { NextResponse } from "next/server";
 import { createAdminToken } from "../../../../lib/adminToken";
+import { connectDB } from "../../../../lib/mongodb";
+import LoginAttempt from "../../../../models/LoginAttempt";
+
+const MAX_ATTEMPTS = 5; // per 15 min (TTL on the model)
 
 export async function POST(req) {
   try {
     const { email, password } = await req.json();
+
+    /* LOCKOUT: too many recent failures from this IP → block */
+    await connectDB();
+
+    const ip =
+      req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ||
+      "unknown";
+
+    const failures = await LoginAttempt.countDocuments({ key: ip });
+
+    if (failures >= MAX_ATTEMPTS) {
+      return NextResponse.json(
+        {
+          success: false,
+          error: "Too many failed attempts. Try again in 15 minutes.",
+        },
+        { status: 429 }
+      );
+    }
 
     const adminEmail = process.env.ADMIN_EMAIL;
     const adminPassword = process.env.ADMIN_PASSWORD;
@@ -18,14 +41,18 @@ export async function POST(req) {
     }
 
     if (email !== adminEmail || password !== adminPassword) {
-      /* slow down brute-force attempts */
+      /* record failure + slow down brute-force attempts */
+      await LoginAttempt.create({ key: ip }).catch(() => {});
       await new Promise((r) => setTimeout(r, 800));
 
-      return NextResponse.json({
-        success: false,
-        error: "Invalid credentials",
-      });
+      return NextResponse.json(
+        { success: false, error: "Invalid credentials" },
+        { status: 401 }
+      );
     }
+
+    /* success → clear this IP's failure history */
+    await LoginAttempt.deleteMany({ key: ip }).catch(() => {});
 
     const token = await createAdminToken(secret);
 
