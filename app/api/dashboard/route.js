@@ -59,6 +59,9 @@ export async function GET() {
       lowStock,
     });
   } catch (error) {
-    return NextResponse.json({ success: false, error: error.message });
+
+    console.error("dashboard error:", error);
+
+    return NextResponse.json({ success: false, error: "Something went wrong. Please try again.", });
   }
 }

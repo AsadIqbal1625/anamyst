@@ -54,6 +54,9 @@ export async function POST(req) {
 
     return NextResponse.json({ success: true, orders: safe });
   } catch (error) {
-    return NextResponse.json({ success: false, error: error.message });
+
+    console.error("track-order error:", error);
+
+    return NextResponse.json({ success: false, error: "Something went wrong. Please try again.", });
   }
 }

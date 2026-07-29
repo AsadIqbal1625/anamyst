@@ -113,8 +113,7 @@ export async function POST(req) {
 
         success: false,
 
-        error:
-          error.message,
+        error: "Something went wrong. Please try again.",
 
       },
 

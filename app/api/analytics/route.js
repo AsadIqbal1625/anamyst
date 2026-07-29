@@ -10,6 +10,9 @@ export async function GET() {
       ...data,
     });
   } catch (error) {
-    return NextResponse.json({ success: false, error: error.message });
+
+    console.error("analytics error:", error);
+
+    return NextResponse.json({ success: false, error: "Something went wrong. Please try again.", });
   }
 }

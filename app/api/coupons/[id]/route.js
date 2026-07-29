@@ -22,7 +22,10 @@ export async function PATCH(req, { params }) {
 
     return NextResponse.json({ success: true, coupon });
   } catch (error) {
-    return NextResponse.json({ success: false, error: error.message });
+
+    console.error("[id] error:", error);
+
+    return NextResponse.json({ success: false, error: "Something went wrong. Please try again.", });
   }
 }
 
@@ -34,6 +37,9 @@ export async function DELETE(req, { params }) {
     await Coupon.findByIdAndDelete(id);
     return NextResponse.json({ success: true });
   } catch (error) {
-    return NextResponse.json({ success: false, error: error.message });
+
+    console.error("[id] error:", error);
+
+    return NextResponse.json({ success: false, error: "Something went wrong. Please try again.", });
   }
 }

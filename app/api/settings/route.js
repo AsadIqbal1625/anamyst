@@ -15,7 +15,10 @@ export async function GET() {
 
     return NextResponse.json({ success: true, settings });
   } catch (error) {
-    return NextResponse.json({ success: false, error: error.message });
+
+    console.error("settings error:", error);
+
+    return NextResponse.json({ success: false, error: "Something went wrong. Please try again.", });
   }
 }
 
@@ -36,6 +39,9 @@ export async function PUT(req) {
 
     return NextResponse.json({ success: true, settings });
   } catch (error) {
-    return NextResponse.json({ success: false, error: error.message });
+
+    console.error("settings error:", error);
+
+    return NextResponse.json({ success: false, error: "Something went wrong. Please try again.", });
   }
 }

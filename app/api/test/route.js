@@ -15,9 +15,12 @@ export async function GET() {
 
   } catch (error) {
 
+    console.error("test error:", error);
+
+
     return Response.json({
       success: false,
-      error: error.message,
+      error: "Something went wrong. Please try again.",
     });
 
   }

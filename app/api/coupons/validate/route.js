@@ -56,6 +56,9 @@ export async function POST(req) {
       discount,
     });
   } catch (error) {
-    return NextResponse.json({ success: false, error: error.message });
+
+    console.error("validate error:", error);
+
+    return NextResponse.json({ success: false, error: "Something went wrong. Please try again.", });
   }
 }

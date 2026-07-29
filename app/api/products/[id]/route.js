@@ -44,9 +44,12 @@ export async function GET(
 
   } catch (error) {
 
+    console.error("[id] error:", error);
+
+
     return Response.json({
       success: false,
-      error: error.message,
+      error: "Something went wrong. Please try again.",
     });
 
   }
@@ -95,12 +98,14 @@ export async function PATCH(
 
   } catch (error) {
 
+    console.error("[id] error:", error);
+
+
     return Response.json({
 
       success: false,
 
-      error:
-        error.message,
+      error: "Something went wrong. Please try again.",
 
     });
 
@@ -138,12 +143,14 @@ export async function DELETE(
 
   } catch (error) {
 
+    console.error("[id] error:", error);
+
+
     return Response.json({
 
       success: false,
 
-      error:
-        error.message,
+      error: "Something went wrong. Please try again.",
 
     });
 

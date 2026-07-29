@@ -33,7 +33,7 @@ export async function GET(request, { params }) {
     return Response.json(
       {
         success: false,
-        error: error.message,
+        error: "Something went wrong. Please try again.",
       },
       { status: 500 }
     );

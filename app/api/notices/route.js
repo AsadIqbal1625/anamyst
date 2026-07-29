@@ -31,9 +31,12 @@ export async function GET(req) {
 
   } catch (error) {
 
+    console.error("notices error:", error);
+
+
     return Response.json({
       success: false,
-      error: error.message,
+      error: "Something went wrong. Please try again.",
     });
 
   }
@@ -60,9 +63,12 @@ export async function POST(req) {
 
   } catch (error) {
 
+    console.error("notices error:", error);
+
+
     return Response.json({
       success: false,
-      error: error.message,
+      error: "Something went wrong. Please try again.",
     });
 
   }

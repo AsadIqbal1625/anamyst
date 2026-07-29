@@ -9,7 +9,10 @@ export async function GET() {
     const coupons = await Coupon.find().sort({ createdAt: -1 }).lean();
     return NextResponse.json({ success: true, coupons });
   } catch (error) {
-    return NextResponse.json({ success: false, error: error.message });
+
+    console.error("coupons error:", error);
+
+    return NextResponse.json({ success: false, error: "Something went wrong. Please try again.", });
   }
 }
 
@@ -44,6 +47,9 @@ export async function POST(req) {
 
     return NextResponse.json({ success: true, coupon });
   } catch (error) {
+
+    console.error("coupons error:", error);
+
     const message =
       error.code === 11000
         ? "Coupon code already exists"

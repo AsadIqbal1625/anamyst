@@ -122,11 +122,14 @@ export async function PATCH(
 
   } catch (error) {
 
+    console.error("[id] error:", error);
+
+
     return NextResponse.json({
 
       success: false,
 
-      error: error.message,
+      error: "Something went wrong. Please try again.",
 
     });
 
