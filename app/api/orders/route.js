@@ -93,6 +93,16 @@ export async function POST(req) {
         );
       }
 
+      if (typeof db.stock === "number" && db.stock < quantity) {
+        return Response.json(
+          {
+            success: false,
+            error: `"${db.name}" has only ${db.stock} left in stock. Please update your cart.`,
+          },
+          { status: 400 }
+        );
+      }
+
       subtotal += db.price * quantity;
 
       products.push({
@@ -250,6 +260,17 @@ export async function POST(req) {
         invoiceId: await generateInvoiceId(),
 
       });
+
+    /* DECREMENT STOCK (floor at 0 via the availability check above) */
+
+    await Product.bulkWrite(
+      products.map((p) => ({
+        updateOne: {
+          filter: { _id: p.productId },
+          update: { $inc: { stock: -p.quantity } },
+        },
+      }))
+    ).catch(() => {});
 
     /* COUNT COUPON USAGE */
 

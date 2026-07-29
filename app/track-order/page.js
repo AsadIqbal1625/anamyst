@@ -9,8 +9,12 @@ import Image from "next/image";
 
 export default function TrackOrderPage() {
 
-  const [search,
-    setSearch] =
+  const [orderId,
+    setOrderId] =
+    useState("");
+
+  const [contact,
+    setContact] =
     useState("");
 
   const [orders,
@@ -46,7 +50,8 @@ export default function TrackOrderPage() {
                 "application/json",
             },
             body: JSON.stringify({
-              query: search,
+              orderId,
+              contact,
             }),
           }
         );
@@ -103,7 +108,7 @@ export default function TrackOrderPage() {
 
           <p className="text-gray-400 text-lg max-w-2xl mx-auto leading-8">
 
-            Enter your phone number or email to check your latest order status.
+            Enter your Order ID along with the phone number or email used on the order.
 
           </p>
 
@@ -119,10 +124,23 @@ export default function TrackOrderPage() {
 
         <input
             type="text"
-            placeholder="Enter Order ID, Phone or Email"
-            value={search}
+            placeholder="Order ID (e.g. ORD000123)"
+            value={orderId}
             onChange={(e) =>
-            setSearch(
+            setOrderId(
+                e.target.value
+            )
+            }
+            className="flex-1 bg-black/40 border border-white/10 rounded-2xl px-5 py-5 outline-none focus:border-[#D4AF37] text-white placeholder:text-gray-500"
+            required
+        />
+
+        <input
+            type="text"
+            placeholder="Phone or Email used on the order"
+            value={contact}
+            onChange={(e) =>
+            setContact(
                 e.target.value
             )
             }
@@ -147,7 +165,9 @@ export default function TrackOrderPage() {
             type="button"
             onClick={() => {
 
-            setSearch("");
+            setOrderId("");
+
+            setContact("");
 
             setOrders([]);
 

@@ -2,31 +2,33 @@ import { NextResponse } from "next/server";
 import { connectDB } from "../../../lib/mongodb";
 import Order from "../../../models/Order";
 
-/* PUBLIC: customers track their own orders by Order ID, phone or email.
-   Requires an exact match — never exposes the full order list. */
+/* PUBLIC: customers track their own orders. Requires the Order ID
+   AND the matching phone/email on that order — knowing someone's
+   phone number alone must not reveal their order history. */
 export async function POST(req) {
   try {
-    const { query } = await req.json();
+    const { orderId, contact } = await req.json();
 
-    const q = String(query || "").trim();
+    const id = String(orderId || "").trim();
+    const who = String(contact || "").trim();
 
-    if (q.length < 5) {
+    if (id.length < 5 || who.length < 5) {
       return NextResponse.json({
         success: false,
-        error: "Enter your full Order ID, phone number or email",
+        error: "Enter your Order ID and the phone or email used on the order",
       });
     }
 
     await connectDB();
 
     /* escape regex characters so nobody can search with wildcards */
-    const escaped = q.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    const esc = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 
     const orders = await Order.find({
+      orderId: new RegExp(`^${esc(id)}$`, "i"),
       $or: [
-        { orderId: new RegExp(`^${escaped}$`, "i") },
-        { phone: q },
-        { email: new RegExp(`^${escaped}$`, "i") },
+        { phone: who },
+        { email: new RegExp(`^${esc(who)}$`, "i") },
       ],
     })
       .sort({ createdAt: -1 })
