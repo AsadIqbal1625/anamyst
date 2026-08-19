@@ -11,6 +11,7 @@ const PUBLIC_API = [
   { path: "/api/track-order" },
   { path: "/api/testimonials", methods: ["GET"] },
   { path: "/api/notices", methods: ["GET"] },
+  { path: "/api/abandoned-checkout", methods: ["POST"], exact: true },
 ];
 
 function isPublic(pathname, method) {
@@ -82,6 +83,7 @@ export const config = {
     "/api/notices",
     "/api/inventory/:path*",
     "/api/invoices/:path*",
+    "/api/abandoned-checkout",
   ],
 
 };

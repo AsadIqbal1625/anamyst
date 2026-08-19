@@ -40,6 +40,11 @@ const menus = [
     icon: "📢",
   },
   {
+    title: "Abandoned Carts",
+    href: "/admin/abandoned",
+    icon: "🧺",
+  },
+  {
     title: "Testimonials",
     href: "/admin/testimonials",
     icon: "💬",

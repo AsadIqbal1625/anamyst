@@ -115,6 +115,38 @@ export default function CheckoutPage() {
 
   }, [router]);
 
+  /* ABANDONED-CHECKOUT CAPTURE — after the visitor types a contact,
+     save their cart server-side (debounced, fire-and-forget) */
+
+  useEffect(() => {
+
+    const phoneOk =
+      form.phone.replace(/\D/g, "").length >= 10;
+
+    const emailOk =
+      /^\S+@\S+\.\S+$/.test(form.email);
+
+    if ((!phoneOk && !emailOk) || cart.length === 0) return;
+
+    const t = setTimeout(() => {
+
+      fetch("/api/abandoned-checkout", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: form.name,
+          phone: form.phone,
+          email: form.email,
+          cart,
+        }),
+      }).catch(() => {});
+
+    }, 2000);
+
+    return () => clearTimeout(t);
+
+  }, [form.name, form.phone, form.email, cart]);
+
   const handleChange = (e) => {
 
     setForm({

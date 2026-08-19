@@ -9,6 +9,8 @@ import {
 } from "../../../lib/generateIds";
 import { connectDB } from "../../../lib/mongodb";
 import { sendOrderEmail } from "../../../lib/sendOrderEmail";
+import { sendOwnerOrderAlert } from "../../../lib/sendOwnerOrderAlert";
+import AbandonedCheckout from "../../../models/AbandonedCheckout";
 import { sendWhatsAppOrderConfirmation } from "../../../lib/sendWhatsAppMessage";
 import Order from "../../../models/Order";
 import Product from "../../../models/Product";
@@ -292,6 +294,19 @@ export async function POST(req) {
     if (order.notifyWhatsapp) {
       await sendWhatsAppOrderConfirmation(order);
     }
+
+    /* ALWAYS alert the store owner */
+
+    await sendOwnerOrderAlert(order);
+
+    /* ORDER PLACED → no longer an abandoned checkout */
+
+    await AbandonedCheckout.deleteMany({
+      $or: [
+        { phone: String(body.phone || "").replace(/\D/g, "").slice(0, 12) },
+        { email: String(body.email || "").trim().toLowerCase() },
+      ],
+    }).catch(() => {});
 
     return Response.json({
 
