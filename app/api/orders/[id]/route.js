@@ -10,6 +10,20 @@ from "../../../../models/Order";
 import Product
 from "../../../../models/Product";
 
+import Customer
+from "../../../../models/Customer";
+
+/* customer/shipping fields an admin may correct after the order */
+const EDITABLE_FIELDS = [
+  "customerName",
+  "email",
+  "phone",
+  "address",
+  "city",
+  "state",
+  "pincode",
+];
+
 /* restore (+1) or re-deduct (-1) stock for an order's items */
 async function adjustStock(order, direction) {
   await Product.bulkWrite(
@@ -42,6 +56,14 @@ export async function PATCH(
       await request.json();
 
     const update = {};
+
+    /* EDIT CUSTOMER / SHIPPING DETAILS */
+
+    for (const field of EDITABLE_FIELDS) {
+      if (typeof body[field] === "string") {
+        update[field] = body[field].trim();
+      }
+    }
 
     if (body.orderStatus) {
       update.orderStatus =
@@ -131,6 +153,59 @@ export async function PATCH(
 
       error: "Something went wrong. Please try again.",
 
+    });
+
+  }
+
+}
+
+/* DELETE ORDER (e.g. removing test orders)
+   Restores stock and rolls back the customer's lifetime totals. */
+export async function DELETE(request, context) {
+
+  try {
+
+    await connectDB();
+
+    const params = await context.params;
+
+    const order = await Order.findById(params.id);
+
+    if (!order) {
+      return NextResponse.json(
+        { success: false, error: "Order not found" },
+        { status: 404 }
+      );
+    }
+
+    /* cancelled orders already had their stock returned */
+    if (order.orderStatus !== "Cancelled") {
+      await adjustStock(order, +1);
+    }
+
+    if (order.customerId) {
+      await Customer.updateOne(
+        { customerId: order.customerId },
+        {
+          $inc: {
+            totalOrders: -1,
+            totalSpent: -(order.totalAmount || 0),
+          },
+        }
+      ).catch(() => {});
+    }
+
+    await Order.findByIdAndDelete(params.id);
+
+    return NextResponse.json({ success: true });
+
+  } catch (error) {
+
+    console.error("[id] delete error:", error);
+
+    return NextResponse.json({
+      success: false,
+      error: "Something went wrong. Please try again.",
     });
 
   }

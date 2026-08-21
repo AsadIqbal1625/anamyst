@@ -24,6 +24,16 @@ export default function OrdersPage() {
     setActiveFilter] =
     useState("All");
 
+  const [search, setSearch] = useState("");
+
+  const [paymentFilter, setPaymentFilter] = useState("All");
+
+  const [selected, setSelected] = useState([]);
+
+  const [editingId, setEditingId] = useState(null);
+
+  const [editForm, setEditForm] = useState({});
+
   /* FETCH ORDERS */
   async function fetchOrders() {
 
@@ -62,6 +72,81 @@ export default function OrdersPage() {
     fetchOrders();
 
   }, []);
+
+  /* DELETE ONE ORDER */
+  async function deleteOrder(id) {
+
+    if (
+      !confirm(
+        "Delete this order permanently? Stock will be restored and the customer's totals adjusted."
+      )
+    ) return;
+
+    await fetch(`/api/orders/${id}`, { method: "DELETE" });
+
+    setSelected((s) => s.filter((x) => x !== id));
+
+    fetchOrders();
+
+  }
+
+  /* DELETE SELECTED ORDERS */
+  async function deleteSelected() {
+
+    if (
+      !confirm(
+        `Delete ${selected.length} order(s) permanently? Stock will be restored and customer totals adjusted.`
+      )
+    ) return;
+
+    for (const id of selected) {
+      await fetch(`/api/orders/${id}`, { method: "DELETE" });
+    }
+
+    setSelected([]);
+
+    fetchOrders();
+
+  }
+
+  function toggleSelect(id) {
+
+    setSelected((s) =>
+      s.includes(id) ? s.filter((x) => x !== id) : [...s, id]
+    );
+
+  }
+
+  /* EDIT ORDER DETAILS */
+  function startEdit(order) {
+
+    setEditingId(order._id);
+
+    setEditForm({
+      customerName: order.customerName || "",
+      email: order.email || "",
+      phone: order.phone || "",
+      address: order.address || "",
+      city: order.city || "",
+      state: order.state || "",
+      pincode: order.pincode || "",
+    });
+
+  }
+
+  async function saveEdit(id) {
+
+    await fetch(`/api/orders/${id}`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(editForm),
+    });
+
+    setEditingId(null);
+
+    fetchOrders();
+
+  }
 
   /* UPDATE STATUS */
   async function updateStatus(
@@ -155,21 +240,35 @@ export default function OrdersPage() {
 
   }
 
-  /* FILTERED */
-  const filteredOrders =
+  /* FILTERED — status segment + payment segment + search */
+  const q = search.trim().toLowerCase();
 
-    activeFilter === "All"
+  const filteredOrders = orders.filter((order) => {
 
-      ? orders
+    const matchesStatus =
+      activeFilter === "All" ||
+      order.orderStatus === activeFilter;
 
-      : orders.filter(
+    const matchesPayment =
+      paymentFilter === "All" ||
+      (paymentFilter === "Paid" && order.paymentStatus === "Paid") ||
+      (paymentFilter === "Unpaid" && order.paymentStatus !== "Paid") ||
+      paymentFilter === order.paymentMethod;
 
-          (order) =>
+    const matchesSearch =
+      !q ||
+      [
+        order.orderId,
+        order.customerName,
+        order.phone,
+        order.email,
+      ]
+        .filter(Boolean)
+        .some((v) => String(v).toLowerCase().includes(q));
 
-            order.orderStatus ===
-            activeFilter
+    return matchesStatus && matchesPayment && matchesSearch;
 
-        );
+  });
 
   /* LOADING */
   if (loading) {
@@ -260,6 +359,61 @@ export default function OrdersPage() {
 
       </div>
 
+      {/* SEARCH + PAYMENT SEGMENT */}
+      <div className="flex flex-col md:flex-row gap-4">
+
+        <input
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          placeholder="Search Order ID, name, phone or email..."
+          className="flex-1 bg-white/5 border border-white/10 rounded-xl px-5 py-3 text-sm outline-none focus:border-[#D4AF37]/60"
+        />
+
+        <select
+          value={paymentFilter}
+          onChange={(e) => setPaymentFilter(e.target.value)}
+          className="bg-black/40 border border-white/10 text-white rounded-xl px-4 py-3 text-sm outline-none focus:border-[#D4AF37]/60"
+        >
+          <option value="All">All payments</option>
+          <option value="Paid">Paid only</option>
+          <option value="Unpaid">Unpaid only</option>
+          <option value="COD">COD</option>
+          <option value="RAZORPAY">Razorpay</option>
+        </select>
+
+      </div>
+
+      {/* BULK ACTIONS */}
+      {selected.length > 0 && (
+
+        <div className="flex items-center justify-between gap-4 bg-red-500/10 border border-red-500/30 rounded-xl px-5 py-3">
+
+          <span className="text-sm">
+            {selected.length} order(s) selected
+          </span>
+
+          <div className="flex gap-3">
+
+            <button
+              onClick={() => setSelected([])}
+              className="px-4 py-2 rounded-lg border border-white/20 text-xs hover:border-white/40 transition"
+            >
+              Clear
+            </button>
+
+            <button
+              onClick={deleteSelected}
+              className="px-4 py-2 rounded-lg bg-red-500 hover:bg-red-600 text-white text-xs font-semibold transition"
+            >
+              Delete Selected
+            </button>
+
+          </div>
+
+        </div>
+
+      )}
+
       {/* EMPTY */}
       {filteredOrders.length === 0 && (
 
@@ -294,6 +448,14 @@ export default function OrdersPage() {
                 <div>
 
                   <div className="flex items-center gap-3 flex-wrap">
+
+                    <input
+                      type="checkbox"
+                      checked={selected.includes(order._id)}
+                      onChange={() => toggleSelect(order._id)}
+                      className="w-4 h-4 accent-[#D4AF37]"
+                      title="Select for bulk delete"
+                    />
 
                     <h2 className="text-lg font-semibold text-white">
                       {order.customerName}
@@ -380,6 +542,72 @@ export default function OrdersPage() {
 
               </div>
 
+              {/* EDIT FORM */}
+              {editingId === order._id && (
+
+                <div className="mt-5 bg-black/30 border border-[#D4AF37]/30 rounded-xl p-5">
+
+                  <p className="text-[#D4AF37] text-xs font-semibold uppercase tracking-wide mb-4">
+                    Edit Customer &amp; Shipping Details
+                  </p>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+
+                    {[
+                      ["customerName", "Full Name"],
+                      ["phone", "Phone"],
+                      ["email", "Email"],
+                      ["city", "City"],
+                      ["state", "State"],
+                      ["pincode", "Pincode"],
+                    ].map(([key, label]) => (
+
+                      <input
+                        key={key}
+                        value={editForm[key] ?? ""}
+                        onChange={(e) =>
+                          setEditForm({ ...editForm, [key]: e.target.value })
+                        }
+                        placeholder={label}
+                        className="bg-black/40 border border-white/10 rounded-lg px-4 py-2.5 text-sm outline-none focus:border-[#D4AF37]/60"
+                      />
+
+                    ))}
+
+                    <textarea
+                      value={editForm.address ?? ""}
+                      onChange={(e) =>
+                        setEditForm({ ...editForm, address: e.target.value })
+                      }
+                      placeholder="Full Address"
+                      rows={2}
+                      className="md:col-span-2 bg-black/40 border border-white/10 rounded-lg px-4 py-2.5 text-sm outline-none focus:border-[#D4AF37]/60"
+                    />
+
+                  </div>
+
+                  <div className="flex gap-3 mt-4">
+
+                    <button
+                      onClick={() => saveEdit(order._id)}
+                      className="px-5 py-2 rounded-lg bg-[#D4AF37] text-black text-xs font-semibold hover:opacity-90 transition"
+                    >
+                      Save Changes
+                    </button>
+
+                    <button
+                      onClick={() => setEditingId(null)}
+                      className="px-5 py-2 rounded-lg border border-white/20 text-xs hover:border-white/40 transition"
+                    >
+                      Cancel
+                    </button>
+
+                  </div>
+
+                </div>
+
+              )}
+
               {/* BODY */}
               <div className="grid md:grid-cols-[minmax(0,1fr)_minmax(0,1.4fr)] gap-6 pt-5">
 
@@ -446,15 +674,41 @@ export default function OrdersPage() {
               </div>
 
               {/* FOOTER */}
-              <div className="flex items-center justify-between pt-5 mt-5 border-t border-white/10">
+              <div className="flex flex-wrap items-center justify-between gap-4 pt-5 mt-5 border-t border-white/10">
 
-                <span className="text-sm text-gray-400">
-                  Total Amount
-                </span>
+                <div className="flex gap-3">
 
-                <span className="text-2xl font-bold text-[#D4AF37]">
-                  ₹{order.totalAmount}
-                </span>
+                  <button
+                    onClick={() =>
+                      editingId === order._id
+                        ? setEditingId(null)
+                        : startEdit(order)
+                    }
+                    className="px-4 py-2 rounded-lg border border-white/20 text-xs hover:border-[#D4AF37] transition"
+                  >
+                    {editingId === order._id ? "Close Edit" : "Edit"}
+                  </button>
+
+                  <button
+                    onClick={() => deleteOrder(order._id)}
+                    className="px-4 py-2 rounded-lg border border-red-500/40 text-red-400 text-xs hover:bg-red-500/10 transition"
+                  >
+                    Delete
+                  </button>
+
+                </div>
+
+                <div className="flex items-center gap-3">
+
+                  <span className="text-sm text-gray-400">
+                    Total Amount
+                  </span>
+
+                  <span className="text-2xl font-bold text-[#D4AF37]">
+                    ₹{order.totalAmount}
+                  </span>
+
+                </div>
 
               </div>
 
