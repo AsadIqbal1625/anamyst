@@ -2,6 +2,15 @@ import { NextResponse } from "next/server";
 import { connectDB } from "../../../../lib/mongodb";
 import Testimonial from "../../../../models/Testimonial";
 
+const EDITABLE_FIELDS = [
+  "name",
+  "location",
+  "quote",
+  "rating",
+  "image",
+  "published",
+];
+
 /* UPDATE TESTIMONIAL */
 export async function PATCH(req, { params }) {
   try {
@@ -9,7 +18,12 @@ export async function PATCH(req, { params }) {
     await connectDB();
     const body = await req.json();
 
-    const testimonial = await Testimonial.findByIdAndUpdate(id, body, {
+    const update = {};
+    for (const field of EDITABLE_FIELDS) {
+      if (field in body) update[field] = body[field];
+    }
+
+    const testimonial = await Testimonial.findByIdAndUpdate(id, update, {
       new: true,
     });
 

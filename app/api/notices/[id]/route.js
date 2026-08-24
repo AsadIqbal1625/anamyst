@@ -2,6 +2,15 @@ import { NextResponse } from "next/server";
 import { connectDB } from "../../../../lib/mongodb";
 import Notice from "../../../../models/Notice";
 
+const EDITABLE_FIELDS = [
+  "title",
+  "slug",
+  "excerpt",
+  "content",
+  "image",
+  "published",
+];
+
 /* GET SINGLE NOTICE (by id or slug) */
 export async function GET(req, { params }) {
   try {
@@ -35,7 +44,12 @@ export async function PATCH(req, { params }) {
     await connectDB();
     const body = await req.json();
 
-    const notice = await Notice.findByIdAndUpdate(id, body, {
+    const update = {};
+    for (const field of EDITABLE_FIELDS) {
+      if (field in body) update[field] = body[field];
+    }
+
+    const notice = await Notice.findByIdAndUpdate(id, update, {
       new: true,
     });
 

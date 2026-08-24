@@ -2,6 +2,15 @@ import { NextResponse } from "next/server";
 import { connectDB } from "../../../../lib/mongodb";
 import Coupon from "../../../../models/Coupon";
 
+const EDITABLE_FIELDS = [
+  "code",
+  "discountType",
+  "value",
+  "minOrder",
+  "expiresAt",
+  "active",
+];
+
 /* UPDATE COUPON (toggle active, edit fields) */
 export async function PATCH(req, { params }) {
   try {
@@ -9,7 +18,12 @@ export async function PATCH(req, { params }) {
     await connectDB();
     const body = await req.json();
 
-    const coupon = await Coupon.findByIdAndUpdate(id, body, {
+    const update = {};
+    for (const field of EDITABLE_FIELDS) {
+      if (field in body) update[field] = body[field];
+    }
+
+    const coupon = await Coupon.findByIdAndUpdate(id, update, {
       new: true,
     });
 

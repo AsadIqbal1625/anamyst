@@ -27,6 +27,29 @@ export async function POST(
 
     }
 
+    /* only real image types — blocks scripts/HTML/SVG being hosted
+       on the Cloudinary account via this endpoint */
+    const ALLOWED = [
+      "image/jpeg",
+      "image/png",
+      "image/webp",
+      "image/avif",
+      "image/gif",
+    ];
+
+    if (!ALLOWED.includes(file.type)) {
+
+      return Response.json({
+
+        success: false,
+
+        error:
+          "Only JPG, PNG, WEBP, AVIF or GIF images are allowed.",
+
+      });
+
+    }
+
     if (file.size > 15 * 1024 * 1024) {
 
       return Response.json({

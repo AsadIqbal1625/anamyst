@@ -155,14 +155,14 @@ export default async function ProductPage({ params }) {
         id="product-schema"
         type="application/ld+json"
         dangerouslySetInnerHTML={{
-          __html: JSON.stringify(productSchema),
+          __html: JSON.stringify(productSchema).replace(/</g, "\\u003c"),
         }}
       />
       <script
         id="breadcrumb-schema"
         type="application/ld+json"
         dangerouslySetInnerHTML={{
-          __html: JSON.stringify(breadcrumbSchema),
+          __html: JSON.stringify(breadcrumbSchema).replace(/</g, "\\u003c"),
         }}
       />
       <ProductClient
