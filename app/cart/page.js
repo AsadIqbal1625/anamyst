@@ -19,6 +19,10 @@ import {
   removeFromCart,
 } from "../../lib/cart";
 
+import { getPricingBenefits } from "../../lib/pricing";
+
+import OccasionTierTrack from "../../components/OccasionTierTrack";
+
 export default function CartPage() {
 
   const [mounted,
@@ -32,6 +36,10 @@ export default function CartPage() {
   const [products,
     setProducts] =
     useState([]);
+
+  const [settings,
+    setSettings] =
+    useState({ shippingFee: 0, discountTiers: [] });
 
   /* REMOVE CONFIRMATION */
 
@@ -88,6 +96,25 @@ export default function CartPage() {
 
   }
 
+  /* LOAD STORE SETTINGS (shipping + discount tiers) */
+
+  useEffect(() => {
+
+    fetch("/api/settings")
+      .then((res) => res.json())
+      .then((data) => {
+
+        if (data.success) {
+
+          setSettings(data.settings);
+
+        }
+
+      })
+      .catch(() => {});
+
+  }, []);
+
   useEffect(() => {
 
     if (!mounted) return;
@@ -124,6 +151,23 @@ export default function CartPage() {
     );
 
   }, [cart]);
+
+  /* TIER BENEFITS (free shipping + auto discount) */
+
+  const benefits = useMemo(
+    () => getPricingBenefits(total, settings.discountTiers),
+    [total, settings.discountTiers]
+  );
+
+  const shippingCost = benefits.freeShipping
+    ? 0
+    : Number(settings.shippingFee) || 0;
+
+  const discountAmount = Math.round(
+    (total * benefits.discountPercent) / 100
+  );
+
+  const grandTotal = Math.max(total - discountAmount, 0) + shippingCost;
 
   if (!mounted) return null;
 
@@ -479,11 +523,25 @@ export default function CartPage() {
 
                 </p>
 
-                <h2 className="text-2xl font-bold mb-7">
+                <h2 className="text-2xl font-bold mb-6">
 
                   Order Summary
 
                 </h2>
+
+                {settings.discountTiers?.some((t) => t.active !== false) && (
+
+                  <div className="mb-7">
+
+                    <OccasionTierTrack
+                      tiers={settings.discountTiers}
+                      total={total}
+                      size="sm"
+                    />
+
+                  </div>
+
+                )}
 
                 <div className="space-y-4">
 
@@ -522,15 +580,35 @@ export default function CartPage() {
 
                   </div>
 
+                  {discountAmount > 0 && (
+
+                    <div className="flex justify-between text-green-400">
+
+                      <span>{benefits.discountPercent}% OFF</span>
+
+                      <span>−₹{discountAmount}</span>
+
+                    </div>
+
+                  )}
+
                   <div className="flex justify-between text-gray-300">
 
                     <span>Shipping</span>
 
-                    <span className="text-green-400">
+                    {benefits.freeShipping ? (
 
-                      Free
+                      <span className="text-green-400">
 
-                    </span>
+                        Free
+
+                      </span>
+
+                    ) : (
+
+                      <span>₹{shippingCost}</span>
+
+                    )}
 
                   </div>
 
@@ -548,7 +626,7 @@ export default function CartPage() {
 
                   <span className="text-3xl font-bold text-[#D4AF37]">
 
-                    ₹{total}
+                    ₹{grandTotal}
 
                   </span>
 

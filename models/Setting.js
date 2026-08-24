@@ -52,6 +52,49 @@ const SettingSchema = new mongoose.Schema(
       type: Number,
       default: 0,
     },
+
+    campaign: {
+      enabled: { type: Boolean, default: false },
+      title: { type: String, default: "DIWALI OFFER" },
+      tagline: { type: String, default: "On this auspicious occasion" },
+      emoji: { type: String, default: "🪔" },
+      image: { type: String, default: "" },
+    },
+
+    discountTiers: {
+      type: [
+        {
+          label: { type: String, default: "" },
+          minAmount: { type: Number, required: true },
+          discountPercent: { type: Number, default: 0 },
+          freeShipping: { type: Boolean, default: false },
+          active: { type: Boolean, default: true },
+        },
+      ],
+      default: [
+        {
+          label: "Free Shipping",
+          minAmount: 499,
+          discountPercent: 0,
+          freeShipping: true,
+          active: true,
+        },
+        {
+          label: "5% Off",
+          minAmount: 999,
+          discountPercent: 5,
+          freeShipping: false,
+          active: true,
+        },
+        {
+          label: "10% Off",
+          minAmount: 1999,
+          discountPercent: 10,
+          freeShipping: false,
+          active: true,
+        },
+      ],
+    },
   },
   {
     timestamps: true,

@@ -22,6 +22,9 @@ from "./MobileMenu";
 import PromoBar
 from "./PromoBar";
 
+import TierPromoBar
+from "./TierPromoBar";
+
 export default function Navbar({ initialCoupon = null }) {
 
   const router =
@@ -188,6 +191,9 @@ export default function Navbar({ initialCoupon = null }) {
 
         {/* PROMO BAR */}
         <PromoBar initialCoupon={initialCoupon} />
+
+        {/* TIER OFFER BAR (spend more, save more) */}
+        <TierPromoBar />
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3">
 

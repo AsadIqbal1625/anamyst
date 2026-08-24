@@ -72,6 +72,16 @@ const OrderSchema =
         default: 0,
       },
 
+      discountLabel: {
+        type: String,
+        default: "",
+      },
+
+      shippingCost: {
+        type: Number,
+        default: 0,
+      },
+
       paymentMethod: {
         type: String,
         default: "COD",

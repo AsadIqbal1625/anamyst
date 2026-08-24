@@ -18,6 +18,8 @@ import {
   clearCart,
 } from "../../lib/cart";
 
+import { getPricingBenefits } from "../../lib/pricing";
+
 import toast from "react-hot-toast";
 
 export default function CheckoutPage() {
@@ -41,6 +43,10 @@ export default function CheckoutPage() {
     setCodEnabled] =
     useState(true);
 
+  const [settings,
+    setSettings] =
+    useState({ shippingFee: 0, discountTiers: [] });
+
   /* NOTIFICATION PREFERENCES */
 
   const [notifyEmail,
@@ -59,14 +65,17 @@ export default function CheckoutPage() {
       .then((res) => res.json())
       .then((data) => {
 
-        if (
-          data.success &&
-          data.settings?.codEnabled === false
-        ) {
+        if (data.success && data.settings) {
 
-          setCodEnabled(false);
+          setSettings(data.settings);
 
-          setPaymentMethod("RAZORPAY");
+          if (data.settings.codEnabled === false) {
+
+            setCodEnabled(false);
+
+            setPaymentMethod("RAZORPAY");
+
+          }
 
         }
 
@@ -203,8 +212,32 @@ export default function CheckoutPage() {
     setApplying] =
     useState(false);
 
+  /* AUTO TIER BENEFITS (skipped when a coupon is applied) */
+
+  const benefits = useMemo(
+    () => getPricingBenefits(total, settings.discountTiers),
+    [total, settings.discountTiers]
+  );
+
+  const tierDiscountAmount = useMemo(
+    () => Math.round((total * benefits.discountPercent) / 100),
+    [total, benefits.discountPercent]
+  );
+
+  const effectiveDiscount = appliedCoupon
+    ? discount
+    : tierDiscountAmount;
+
+  const effectiveDiscountLabel = appliedCoupon
+    ? appliedCoupon.code
+    : `${benefits.discountPercent}% OFF`;
+
+  const shippingCost = benefits.freeShipping
+    ? 0
+    : Number(settings.shippingFee) || 0;
+
   const payable =
-    Math.max(total - discount, 0);
+    Math.max(total - effectiveDiscount, 0) + shippingCost;
 
   async function applyCoupon() {
 
@@ -372,7 +405,13 @@ export default function CheckoutPage() {
             couponCode:
               appliedCoupon?.code || "",
 
-            discount,
+            discount:
+              effectiveDiscount,
+
+            discountLabel:
+              effectiveDiscountLabel,
+
+            shippingCost,
 
             paymentMethod:
               "COD",
@@ -578,7 +617,13 @@ export default function CheckoutPage() {
                 couponCode:
                   appliedCoupon?.code || "",
 
-                discount,
+                discount:
+                  effectiveDiscount,
+
+                discountLabel:
+                  effectiveDiscountLabel,
+
+                shippingCost,
 
                 paymentMethod:
                   "RAZORPAY",
@@ -1097,19 +1142,37 @@ export default function CheckoutPage() {
 
               <div className="border-t border-white/10 mt-8 pt-6">
 
-                {discount > 0 && (
+                <div className="flex items-center justify-between text-sm mb-3">
+
+                  <span className="text-gray-400">
+
+                    Subtotal
+
+                  </span>
+
+                  <span className="text-gray-400">
+
+                    ₹{total}
+
+                  </span>
+
+                </div>
+
+                {effectiveDiscount > 0 && (
 
                   <div className="flex items-center justify-between text-sm mb-3">
 
-                    <span className="text-gray-400">
+                    <span className="text-green-400">
 
-                      Subtotal
+                      Discount
+                      {effectiveDiscountLabel &&
+                        ` (${effectiveDiscountLabel})`}
 
                     </span>
 
-                    <span className="text-gray-400">
+                    <span className="text-green-400">
 
-                      ₹{total}
+                      −₹{effectiveDiscount}
 
                     </span>
 
@@ -1117,25 +1180,29 @@ export default function CheckoutPage() {
 
                 )}
 
-                {discount > 0 && (
+                <div className="flex items-center justify-between text-sm mb-4">
 
-                  <div className="flex items-center justify-between text-sm mb-4">
+                  <span className="text-gray-400">
 
-                    <span className="text-green-400">
+                    Shipping
 
-                      Discount ({appliedCoupon?.code})
+                  </span>
 
-                    </span>
+                  <span
+                    className={
+                      shippingCost === 0
+                        ? "text-green-400"
+                        : "text-gray-400"
+                    }
+                  >
 
-                    <span className="text-green-400">
+                    {shippingCost === 0
+                      ? "Free"
+                      : `₹${shippingCost}`}
 
-                      −₹{discount}
+                  </span>
 
-                    </span>
-
-                  </div>
-
-                )}
+                </div>
 
                 <div className="flex items-center justify-between">
 

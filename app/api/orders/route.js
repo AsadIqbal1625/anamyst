@@ -15,6 +15,8 @@ import { sendWhatsAppOrderConfirmation } from "../../../lib/sendWhatsAppMessage"
 import Order from "../../../models/Order";
 import Product from "../../../models/Product";
 import Coupon from "../../../models/Coupon";
+import Setting from "../../../models/Setting";
+import { getPricingBenefits } from "../../../lib/pricing";
 
 /* GET ORDERS */
 export async function GET() {
@@ -121,6 +123,7 @@ export async function POST(req) {
 
     let discount = 0;
     let couponCode = "";
+    let discountLabel = "";
 
     if (body.couponCode) {
 
@@ -140,11 +143,31 @@ export async function POST(req) {
           coupon.discountType === "percent"
             ? Math.round((subtotal * coupon.value) / 100)
             : Math.min(coupon.value, subtotal);
+        discountLabel = coupon.code;
       }
 
     }
 
-    const totalAmount = Math.max(subtotal - discount, 0);
+    /* ── SERVER-SIDE AUTO TIER DISCOUNT + SHIPPING ──
+       Skipped when a coupon was applied (no stacking). */
+
+    const storeSettings = await Setting.findOne({ key: "store" }).lean();
+
+    const benefits = getPricingBenefits(
+      subtotal,
+      storeSettings?.discountTiers
+    );
+
+    if (!couponCode && benefits.discountPercent > 0) {
+      discount = Math.round((subtotal * benefits.discountPercent) / 100);
+      discountLabel = `${benefits.discountPercent}% OFF`;
+    }
+
+    const shippingCost = benefits.freeShipping
+      ? 0
+      : Number(storeSettings?.shippingFee) || 0;
+
+    const totalAmount = Math.max(subtotal - discount, 0) + shippingCost;
 
     /* ── SERVER-SIDE PAYMENT VERIFICATION ──
        "Paid" is only accepted with a valid Razorpay signature. */
@@ -244,6 +267,8 @@ export async function POST(req) {
         totalAmount,
         couponCode,
         discount,
+        discountLabel,
+        shippingCost,
 
         paymentMethod,
         paymentStatus,

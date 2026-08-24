@@ -1,3 +1,9 @@
+/* The campaign is read from the DB below. Without this the homepage
+   would be prerendered once at build time and the banner would stay
+   frozen until the next deploy — this re-generates it at most once a
+   minute, so toggling the campaign in admin goes live on its own. */
+export const revalidate = 60;
+
 export const metadata = {
   title: "ANAMYST | Luxury Fragrances",
   description:
@@ -16,15 +22,76 @@ export const metadata = {
 import Link from "next/link";
 import Testimonials from "../components/Testimonials";
 import LatestNotices from "../components/LatestNotices";
+import OccasionBanner from "../components/OccasionBanner";
+import { connectDB } from "../lib/mongodb";
+import Setting from "../models/Setting";
 
-export default function Home() {
+/* Read the campaign server-side (same approach as the promo coupon in
+   layout.js) so the page knows on first paint whether the banner is
+   running — the hero is sized to share the screen with it instead of
+   both claiming a full viewport, and there's no pop-in/layout shift. */
+
+async function getCampaignData() {
+
+  try {
+
+    await connectDB();
+
+    const settings = await Setting.findOne({ key: "store" }).lean();
+
+    if (!settings?.campaign?.enabled) return null;
+
+    const tiers = (settings.discountTiers || [])
+      .filter((t) => t && t.active !== false)
+      .map((t) => ({
+        label: t.label || "",
+        minAmount: Number(t.minAmount) || 0,
+        discountPercent: Number(t.discountPercent) || 0,
+        freeShipping: Boolean(t.freeShipping),
+        active: true,
+      }));
+
+    if (tiers.length === 0) return null;
+
+    return {
+      campaign: {
+        enabled: true,
+        title: settings.campaign.title || "",
+        tagline: settings.campaign.tagline || "",
+        emoji: settings.campaign.emoji || "",
+        image: settings.campaign.image || "",
+      },
+      discountTiers: tiers,
+    };
+
+  } catch {
+
+    return null;
+
+  }
+
+}
+
+export default async function Home() {
+
+  const campaignData = await getCampaignData();
+
+  const hasCampaign = Boolean(campaignData);
 
   return (
 
     <main className="w-full bg-black overflow-hidden text-white">
 
+      {/* OCCASION CAMPAIGN BANNER (spend more, save more) —
+          above the hero so it's visible without scrolling */}
+      <OccasionBanner initialSettings={campaignData} />
+
       {/* ================= MOBILE HERO (full-screen video) ================= */}
-      <section className="relative w-full min-h-[100dvh] overflow-hidden lg:hidden">
+      <section
+        className={`relative w-full overflow-hidden lg:hidden ${
+          hasCampaign ? "min-h-[62vh]" : "min-h-[100dvh]"
+        }`}
+      >
 
         {/* VIDEO */}
         <video
@@ -45,7 +112,13 @@ export default function Home() {
         <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/40 to-black z-0" />
 
         {/* CONTENT */}
-        <div className="relative z-10 flex flex-col items-center justify-center min-h-[100dvh] px-6 text-center">
+        <div
+          className={`relative z-10 flex flex-col items-center justify-center px-6 text-center ${
+            hasCampaign
+              ? "min-h-[62vh] py-14"
+              : "min-h-[100dvh]"
+          }`}
+        >
 
           <h1 className="font-brand text-white text-5xl sm:text-7xl tracking-[0.25em] leading-tight">
 
@@ -74,7 +147,11 @@ export default function Home() {
       </section>
 
       {/* ================= DESKTOP HERO (split layout) ================= */}
-      <section className="relative w-full min-h-[92vh] overflow-hidden hidden lg:flex items-center">
+      <section
+        className={`relative w-full overflow-hidden hidden lg:flex items-center ${
+          hasCampaign ? "min-h-[74vh]" : "min-h-[92vh]"
+        }`}
+      >
 
         {/* BACKGROUND GLOW */}
         <div className="absolute inset-0 bg-gradient-to-br from-[#D4AF37]/10 via-transparent to-[#D4AF37]/5 pointer-events-none" />
