@@ -15,8 +15,8 @@ import { sendWhatsAppOrderConfirmation } from "../../../lib/sendWhatsAppMessage"
 import Order from "../../../models/Order";
 import Product from "../../../models/Product";
 import Coupon from "../../../models/Coupon";
-import Setting from "../../../models/Setting";
-import { getOrderTotals } from "../../../lib/pricing";
+import Razorpay from "razorpay";
+import { priceCart, PricingError } from "../../../lib/serverPricing";
 
 /* GET ORDERS */
 export async function GET() {
@@ -53,106 +53,38 @@ export async function POST(req) {
       await req.json();
 
     /* ── SERVER-SIDE PRICING ──
-       Never trust prices/totals from the browser: rebuild every
-       line item from the DB and recompute the payable amount. */
+       Never trust prices/totals from the browser: every line item and
+       the payable amount are rebuilt from the DB. This is the same
+       call the Razorpay order used, so the amount collected and the
+       amount recorded cannot disagree. */
 
-    const cartItems = Array.isArray(body.products)
-      ? body.products
-      : [];
+    const requestedMethod =
+      body.paymentMethod === "RAZORPAY" ? "RAZORPAY" : "COD";
 
-    if (cartItems.length === 0) {
-      return Response.json(
-        { success: false, error: "Cart is empty" },
-        { status: 400 }
-      );
-    }
+    const priced = await priceCart({
+      items: body.products,
+      couponCode: body.couponCode,
+      paymentMethod: requestedMethod,
+    });
 
-    const ids = cartItems.map((i) => i.productId).filter(Boolean);
+    const { products, couponCode, totals } = priced;
 
-    const dbProducts = await Product.find({
-      _id: { $in: ids },
-    }).lean();
-
-    const productMap = Object.fromEntries(
-      dbProducts.map((p) => [String(p._id), p])
-    );
-
-    let subtotal = 0;
-
-    const products = [];
-
-    for (const item of cartItems) {
-
-      const db = productMap[String(item.productId)];
-
-      const quantity = Math.max(
-        1,
-        Math.floor(Number(item.quantity) || 1)
-      );
-
-      if (!db) {
-        return Response.json(
-          { success: false, error: "A product in your cart no longer exists. Please refresh your cart." },
-          { status: 400 }
-        );
-      }
-
-      if (typeof db.stock === "number" && db.stock < quantity) {
-        return Response.json(
-          {
-            success: false,
-            error: `"${db.name}" has only ${db.stock} left in stock. Please update your cart.`,
-          },
-          { status: 400 }
-        );
-      }
-
-      subtotal += db.price * quantity;
-
-      products.push({
-        productId: String(db._id),
-        name: db.name,
-        image: db.image,
-        quantity,
-        price: db.price,
-      });
-
-    }
-
-    /* ── SERVER-SIDE COUPON ── */
-
-    let couponDiscount = 0;
-    let couponCode = "";
-
-    if (body.couponCode) {
-
-      const coupon = await Coupon.findOne({
-        code: String(body.couponCode).toUpperCase().trim(),
-      }).lean();
-
-      const valid =
-        coupon &&
-        coupon.active &&
-        (!coupon.expiresAt || new Date(coupon.expiresAt) >= new Date()) &&
-        (!coupon.minOrder || subtotal >= coupon.minOrder);
-
-      if (valid) {
-        couponCode = coupon.code;
-        couponDiscount =
-          coupon.discountType === "percent"
-            ? Math.round((subtotal * coupon.value) / 100)
-            : Math.min(coupon.value, subtotal);
-      }
-
-    }
+    const discount = totals.discount;
+    const discountLabel = totals.discountLabel;
+    const shippingCost = totals.shippingCost;
+    const codFee = totals.codCharge;
+    const totalAmount = totals.total;
 
     /* ── SERVER-SIDE PAYMENT VERIFICATION ──
-       "Paid" is only accepted with a valid Razorpay signature. */
+       "Paid" needs both a valid signature (the payment is genuine and
+       untampered) and a captured amount that covers the price we just
+       computed — a signature alone says nothing about how much was
+       actually paid. */
 
     let paymentMethod = "COD";
     let paymentStatus = "Pending";
 
-    if (body.paymentMethod === "RAZORPAY") {
+    if (requestedMethod === "RAZORPAY") {
 
       const expected = crypto
         .createHmac("sha256", process.env.RAZORPAY_KEY_SECRET)
@@ -170,34 +102,63 @@ export async function POST(req) {
         );
       }
 
+      /* confirm with Razorpay what was actually captured */
+
+      let payment;
+
+      try {
+
+        const razorpay = new Razorpay({
+          key_id: process.env.RAZORPAY_KEY_ID,
+          key_secret: process.env.RAZORPAY_KEY_SECRET,
+        });
+
+        payment = await razorpay.payments.fetch(body.paymentId);
+
+      } catch (err) {
+
+        console.error("razorpay payment fetch failed:", err);
+
+        return Response.json(
+          {
+            success: false,
+            error:
+              "We could not confirm your payment. If money was debited, contact support and we will sort it out.",
+          },
+          { status: 502 }
+        );
+
+      }
+
+      const paidPaise = Number(payment?.amount) || 0;
+      const duePaise = Math.round(totalAmount * 100);
+
+      /* underpayment is refused outright; an overpayment (a price that
+         dropped mid-checkout) still creates the order so the customer
+         is not left having paid for nothing */
+      if (
+        paidPaise < duePaise ||
+        !["captured", "authorized"].includes(payment?.status)
+      ) {
+
+        console.error("payment amount mismatch", {
+          paymentId: body.paymentId,
+          paidPaise,
+          duePaise,
+          status: payment?.status,
+        });
+
+        return Response.json(
+          { success: false, error: "Payment verification failed" },
+          { status: 400 }
+        );
+
+      }
+
       paymentMethod = "RAZORPAY";
       paymentStatus = "Paid";
 
     }
-
-    /* ── SERVER-SIDE TOTALS ──
-       Same shared calculation the checkout page runs, recomputed here
-       from the database so the browser cannot influence the price:
-       occasion tiers, shipping, and the COD fee. A coupon replaces the
-       tier offer entirely (discount and its free shipping alike). */
-
-    const storeSettings = await Setting.findOne({ key: "store" }).lean();
-
-    const totals = getOrderTotals({
-      subtotal,
-      tiers: storeSettings?.discountTiers,
-      shippingFee: storeSettings?.shippingFee,
-      codFee: storeSettings?.codFee,
-      paymentMethod,
-      couponCode,
-      couponDiscount,
-    });
-
-    const discount = totals.discount;
-    const discountLabel = totals.discountLabel;
-    const shippingCost = totals.shippingCost;
-    const codFee = totals.codCharge;
-    const totalAmount = totals.total;
 
     let customer =
       await Customer.findOne({
@@ -344,6 +305,17 @@ export async function POST(req) {
     });
 
   } catch (error) {
+
+    /* cart problems the customer can fix (empty cart, out of stock)
+       keep their specific message; anything else stays generic */
+    if (error instanceof PricingError) {
+
+      return Response.json(
+        { success: false, error: error.message },
+        { status: error.status }
+      );
+
+    }
 
     console.log(error);
 

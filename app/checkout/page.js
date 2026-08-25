@@ -489,10 +489,18 @@ export default function CheckoutPage() {
 
               },
 
+              /* the amount is priced server-side from these — sending
+                 a total here would let a tampered client set it */
               body:
                 JSON.stringify({
 
-                  amount: payable,
+                  products: cart.map((item) => ({
+                    productId: item._id,
+                    quantity: item.quantity,
+                  })),
+
+                  couponCode:
+                    appliedCoupon?.code || "",
 
                 }),
 
@@ -501,6 +509,22 @@ export default function CheckoutPage() {
 
         const razorpayData =
           await razorpayRes.json();
+
+        if (
+          !razorpayData.success ||
+          !razorpayData.order
+        ) {
+
+          toast.error(
+            razorpayData.error ||
+              "Could not start the payment. Please try again."
+          );
+
+          setLoading(false);
+
+          return;
+
+        }
 
         const order =
           razorpayData.order;
