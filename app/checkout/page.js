@@ -18,7 +18,7 @@ import {
   clearCart,
 } from "../../lib/cart";
 
-import { getPricingBenefits } from "../../lib/pricing";
+import { getOrderTotals } from "../../lib/pricing";
 
 import toast from "react-hot-toast";
 
@@ -212,32 +212,32 @@ export default function CheckoutPage() {
     setApplying] =
     useState(false);
 
-  /* AUTO TIER BENEFITS (skipped when a coupon is applied) */
+  /* FULL BREAKDOWN — one shared calculation, also run server-side on
+     the order API so the shown price always matches what is charged */
 
-  const benefits = useMemo(
-    () => getPricingBenefits(total, settings.discountTiers),
-    [total, settings.discountTiers]
+  const totals = useMemo(
+    () =>
+      getOrderTotals({
+        subtotal: total,
+        tiers: settings.discountTiers,
+        shippingFee: settings.shippingFee,
+        codFee: settings.codFee,
+        paymentMethod,
+        couponCode: appliedCoupon?.code || "",
+        couponDiscount: discount,
+      }),
+    [
+      total,
+      settings.discountTiers,
+      settings.shippingFee,
+      settings.codFee,
+      paymentMethod,
+      appliedCoupon,
+      discount,
+    ]
   );
 
-  const tierDiscountAmount = useMemo(
-    () => Math.round((total * benefits.discountPercent) / 100),
-    [total, benefits.discountPercent]
-  );
-
-  const effectiveDiscount = appliedCoupon
-    ? discount
-    : tierDiscountAmount;
-
-  const effectiveDiscountLabel = appliedCoupon
-    ? appliedCoupon.code
-    : `${benefits.discountPercent}% OFF`;
-
-  const shippingCost = benefits.freeShipping
-    ? 0
-    : Number(settings.shippingFee) || 0;
-
-  const payable =
-    Math.max(total - effectiveDiscount, 0) + shippingCost;
+  const payable = totals.total;
 
   async function applyCoupon() {
 
@@ -406,12 +406,16 @@ export default function CheckoutPage() {
               appliedCoupon?.code || "",
 
             discount:
-              effectiveDiscount,
+              totals.discount,
 
             discountLabel:
-              effectiveDiscountLabel,
+              totals.discountLabel,
 
-            shippingCost,
+            shippingCost:
+              totals.shippingCost,
+
+            codFee:
+              totals.codCharge,
 
             paymentMethod:
               "COD",
@@ -618,12 +622,15 @@ export default function CheckoutPage() {
                   appliedCoupon?.code || "",
 
                 discount:
-                  effectiveDiscount,
+                  totals.discount,
 
                 discountLabel:
-                  effectiveDiscountLabel,
+                  totals.discountLabel,
 
-                shippingCost,
+                shippingCost:
+                  totals.shippingCost,
+
+                codFee: 0,
 
                 paymentMethod:
                   "RAZORPAY",
@@ -1017,7 +1024,11 @@ export default function CheckoutPage() {
                               "Cash On Delivery",
 
                             desc:
-                              "Pay after delivery",
+                              Number(settings.codFee) > 0
+                                ? `Pay after delivery · +₹${Number(
+                                    settings.codFee
+                                  )} fee`
+                                : "Pay after delivery",
                           },
                         ]
                       : []),
@@ -1086,7 +1097,14 @@ export default function CheckoutPage() {
 
                       <p className="text-green-400 text-xs mt-0.5">
 
-                        You save ₹{discount}
+                        You save ₹{totals.discount}
+
+                      </p>
+
+                      <p className="text-gray-500 text-[11px] mt-1 leading-relaxed">
+
+                        Coupon used instead of the occasion offer — the
+                        two can&apos;t be combined.
 
                       </p>
 
@@ -1158,21 +1176,21 @@ export default function CheckoutPage() {
 
                 </div>
 
-                {effectiveDiscount > 0 && (
+                {totals.discount > 0 && (
 
                   <div className="flex items-center justify-between text-sm mb-3">
 
                     <span className="text-green-400">
 
                       Discount
-                      {effectiveDiscountLabel &&
-                        ` (${effectiveDiscountLabel})`}
+                      {totals.discountLabel &&
+                        ` (${totals.discountLabel})`}
 
                     </span>
 
                     <span className="text-green-400">
 
-                      −₹{effectiveDiscount}
+                      −₹{totals.discount}
 
                     </span>
 
@@ -1180,7 +1198,7 @@ export default function CheckoutPage() {
 
                 )}
 
-                <div className="flex items-center justify-between text-sm mb-4">
+                <div className="flex items-center justify-between text-sm mb-3">
 
                   <span className="text-gray-400">
 
@@ -1190,19 +1208,50 @@ export default function CheckoutPage() {
 
                   <span
                     className={
-                      shippingCost === 0
+                      totals.shippingCost === 0
                         ? "text-green-400"
                         : "text-gray-400"
                     }
                   >
 
-                    {shippingCost === 0
+                    {totals.shippingCost === 0
                       ? "Free"
-                      : `₹${shippingCost}`}
+                      : `₹${totals.shippingCost}`}
 
                   </span>
 
                 </div>
+
+                {totals.codCharge > 0 && (
+
+                  <div className="flex items-center justify-between text-sm mb-3">
+
+                    <span className="text-gray-400">
+
+                      Cash on Delivery fee
+
+                    </span>
+
+                    <span className="text-gray-400">
+
+                      +₹{totals.codCharge}
+
+                    </span>
+
+                  </div>
+
+                )}
+
+                {totals.codCharge > 0 && (
+
+                  <p className="text-[11px] text-gray-500 mb-4 leading-relaxed">
+
+                    Pay online to avoid the ₹{totals.codCharge} Cash on
+                    Delivery fee.
+
+                  </p>
+
+                )}
 
                 <div className="flex items-center justify-between">
 

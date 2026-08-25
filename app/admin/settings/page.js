@@ -12,6 +12,7 @@ const fields = [
   { name: "address", label: "Address", type: "text" },
   { name: "instagram", label: "Instagram URL", type: "text" },
   { name: "shippingFee", label: "Shipping Fee (₹, charged below the lowest active free-shipping tier)", type: "number" },
+  { name: "codFee", label: "Cash on Delivery Fee (₹, added to COD orders only)", type: "number" },
 ];
 
 const emptyTier = {

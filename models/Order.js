@@ -82,6 +82,11 @@ const OrderSchema =
         default: 0,
       },
 
+      codFee: {
+        type: Number,
+        default: 0,
+      },
+
       paymentMethod: {
         type: String,
         default: "COD",

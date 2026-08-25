@@ -48,6 +48,13 @@ const SettingSchema = new mongoose.Schema(
       default: 0,
     },
 
+    /* extra charge added to Cash-on-Delivery orders — COD costs more
+       to fulfil, so it is priced rather than offered for free */
+    codFee: {
+      type: Number,
+      default: 99,
+    },
+
     freeShippingAbove: {
       type: Number,
       default: 0,

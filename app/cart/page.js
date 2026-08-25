@@ -19,7 +19,7 @@ import {
   removeFromCart,
 } from "../../lib/cart";
 
-import { getPricingBenefits } from "../../lib/pricing";
+import { getOrderTotals } from "../../lib/pricing";
 
 import OccasionTierTrack from "../../components/OccasionTierTrack";
 
@@ -152,22 +152,27 @@ export default function CartPage() {
 
   }, [cart]);
 
-  /* TIER BENEFITS (free shipping + auto discount) */
+  /* TIER BENEFITS — the cart has no payment method chosen yet, so it
+     shows the online-payment price; any COD fee is added at checkout */
 
-  const benefits = useMemo(
-    () => getPricingBenefits(total, settings.discountTiers),
-    [total, settings.discountTiers]
+  const totals = useMemo(
+    () =>
+      getOrderTotals({
+        subtotal: total,
+        tiers: settings.discountTiers,
+        shippingFee: settings.shippingFee,
+        paymentMethod: "RAZORPAY",
+      }),
+    [total, settings.discountTiers, settings.shippingFee]
   );
 
-  const shippingCost = benefits.freeShipping
-    ? 0
-    : Number(settings.shippingFee) || 0;
+  const benefits = totals.benefits;
 
-  const discountAmount = Math.round(
-    (total * benefits.discountPercent) / 100
-  );
+  const shippingCost = totals.shippingCost;
 
-  const grandTotal = Math.max(total - discountAmount, 0) + shippingCost;
+  const discountAmount = totals.discount;
+
+  const grandTotal = totals.total;
 
   if (!mounted) return null;
 

@@ -16,7 +16,7 @@ import Order from "../../../models/Order";
 import Product from "../../../models/Product";
 import Coupon from "../../../models/Coupon";
 import Setting from "../../../models/Setting";
-import { getPricingBenefits } from "../../../lib/pricing";
+import { getOrderTotals } from "../../../lib/pricing";
 
 /* GET ORDERS */
 export async function GET() {
@@ -121,9 +121,8 @@ export async function POST(req) {
 
     /* ── SERVER-SIDE COUPON ── */
 
-    let discount = 0;
+    let couponDiscount = 0;
     let couponCode = "";
-    let discountLabel = "";
 
     if (body.couponCode) {
 
@@ -139,35 +138,13 @@ export async function POST(req) {
 
       if (valid) {
         couponCode = coupon.code;
-        discount =
+        couponDiscount =
           coupon.discountType === "percent"
             ? Math.round((subtotal * coupon.value) / 100)
             : Math.min(coupon.value, subtotal);
-        discountLabel = coupon.code;
       }
 
     }
-
-    /* ── SERVER-SIDE AUTO TIER DISCOUNT + SHIPPING ──
-       Skipped when a coupon was applied (no stacking). */
-
-    const storeSettings = await Setting.findOne({ key: "store" }).lean();
-
-    const benefits = getPricingBenefits(
-      subtotal,
-      storeSettings?.discountTiers
-    );
-
-    if (!couponCode && benefits.discountPercent > 0) {
-      discount = Math.round((subtotal * benefits.discountPercent) / 100);
-      discountLabel = `${benefits.discountPercent}% OFF`;
-    }
-
-    const shippingCost = benefits.freeShipping
-      ? 0
-      : Number(storeSettings?.shippingFee) || 0;
-
-    const totalAmount = Math.max(subtotal - discount, 0) + shippingCost;
 
     /* ── SERVER-SIDE PAYMENT VERIFICATION ──
        "Paid" is only accepted with a valid Razorpay signature. */
@@ -197,6 +174,30 @@ export async function POST(req) {
       paymentStatus = "Paid";
 
     }
+
+    /* ── SERVER-SIDE TOTALS ──
+       Same shared calculation the checkout page runs, recomputed here
+       from the database so the browser cannot influence the price:
+       occasion tiers, shipping, and the COD fee. A coupon replaces the
+       tier offer entirely (discount and its free shipping alike). */
+
+    const storeSettings = await Setting.findOne({ key: "store" }).lean();
+
+    const totals = getOrderTotals({
+      subtotal,
+      tiers: storeSettings?.discountTiers,
+      shippingFee: storeSettings?.shippingFee,
+      codFee: storeSettings?.codFee,
+      paymentMethod,
+      couponCode,
+      couponDiscount,
+    });
+
+    const discount = totals.discount;
+    const discountLabel = totals.discountLabel;
+    const shippingCost = totals.shippingCost;
+    const codFee = totals.codCharge;
+    const totalAmount = totals.total;
 
     let customer =
       await Customer.findOne({
@@ -269,6 +270,7 @@ export async function POST(req) {
         discount,
         discountLabel,
         shippingCost,
+        codFee,
 
         paymentMethod,
         paymentStatus,
