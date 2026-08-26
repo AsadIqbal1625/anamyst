@@ -287,14 +287,24 @@ export async function POST(req) {
 
     await sendOwnerOrderAlert(order);
 
-    /* ORDER PLACED → no longer an abandoned checkout */
+    /* ORDER PLACED → mark the cart recovered rather than deleting it,
+       so recovery rate stays measurable. The TTL still cleans up. */
 
-    await AbandonedCheckout.deleteMany({
-      $or: [
-        { phone: String(body.phone || "").replace(/\D/g, "").slice(0, 12) },
-        { email: String(body.email || "").trim().toLowerCase() },
-      ],
-    }).catch(() => {});
+    const recoveryMatch = [
+      { phone: String(body.phone || "").replace(/\D/g, "").slice(0, 12) },
+      { email: String(body.email || "").trim().toLowerCase() },
+    ];
+
+    if (body.sessionId) {
+      recoveryMatch.push({
+        sessionId: String(body.sessionId).trim().slice(0, 64),
+      });
+    }
+
+    await AbandonedCheckout.updateMany(
+      { $or: recoveryMatch, recoveredAt: null },
+      { $set: { recoveredAt: new Date() } }
+    ).catch(() => {});
 
     return Response.json({
 

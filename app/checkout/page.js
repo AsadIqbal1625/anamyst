@@ -20,6 +20,8 @@ import {
 
 import { getOrderTotals } from "../../lib/pricing";
 
+import { getSessionId } from "../../lib/track";
+
 import toast from "react-hot-toast";
 
 export default function CheckoutPage() {
@@ -143,6 +145,9 @@ export default function CheckoutPage() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
+          /* same session id the cart snapshots use, so this enriches
+             that record instead of creating a second one */
+          sessionId: getSessionId(),
           name: form.name,
           phone: form.phone,
           email: form.email,
@@ -430,6 +435,9 @@ export default function CheckoutPage() {
 
             notifyWhatsapp,
 
+            /* lets the server close out this session's abandoned cart */
+            sessionId: getSessionId(),
+
           };
 
           const res =
@@ -680,6 +688,9 @@ export default function CheckoutPage() {
                 notifyEmail,
 
                 notifyWhatsapp,
+
+                /* lets the server close out this session's abandoned cart */
+                sessionId: getSessionId(),
 
               };
 

@@ -3,9 +3,14 @@
 import { useEffect } from "react";
 import { usePathname } from "next/navigation";
 import { trackEvent } from "@/lib/track";
+import { startCartSync } from "@/lib/cartSync";
 
 export default function Tracker() {
   const pathname = usePathname();
+
+  /* record cart changes for abandoned-cart recovery (once per mount,
+     not per navigation — it listens for cart events, not routes) */
+  useEffect(() => startCartSync(), []);
 
   useEffect(() => {
     if (!pathname) return;

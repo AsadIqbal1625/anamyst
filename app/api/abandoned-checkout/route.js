@@ -2,11 +2,18 @@ import { NextResponse } from "next/server";
 import { connectDB } from "../../../lib/mongodb";
 import AbandonedCheckout from "../../../models/AbandonedCheckout";
 
-/* PUBLIC: checkout page pings this (debounced) once the visitor has
-   typed a contact — upserts one record per phone/email. */
+/* PUBLIC: called from two places —
+   1. every cart change (session id + cart, no contact known yet)
+   2. the checkout page once a contact has been typed, which enriches
+      the same session's record.
+
+   Keyed on sessionId so anonymous carts are recorded too; falls back
+   to phone/email for older clients that send no session id. */
 export async function POST(req) {
   try {
     const body = await req.json();
+
+    const sessionId = String(body.sessionId || "").trim().slice(0, 64);
 
     const phone = String(body.phone || "").replace(/\D/g, "").slice(0, 12);
     const email = String(body.email || "").trim().toLowerCase().slice(0, 100);
@@ -16,7 +23,8 @@ export async function POST(req) {
 
     const cart = Array.isArray(body.cart) ? body.cart.slice(0, 30) : [];
 
-    if ((!validPhone && !validEmail) || cart.length === 0) {
+    /* need a cart, and some way to identify the record */
+    if (cart.length === 0 || (!sessionId && !validPhone && !validEmail)) {
       return NextResponse.json({ success: false }, { status: 400 });
     }
 
@@ -35,37 +43,83 @@ export async function POST(req) {
 
     await connectDB();
 
+    const filter = sessionId
+      ? { sessionId }
+      : validPhone
+      ? { phone }
+      : { email };
+
+    /* contact details only overwrite when actually supplied, so a
+       later anonymous cart ping cannot wipe a known contact */
+    const update = {
+      cart: safeCart,
+      cartValue,
+      lastActiveAt: new Date(),
+      /* a fresh cart after a purchase is a new opportunity */
+      recoveredAt: null,
+    };
+
+    if (sessionId) update.sessionId = sessionId;
+    if (validPhone) update.phone = phone;
+    if (validEmail) update.email = email;
+    if (body.name) update.name = String(body.name).slice(0, 80);
+
     await AbandonedCheckout.findOneAndUpdate(
-      validPhone ? { phone } : { email },
-      {
-        phone: validPhone ? phone : "",
-        email: validEmail ? email : "",
-        name: String(body.name || "").slice(0, 80),
-        cart: safeCart,
-        cartValue,
-        lastActiveAt: new Date(),
-      },
+      filter,
+      { $set: update },
       { upsert: true }
     );
 
     return NextResponse.json({ success: true });
   } catch (error) {
+    /* a racing upsert on the same session can trip the unique index —
+       harmless, the other write already recorded the cart */
+    if (error?.code === 11000) {
+      return NextResponse.json({ success: true });
+    }
+
     console.error("abandoned-checkout error:", error);
     return NextResponse.json({ success: false }, { status: 500 });
   }
 }
 
-/* ADMIN (gated by proxy.js): list abandoned checkouts */
+/* ADMIN (gated by proxy.js): list abandoned checkouts + summary */
 export async function GET() {
   try {
     await connectDB();
 
-    const items = await AbandonedCheckout.find()
+    /* still-open carts (a recovered one became an order) */
+    const items = await AbandonedCheckout.find({ recoveredAt: null })
       .sort({ lastActiveAt: -1 })
       .limit(200)
       .lean();
 
-    return NextResponse.json({ success: true, items });
+    const recoveredCount = await AbandonedCheckout.countDocuments({
+      recoveredAt: { $ne: null },
+    });
+
+    const contactable = items.filter((i) => i.phone || i.email);
+
+    const stats = {
+      openCount: items.length,
+      openValue: items.reduce((s, i) => s + (i.cartValue || 0), 0),
+      contactableCount: contactable.length,
+      contactableValue: contactable.reduce(
+        (s, i) => s + (i.cartValue || 0),
+        0
+      ),
+      anonymousCount: items.length - contactable.length,
+      recoveredCount,
+      /* share of carts that went on to become orders */
+      recoveryRate:
+        items.length + recoveredCount > 0
+          ? Math.round(
+              (recoveredCount / (items.length + recoveredCount)) * 100
+            )
+          : 0,
+    };
+
+    return NextResponse.json({ success: true, items, stats });
   } catch (error) {
     console.error("abandoned-checkout error:", error);
     return NextResponse.json(

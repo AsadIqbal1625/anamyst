@@ -5,13 +5,18 @@ import Image from "next/image";
 
 export default function AbandonedPage() {
   const [items, setItems] = useState([]);
+  const [stats, setStats] = useState(null);
+  const [filter, setFilter] = useState("all");
   const [loading, setLoading] = useState(true);
 
   async function fetchItems() {
     try {
       const res = await fetch("/api/abandoned-checkout");
       const data = await res.json();
-      if (data.success) setItems(data.items || []);
+      if (data.success) {
+        setItems(data.items || []);
+        setStats(data.stats || null);
+      }
     } catch (err) {
       console.log(err);
     } finally {
@@ -39,34 +44,134 @@ export default function AbandonedPage() {
     return `https://wa.me/${to}?text=${msg}`;
   }
 
+  const contactable = (i) => Boolean(i.phone || i.email);
+
+  const visible = items.filter((i) =>
+    filter === "contactable"
+      ? contactable(i)
+      : filter === "anonymous"
+      ? !contactable(i)
+      : true
+  );
+
   return (
     <div className="text-white space-y-8">
       <p className="text-gray-400">
-        Visitors who reached checkout but didn&apos;t order. Follow up
-        personally — records auto-delete after 30 days or when they buy.
+        Carts that were built but not ordered. Anonymous ones can&apos;t be
+        contacted — they&apos;re here so you can see the true size of the
+        drop-off. Records auto-delete after 30 days.
       </p>
+
+      {/* SUMMARY */}
+      {stats && (
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          {[
+            {
+              label: "Open carts",
+              value: stats.openCount,
+              accent: "#D4AF37",
+            },
+            {
+              label: "Value at risk",
+              value: `₹${stats.openValue}`,
+              accent: "#eab308",
+            },
+            {
+              label: "Contactable",
+              value: `${stats.contactableCount} · ₹${stats.contactableValue}`,
+              accent: "#22c55e",
+            },
+            {
+              label: "Recovery rate",
+              value: `${stats.recoveryRate}%`,
+              accent: "#38bdf8",
+            },
+          ].map((s) => (
+            <div
+              key={s.label}
+              className="bg-white/5 border border-white/10 rounded-2xl p-4"
+            >
+              <p className="text-[11px] uppercase tracking-[2px] text-gray-500 mb-1.5">
+                {s.label}
+              </p>
+              <p
+                className="text-xl font-bold"
+                style={{ color: s.accent }}
+              >
+                {s.value}
+              </p>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {/* FILTERS */}
+      {stats && (
+        <div className="flex flex-wrap gap-2">
+          {[
+            { key: "all", label: `All (${stats.openCount})` },
+            {
+              key: "contactable",
+              label: `Contactable (${stats.contactableCount})`,
+            },
+            {
+              key: "anonymous",
+              label: `Anonymous (${stats.anonymousCount})`,
+            },
+          ].map((f) => (
+            <button
+              key={f.key}
+              onClick={() => setFilter(f.key)}
+              className={`px-4 py-2 rounded-lg text-xs font-semibold border transition ${
+                filter === f.key
+                  ? "bg-[#D4AF37]/20 text-[#D4AF37] border-[#D4AF37]/40"
+                  : "border-white/10 text-gray-400 hover:border-white/30"
+              }`}
+            >
+              {f.label}
+            </button>
+          ))}
+        </div>
+      )}
 
       {loading ? (
         <p className="text-gray-400">Loading...</p>
-      ) : items.length === 0 ? (
+      ) : visible.length === 0 ? (
         <p className="text-gray-400 border border-white/10 rounded-2xl p-8 text-center">
-          No abandoned checkouts right now. 🎉
+          {items.length === 0
+            ? "No abandoned carts right now. 🎉"
+            : "No carts match this filter."}
         </p>
       ) : (
         <div className="space-y-4">
-          {items.map((item) => (
+          {visible.map((item) => (
             <div
               key={item._id}
               className="bg-white/5 border border-white/10 rounded-2xl p-5"
             >
               <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
                 <div>
-                  <p className="font-semibold">
-                    {item.name || "Unknown name"}
+                  <p className="font-semibold flex items-center gap-2">
+                    {item.name ||
+                      (contactable(item) ? "Unknown name" : "Anonymous visitor")}
+
+                    {!contactable(item) && (
+                      <span className="text-[10px] uppercase tracking-[1px] text-gray-500 border border-white/15 rounded-full px-2 py-0.5">
+                        No contact
+                      </span>
+                    )}
                   </p>
-                  <p className="text-sm text-gray-400">
-                    {[item.phone, item.email].filter(Boolean).join(" · ")}
-                  </p>
+
+                  {contactable(item) ? (
+                    <p className="text-sm text-gray-400">
+                      {[item.phone, item.email].filter(Boolean).join(" · ")}
+                    </p>
+                  ) : (
+                    <p className="text-sm text-gray-500">
+                      Left before entering contact details
+                    </p>
+                  )}
+
                   <p className="text-xs text-gray-500 mt-1">
                     Last active:{" "}
                     {new Date(item.lastActiveAt).toLocaleString("en-IN", {
@@ -86,9 +191,15 @@ export default function AbandonedPage() {
                       href={waLink(item)}
                       target="_blank"
                       rel="noopener noreferrer"
+                      title={
+                        item.consentWhatsapp
+                          ? "This customer opted in to WhatsApp updates"
+                          : "No marketing opt-in on record — this opens a personal WhatsApp chat, don't use it for bulk promotion"
+                      }
                       className="px-4 py-2 rounded-lg bg-green-600 hover:bg-green-500 text-white text-xs font-semibold transition"
                     >
                       WhatsApp Follow-up
+                      {!item.consentWhatsapp && " ⚠"}
                     </a>
                   )}
 
