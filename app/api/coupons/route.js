@@ -53,7 +53,7 @@ export async function POST(req) {
     const message =
       error.code === 11000
         ? "Coupon code already exists"
-        : error.message;
+        : "Could not create coupon. Check the values and try again.";
     return NextResponse.json({ success: false, error: message });
   }
 }

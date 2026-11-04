@@ -7,6 +7,9 @@ from "../../../../models/Product";
 import mongoose
 from "mongoose";
 
+import { isAdminRequest }
+from "../../../../lib/adminAuth";
+
 /* GET SINGLE PRODUCT */
 export async function GET(
   req,
@@ -34,8 +37,14 @@ export async function GET(
 
     }
 
-    const product =
-      await Product.findById(id);
+    const query = Product.findById(id);
+
+    /* cost price is for the admin only */
+    if (await isAdminRequest(req)) {
+      query.select("+costPrice");
+    }
+
+    const product = await query;
 
     return Response.json({
       success: true,

@@ -1,3 +1,4 @@
+import crypto from "crypto";
 import { NextResponse } from "next/server";
 import { createAdminToken } from "../../../../lib/adminToken";
 import { connectDB } from "../../../../lib/mongodb";
@@ -40,7 +41,18 @@ export async function POST(req) {
       });
     }
 
-    if (email !== adminEmail || password !== adminPassword) {
+    /* constant-time compare so response timing can't leak how much of
+       the email/password was right */
+    const same = (a, b) => {
+      const x = Buffer.from(String(a ?? ""));
+      const y = Buffer.from(String(b ?? ""));
+      return x.length === y.length && crypto.timingSafeEqual(x, y);
+    };
+
+    const credsOk =
+      same(email, adminEmail) & same(password, adminPassword);
+
+    if (!credsOk) {
       /* record failure + slow down brute-force attempts */
       await LoginAttempt.create({ key: ip }).catch(() => {});
       await new Promise((r) => setTimeout(r, 800));
@@ -54,7 +66,9 @@ export async function POST(req) {
     /* success → clear this IP's failure history */
     await LoginAttempt.deleteMany({ key: ip }).catch(() => {});
 
-    const token = await createAdminToken(secret);
+    /* 24h session. The token is stateless, so logging out can't revoke
+       a stolen cookie — a short life limits how long it stays useful. */
+    const token = await createAdminToken(secret, 24 * 60 * 60 * 1000);
 
     const res = NextResponse.json({ success: true });
 
@@ -63,7 +77,7 @@ export async function POST(req) {
       sameSite: "lax",
       secure: process.env.NODE_ENV === "production",
       path: "/",
-      maxAge: 60 * 60 * 24 * 7, // 7 days
+      maxAge: 60 * 60 * 24, // 24 hours
     });
 
     return res;

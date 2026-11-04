@@ -75,7 +75,6 @@ export const config = {
     "/api/products/:path*",
     "/api/products",
     "/api/upload/:path*",
-    "/api/seed/:path*",
     "/api/test/:path*",
     "/api/testimonials/:path*",
     "/api/testimonials",

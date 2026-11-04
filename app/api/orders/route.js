@@ -17,6 +17,19 @@ import Product from "../../../models/Product";
 import Coupon from "../../../models/Coupon";
 import Razorpay from "razorpay";
 import { priceCart, PricingError } from "../../../lib/serverPricing";
+import { rateLimit } from "../../../lib/rateLimit";
+
+/* constant-time string compare (signature checks) */
+function safeEqual(a, b) {
+  const x = Buffer.from(String(a ?? ""));
+  const y = Buffer.from(String(b ?? ""));
+  return x.length === y.length && crypto.timingSafeEqual(x, y);
+}
+
+/* strip angle brackets, trim and cap length */
+function clean(value, max) {
+  return String(value ?? "").replace(/[<>]/g, "").trim().slice(0, max);
+}
 
 /* GET ORDERS */
 export async function GET() {
@@ -49,8 +62,55 @@ export async function POST(req) {
 
     await connectDB();
 
+    /* public endpoint that sends emails — cap how often one IP can hit it */
+    const limited = await rateLimit(req, "orders", 8);
+    if (limited) return limited;
+
     const body =
       await req.json();
+
+    /* ── INPUT VALIDATION ──
+       Every field is forced to a plain, length-capped string. This stops
+       operator objects like {"$ne":null} reaching a Mongo query (they
+       would match someone else's customer record) and keeps hostile HTML
+       out of orders, emails and the admin invoice. */
+
+    body.customerName = clean(body.customerName, 80);
+    body.email = clean(body.email, 100).toLowerCase();
+    body.phone = clean(body.phone, 15);
+    body.address = clean(body.address, 300);
+    body.city = clean(body.city, 60);
+    body.state = clean(body.state, 60);
+    body.pincode = clean(body.pincode, 10).replace(/\D/g, "");
+
+    if (body.customerName.length < 2) {
+      throw new PricingError("Please enter your full name");
+    }
+
+    if (!/^\S+@\S+\.\S+$/.test(body.email)) {
+      throw new PricingError("Please enter a valid email address");
+    }
+
+    if (!/^[0-9+\-\s()]{10,15}$/.test(body.phone)) {
+      throw new PricingError("Please enter a valid phone number");
+    }
+
+    if (body.address.length < 5 || !body.city || !body.state) {
+      throw new PricingError("Please enter your complete address");
+    }
+
+    if (!/^\d{6}$/.test(body.pincode)) {
+      throw new PricingError("Please enter a valid 6-digit pincode");
+    }
+
+    if (body.paymentMethod !== "RAZORPAY") {
+      /* nothing about a Razorpay payment may ride along on a COD order */
+      delete body.paymentId;
+      delete body.razorpayOrderId;
+    } else {
+      body.paymentId = String(body.paymentId ?? "");
+      body.razorpayOrderId = String(body.razorpayOrderId ?? "");
+    }
 
     /* ── SERVER-SIDE PRICING ──
        Never trust prices/totals from the browser: every line item and
@@ -94,12 +154,22 @@ export async function POST(req) {
       if (
         !body.razorpayOrderId ||
         !body.paymentId ||
-        expected !== body.razorpaySignature
+        !safeEqual(expected, body.razorpaySignature)
       ) {
         return Response.json(
           { success: false, error: "Payment verification failed" },
           { status: 400 }
         );
+      }
+
+      /* REPLAY GUARD — a payment pays for exactly one order. Without
+         this, one valid payment could be re-posted any number of times
+         to mint free paid orders. Re-submitting (double click, retry)
+         just returns the order that already exists. */
+      const already = await Order.findOne({ paymentId: body.paymentId });
+
+      if (already) {
+        return Response.json({ success: true, order: already });
       }
 
       /* confirm with Razorpay what was actually captured */
@@ -315,6 +385,20 @@ export async function POST(req) {
     });
 
   } catch (error) {
+
+    /* two simultaneous submits of the same payment: the unique index on
+       paymentId rejected the second — hand back the first order */
+    const dupPayment = error?.keyValue?.paymentId;
+
+    if (error?.code === 11000 && dupPayment) {
+
+      const existing = await Order.findOne({ paymentId: dupPayment });
+
+      if (existing) {
+        return Response.json({ success: true, order: existing });
+      }
+
+    }
 
     /* cart problems the customer can fix (empty cart, out of stock)
        keep their specific message; anything else stays generic */

@@ -1,6 +1,7 @@
 import Razorpay from "razorpay";
 
 import { priceCart, PricingError } from "../../../lib/serverPricing";
+import { rateLimit } from "../../../lib/rateLimit";
 
 /* CREATE A RAZORPAY ORDER
 
@@ -12,6 +13,9 @@ import { priceCart, PricingError } from "../../../lib/serverPricing";
 export async function POST(req) {
 
   try {
+
+    const limited = await rateLimit(req, "razorpay", 20);
+    if (limited) return limited;
 
     const body = await req.json();
 

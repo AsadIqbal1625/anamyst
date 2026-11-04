@@ -4,15 +4,24 @@ from "../../../lib/mongodb";
 import Product
 from "../../../models/Product";
 
-/* GET PRODUCTS */
-export async function GET() {
+import { isAdminRequest }
+from "../../../lib/adminAuth";
+
+/* GET PRODUCTS (public; cost price only included for the admin) */
+export async function GET(req) {
 
   try {
 
     await connectDB();
 
+    const query = Product.find();
+
+    if (await isAdminRequest(req)) {
+      query.select("+costPrice");
+    }
+
     const products =
-      await Product.find();
+      await query;
 
     return Response.json({
       success: true,

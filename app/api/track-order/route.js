@@ -1,12 +1,17 @@
 import { NextResponse } from "next/server";
 import { connectDB } from "../../../lib/mongodb";
 import Order from "../../../models/Order";
+import { rateLimit } from "../../../lib/rateLimit";
 
 /* PUBLIC: customers track their own orders. Requires the Order ID
    AND the matching phone/email on that order — knowing someone's
    phone number alone must not reveal their order history. */
 export async function POST(req) {
   try {
+    /* stops guessing Order IDs to read other people's orders */
+    const limited = await rateLimit(req, "track-order", 15);
+    if (limited) return limited;
+
     const { orderId, contact } = await req.json();
 
     const id = String(orderId || "").trim();

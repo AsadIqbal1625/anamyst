@@ -1,14 +1,21 @@
 import { NextResponse } from "next/server";
 import { connectDB } from "../../../lib/mongodb";
 import Event from "../../../models/Event";
+import { rateLimit } from "../../../lib/rateLimit";
 
 export async function POST(req) {
   try {
+    /* generous cap — only there so a script can't flood the database */
+    const limited = await rateLimit(req, "track", 400);
+    if (limited) return limited;
+
     const body = await req.json();
 
     if (!body.type || !body.sessionId) {
       return NextResponse.json({ success: false });
     }
+
+    body.type = String(body.type).slice(0, 40);
 
     await connectDB();
 

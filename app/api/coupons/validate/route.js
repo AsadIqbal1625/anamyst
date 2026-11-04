@@ -1,9 +1,14 @@
 import { NextResponse } from "next/server";
 import { connectDB } from "../../../../lib/mongodb";
 import Coupon from "../../../../models/Coupon";
+import { rateLimit } from "../../../../lib/rateLimit";
 
 export async function POST(req) {
   try {
+    /* stops brute-forcing coupon codes */
+    const limited = await rateLimit(req, "coupon", 20);
+    if (limited) return limited;
+
     await connectDB();
     const { code, total } = await req.json();
 

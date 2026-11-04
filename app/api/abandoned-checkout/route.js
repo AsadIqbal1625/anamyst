@@ -1,6 +1,16 @@
 import { NextResponse } from "next/server";
 import { connectDB } from "../../../lib/mongodb";
 import AbandonedCheckout from "../../../models/AbandonedCheckout";
+import { rateLimit } from "../../../lib/rateLimit";
+
+/* The admin list renders these images through next/image, which throws
+   on any host that isn't allow-listed — a stranger could otherwise store
+   a foreign URL here and crash the admin page. Only our own Cloudinary
+   images (or nothing) are kept. */
+function safeImage(value) {
+  const url = String(value || "").slice(0, 300);
+  return url.startsWith("https://res.cloudinary.com/") ? url : "";
+}
 
 /* PUBLIC: called from two places —
    1. every cart change (session id + cart, no contact known yet)
@@ -11,6 +21,10 @@ import AbandonedCheckout from "../../../models/AbandonedCheckout";
    to phone/email for older clients that send no session id. */
 export async function POST(req) {
   try {
+    /* public + writes to the DB, so cap per-IP volume */
+    const limited = await rateLimit(req, "abandoned", 120);
+    if (limited) return limited;
+
     const body = await req.json();
 
     const sessionId = String(body.sessionId || "").trim().slice(0, 64);
@@ -31,9 +45,12 @@ export async function POST(req) {
     const safeCart = cart.map((i) => ({
       productId: String(i.productId || i._id || ""),
       name: String(i.name || "").slice(0, 120),
-      image: String(i.image || ""),
-      price: Number(i.price) || 0,
-      quantity: Math.max(1, Math.floor(Number(i.quantity) || 1)),
+      image: safeImage(i.image),
+      price: Math.min(Math.max(Number(i.price) || 0, 0), 1000000),
+      quantity: Math.min(
+        Math.max(1, Math.floor(Number(i.quantity) || 1)),
+        100
+      ),
     }));
 
     const cartValue = safeCart.reduce(

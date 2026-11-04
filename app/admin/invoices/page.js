@@ -1,16 +1,37 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { escapeHtml } from "@/lib/escapeHtml";
 
-function printInvoice(order) {
-  const rows = (order.products || [])
+function printInvoice(rawOrder) {
+  /* This HTML is written into a same-origin window that inherits the
+     admin session, so every customer-supplied field MUST be escaped —
+     otherwise a hostile name/address becomes script running as admin. */
+  const e = escapeHtml;
+
+  const order = {
+    ...rawOrder,
+    invoiceId: e(rawOrder.invoiceId),
+    orderId: e(rawOrder.orderId),
+    customerName: e(rawOrder.customerName),
+    address: e(rawOrder.address),
+    city: e(rawOrder.city),
+    pincode: e(rawOrder.pincode),
+    phone: e(rawOrder.phone),
+    email: e(rawOrder.email),
+    paymentMethod: e(rawOrder.paymentMethod),
+    paymentStatus: e(rawOrder.paymentStatus),
+    totalAmount: Number(rawOrder.totalAmount) || 0,
+  };
+
+  const rows = (rawOrder.products || [])
     .map(
       (p) => `
       <tr>
-        <td>${p.name}</td>
-        <td style="text-align:center">${p.quantity}</td>
-        <td style="text-align:right">₹${p.price}</td>
-        <td style="text-align:right">₹${p.price * p.quantity}</td>
+        <td>${e(p.name)}</td>
+        <td style="text-align:center">${Number(p.quantity) || 0}</td>
+        <td style="text-align:right">₹${Number(p.price) || 0}</td>
+        <td style="text-align:right">₹${(Number(p.price) || 0) * (Number(p.quantity) || 0)}</td>
       </tr>`
     )
     .join("");

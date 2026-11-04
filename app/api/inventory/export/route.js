@@ -58,7 +58,10 @@ export async function GET(req) {
         : endOfMonthUTC(now);
 
     const products =
-      await Product.find().sort({ category: 1, name: 1 }).lean();
+      await Product.find()
+        .select("+costPrice")
+        .sort({ category: 1, name: 1 })
+        .lean();
 
     const orders =
       await Order.find({

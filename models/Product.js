@@ -21,9 +21,13 @@ const ProductSchema =
         type: Number,
       },
 
+      /* your purchase cost — hidden from every query by default so it can
+         never leak through the public API or server-rendered pages.
+         Admin code opts in with .select("+costPrice"). */
       costPrice: {
         type: Number,
         default: 0,
+        select: false,
       },
 
       image: {

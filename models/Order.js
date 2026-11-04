@@ -91,8 +91,11 @@ const OrderSchema =
         type: String,
         default: "COD",
       },
+      /* unique + sparse: one payment can only ever back one order
+         (COD orders have no paymentId and are skipped by the index) */
       paymentId: {
         type: String,
+        index: { unique: true, sparse: true },
       },
 
       razorpayOrderId: {
