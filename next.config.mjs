@@ -64,7 +64,8 @@ const nextConfig = {
           {
             /* deny hardware APIs the store never uses */
             key: "Permissions-Policy",
-            value: "camera=(), microphone=(), geolocation=(), payment=(self)",
+            value:
+              'camera=(), microphone=(), geolocation=(), payment=(self "https://api.razorpay.com" "https://checkout.razorpay.com")',
           },
         ],
       },
