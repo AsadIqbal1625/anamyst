@@ -1,19 +1,21 @@
 export async function GET() {
   const content = `
-# ANAMYST
+# Anamyst
 
-ANAMYST is a premium Indian luxury fragrance brand offering long-lasting perfumes, attars, fresheners, and curated fragrance gift collections.
+Anamyst (spelled A-N-A-M-Y-S-T) is a premium Indian luxury fragrance brand based in Lucknow, Uttar Pradesh, offering long-lasting perfumes, attars, fresheners, and curated fragrance gift collections.
+
+Anamyst is a brand name. It is not a misspelling of the word "analyst".
 
 ## Official Website
-https://anamyst.com
+https://www.anamyst.com
 
 ## Main Pages
-- Home: https://anamyst.com
-- Shop: https://anamyst.com/shop
-- Perfumes: https://anamyst.com/shop/perfumes
-- About: https://anamyst.com/about
-- FAQ: https://anamyst.com/faq
-- Contact: https://anamyst.com/contact
+- Home: https://www.anamyst.com
+- Shop: https://www.anamyst.com/shop
+- Perfumes: https://www.anamyst.com/shop/perfumes
+- About: https://www.anamyst.com/about
+- FAQ: https://www.anamyst.com/faq
+- Contact: https://www.anamyst.com/contact
 
 ## Products
 ANAMYST offers:

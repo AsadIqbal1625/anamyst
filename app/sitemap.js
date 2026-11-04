@@ -2,7 +2,7 @@ import { connectDB } from "../lib/mongodb";
 import Product from "../models/Product";
 
 export default async function sitemap() {
-  const baseUrl = "https://anamyst.com";
+  const baseUrl = "https://www.anamyst.com";
 
   await connectDB();
 
@@ -75,6 +75,20 @@ export default async function sitemap() {
       lastModified: new Date(),
       changeFrequency: "monthly",
       priority: 0.5,
+    },
+    ...["perfumes", "attars", "fresheners", "premium-gifts", "combos"].map(
+      (category) => ({
+        url: `${baseUrl}/shop/${category}`,
+        lastModified: new Date(),
+        changeFrequency: "weekly",
+        priority: 0.8,
+      })
+    ),
+    {
+      url: `${baseUrl}/notices`,
+      lastModified: new Date(),
+      changeFrequency: "weekly",
+      priority: 0.6,
     },
     ...productUrls,
   ];

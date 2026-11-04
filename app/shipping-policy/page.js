@@ -3,7 +3,7 @@ export const metadata = {
   description:
     "ANAMYST shipping policy — delivery timelines, shipping charges, order processing, and tracking information for luxury fragrance orders across India.",
   alternates: {
-    canonical: "https://anamyst.com/shipping-policy",
+    canonical: "https://www.anamyst.com/shipping-policy",
   },
 };
 

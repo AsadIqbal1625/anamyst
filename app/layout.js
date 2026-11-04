@@ -6,12 +6,12 @@ import { connectDB } from "../lib/mongodb";
 import Coupon from "../models/Coupon";
 
 export const metadata = {
-  metadataBase: new URL("https://anamyst.com"),
+  metadataBase: new URL("https://www.anamyst.com"),
 
-  title: "ANAMYST | Luxury Perfumes & Premium Fragrances India",
+  title: "Anamyst | Luxury Perfumes & Premium Fragrances India",
 
   description:
-    "Discover premium luxury perfumes by ANAMYST. Long-lasting fragrances crafted for elegance, sophistication, and everyday luxury.",
+    "Anamyst is an Indian luxury fragrance brand from Lucknow, offering long-lasting perfumes, attars, fresheners and gift sets.",
 
       verification: {
     other: {
@@ -22,7 +22,7 @@ export const metadata = {
     title: "ANAMYST | Luxury Perfumes & Premium Fragrances India",
     description:
       "Discover premium luxury perfumes by ANAMYST. Long-lasting fragrances crafted for elegance, sophistication, and everyday luxury.",
-    url: "https://anamyst.com",
+    url: "https://www.anamyst.com",
     siteName: "ANAMYST",
     images: [
       {
@@ -101,11 +101,18 @@ export default async function RootLayout({ children }) {
             __html: JSON.stringify({
               "@context": "https://schema.org",
               "@type": "Organization",
-              name: "ANAMYST",
-              url: "https://anamyst.com",
-              logo: "https://anamyst.com/logo.jpeg",
+              name: "Anamyst",
+              alternateName: ["ANAMYST", "Anamyst Perfumes", "Anamyst Fragrances"],
+              url: "https://www.anamyst.com/",
+              logo: "https://www.anamyst.com/logo.jpeg",
               description:
-                "ANAMYST is a premium luxury fragrance brand offering long-lasting perfumes crafted for elegance and sophistication.",
+                "Anamyst is an Indian luxury fragrance brand based in Lucknow, offering long-lasting perfumes, attars, fresheners and gift sets.",
+              address: {
+                "@type": "PostalAddress",
+                addressLocality: "Lucknow",
+                addressRegion: "Uttar Pradesh",
+                addressCountry: "IN",
+              },
               email: "support@anamyst.com",
               telephone: "+91-8840305018",
               contactPoint: {
@@ -116,7 +123,7 @@ export default async function RootLayout({ children }) {
                 availableLanguage: ["English", "Hindi"],
               },
               sameAs: [
-                "https://www.instagram.com/anamyst.in"
+                "https://www.instagram.com/anamyst_official"
               ],
             }),
           }}

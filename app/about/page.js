@@ -3,7 +3,7 @@ export const metadata = {
   description:
     "ANAMYST is a premium fragrance brand crafted to bring elegance, confidence, and identity through scent. Discover our story.",
   alternates: {
-    canonical: "https://anamyst.com/about",
+    canonical: "https://www.anamyst.com/about",
   },
 };
 

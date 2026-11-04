@@ -6,6 +6,9 @@ export const metadata = {
   title: "Shop Luxury Perfumes | ANAMYST",
   description:
     "Browse ANAMYST luxury perfumes, attars, fresheners, premium gifts, and fragrance collections.",
+  alternates: {
+    canonical: "https://www.anamyst.com/shop",
+  },
 };
 
 export default async function ShopPage() {

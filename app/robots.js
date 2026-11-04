@@ -22,6 +22,6 @@ export default function robots() {
         allow: "/",
       },
     ],
-    sitemap: "https://anamyst.com/sitemap.xml",
+    sitemap: "https://www.anamyst.com/sitemap.xml",
   };
 }

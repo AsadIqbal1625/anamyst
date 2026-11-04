@@ -5,9 +5,12 @@
 export const revalidate = 60;
 
 export const metadata = {
-  title: "ANAMYST | Luxury Fragrances",
+  title: "Anamyst | Luxury Perfumes & Attars from India",
   description:
-    "Discover premium luxury fragrances crafted for elegance, sophistication, and timeless identity.",
+    "Anamyst is an Indian luxury fragrance brand from Lucknow. Shop long-lasting Anamyst perfumes, attars, fresheners and gift sets online.",
+  alternates: {
+    canonical: "https://www.anamyst.com/",
+  },
   keywords: [
     "luxury perfume",
     "premium fragrance",
@@ -583,6 +586,44 @@ export default async function Home() {
           </div>
 
         </section>
+
+      {/* Tells Google the site's name, including the spellings people use */}
+      <script
+        id="website-schema"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "WebSite",
+            name: "Anamyst",
+            alternateName: ["ANAMYST", "Anamyst Perfumes", "Anamyst Fragrances"],
+            url: "https://www.anamyst.com/",
+          }),
+        }}
+      />
+
+      {/* WHAT IS ANAMYST — real text, because the logo is a drawing */}
+      <section className="px-6 py-20 border-t border-white/10">
+
+        <div className="max-w-3xl mx-auto text-center">
+
+          <h2 className="text-3xl md:text-4xl font-bold mb-6">
+
+            What is Anamyst?
+
+          </h2>
+
+          <p className="text-gray-400 text-lg leading-9">
+
+            Anamyst is an Indian luxury fragrance brand based in Lucknow,
+            Uttar Pradesh. Anamyst creates long-lasting perfumes, attars,
+            fresheners, gift sets and combos, delivered across India.
+
+          </p>
+
+        </div>
+
+      </section>
 
       <LatestNotices />
 

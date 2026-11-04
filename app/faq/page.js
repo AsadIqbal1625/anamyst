@@ -3,7 +3,7 @@ export const metadata = {
   description:
     "Frequently asked questions about ANAMYST luxury fragrances — longevity, shipping across India, authenticity, and payment options.",
   alternates: {
-    canonical: "https://anamyst.com/faq",
+    canonical: "https://www.anamyst.com/faq",
   },
 };
 
@@ -11,6 +11,14 @@ const faqSchema = {
   "@context": "https://schema.org",
   "@type": "FAQPage",
   "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "What is Anamyst?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Anamyst is an Indian luxury fragrance brand based in Lucknow, Uttar Pradesh. Anamyst offers long-lasting perfumes, attars, fresheners, gift sets and combos, delivered across India."
+      }
+    },
     {
       "@type": "Question",
       "name": "Are ANAMYST fragrances long lasting?",
@@ -49,6 +57,11 @@ const faqSchema = {
 export default function FAQPage() {
 
   const faqs = [
+
+    {
+      q: "What is Anamyst?",
+      a: "Anamyst is an Indian luxury fragrance brand based in Lucknow, Uttar Pradesh. Anamyst offers long-lasting perfumes, attars, fresheners, gift sets and combos, delivered across India."
+    },
 
     {
       q: "Are Anamyst perfumes long lasting?",

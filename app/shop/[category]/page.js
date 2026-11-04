@@ -13,7 +13,7 @@ export async function generateMetadata({ params }) {
     title: `${categoryName} | ANAMYST Luxury Fragrances`,
     description: `Explore the ${categoryName} collection by ANAMYST. Discover premium luxury fragrances crafted for elegance and sophistication.`,
     alternates: {
-      canonical: `https://anamyst.com/shop/${category}`,
+      canonical: `https://www.anamyst.com/shop/${category}`,
     },
   };
 }

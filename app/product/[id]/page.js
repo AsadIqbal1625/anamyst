@@ -42,7 +42,7 @@ export async function generateMetadata({ params }) {
       ],
     },
     alternates: {
-      canonical: `https://anamyst.com/product/${id}`,
+      canonical: `https://www.anamyst.com/product/${id}`,
     },
   };
 }
@@ -112,7 +112,7 @@ export default async function ProductPage({ params }) {
     },
     offers: {
       "@type": "Offer",
-      url: `https://anamyst.com/product/${id}`,
+      url: `https://www.anamyst.com/product/${id}`,
       priceCurrency: "INR",
       price: String(product.price),
       availability: "https://schema.org/InStock",
@@ -127,25 +127,25 @@ export default async function ProductPage({ params }) {
         "@type": "ListItem",
         position: 1,
         name: "Home",
-        item: "https://anamyst.com",
+        item: "https://www.anamyst.com",
       },
       {
         "@type": "ListItem",
         position: 2,
         name: "Shop",
-        item: "https://anamyst.com/shop",
+        item: "https://www.anamyst.com/shop",
       },
       {
         "@type": "ListItem",
         position: 3,
         name: product.category || "Products",
-        item: `https://anamyst.com/shop/${(product.category || "").toLowerCase().replace(/\s+/g, "-")}`,
+        item: `https://www.anamyst.com/shop/${(product.category || "").toLowerCase().replace(/\s+/g, "-")}`,
       },
       {
         "@type": "ListItem",
         position: 4,
         name: product.name,
-        item: `https://anamyst.com/product/${id}`,
+        item: `https://www.anamyst.com/product/${id}`,
       },
     ],
   };
