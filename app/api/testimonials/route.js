@@ -4,6 +4,9 @@ from "../../../lib/mongodb";
 import Testimonial
 from "../../../models/Testimonial";
 
+import { isAdminRequest }
+from "../../../lib/adminAuth";
+
 /* GET TESTIMONIALS (?published=true for storefront) */
 export async function GET(req) {
 
@@ -14,8 +17,10 @@ export async function GET(req) {
     const { searchParams } =
       new URL(req.url);
 
+    /* hidden testimonials are for the admin only */
     const filter =
-      searchParams.get("published") === "true"
+      searchParams.get("published") === "true" ||
+      !(await isAdminRequest(req))
         ? { published: true }
         : {};
 

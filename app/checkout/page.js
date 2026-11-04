@@ -24,6 +24,9 @@ import { getSessionId } from "../../lib/track";
 
 import toast from "react-hot-toast";
 
+import { validateCheckoutDetails }
+from "../../lib/validateCheckout";
+
 export default function CheckoutPage() {
 
   const router =
@@ -349,6 +352,21 @@ export default function CheckoutPage() {
         toast.error(
           "Please fill all fields"
         );
+
+        return;
+
+      }
+
+      /* same rules as the order API — must pass BEFORE any payment */
+      const { error: detailsError } =
+        validateCheckoutDetails({
+          ...form,
+          customerName: form.name,
+        });
+
+      if (detailsError) {
+
+        toast.error(detailsError);
 
         return;
 

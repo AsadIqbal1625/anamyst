@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { connectDB } from "../../../../lib/mongodb";
 import Notice from "../../../../models/Notice";
+import { isAdminRequest } from "../../../../lib/adminAuth";
 
 const EDITABLE_FIELDS = [
   "title",
@@ -21,7 +22,11 @@ export async function GET(req, { params }) {
       (await Notice.findById(id).catch(() => null)) ||
       (await Notice.findOne({ slug: id }));
 
-    if (!notice) {
+    /* a hidden notice looks the same as a missing one to the public */
+    if (
+      !notice ||
+      (!notice.published && !(await isAdminRequest(req)))
+    ) {
       return NextResponse.json({
         success: false,
         error: "Notice not found",

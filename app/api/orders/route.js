@@ -18,17 +18,13 @@ import Coupon from "../../../models/Coupon";
 import Razorpay from "razorpay";
 import { priceCart, PricingError } from "../../../lib/serverPricing";
 import { rateLimit } from "../../../lib/rateLimit";
+import { validateCheckoutDetails } from "../../../lib/validateCheckout";
 
 /* constant-time string compare (signature checks) */
 function safeEqual(a, b) {
   const x = Buffer.from(String(a ?? ""));
   const y = Buffer.from(String(b ?? ""));
   return x.length === y.length && crypto.timingSafeEqual(x, y);
-}
-
-/* strip angle brackets, trim and cap length */
-function clean(value, max) {
-  return String(value ?? "").replace(/[<>]/g, "").trim().slice(0, max);
 }
 
 /* GET ORDERS */
@@ -62,12 +58,11 @@ export async function POST(req) {
 
     await connectDB();
 
-    /* public endpoint that sends emails — cap how often one IP can hit it */
-    const limited = await rateLimit(req, "orders", 8);
-    if (limited) return limited;
-
     const body =
       await req.json();
+
+    const requestedMethod =
+      body.paymentMethod === "RAZORPAY" ? "RAZORPAY" : "COD";
 
     /* ── INPUT VALIDATION ──
        Every field is forced to a plain, length-capped string. This stops
@@ -75,41 +70,32 @@ export async function POST(req) {
        would match someone else's customer record) and keeps hostile HTML
        out of orders, emails and the admin invoice. */
 
-    body.customerName = clean(body.customerName, 80);
-    body.email = clean(body.email, 100).toLowerCase();
-    body.phone = clean(body.phone, 15);
-    body.address = clean(body.address, 300);
-    body.city = clean(body.city, 60);
-    body.state = clean(body.state, 60);
-    body.pincode = clean(body.pincode, 10).replace(/\D/g, "");
+    const { details, error: detailsError } =
+      validateCheckoutDetails(body);
 
-    if (body.customerName.length < 2) {
-      throw new PricingError("Please enter your full name");
-    }
+    Object.assign(body, details);
 
-    if (!/^\S+@\S+\.\S+$/.test(body.email)) {
-      throw new PricingError("Please enter a valid email address");
-    }
+    if (requestedMethod === "COD") {
 
-    if (!/^[0-9+\-\s()]{10,15}$/.test(body.phone)) {
-      throw new PricingError("Please enter a valid phone number");
-    }
+      /* Spam guard for the path that costs nothing to abuse. Razorpay
+         orders are deliberately exempt, as are their detail errors below:
+         that money is already taken, so a customer who has really paid
+         must never be turned away here. A fake RAZORPAY request still
+         dies at the signature check. */
+      const limited = await rateLimit(req, "orders", 8);
+      if (limited) return limited;
 
-    if (body.address.length < 5 || !body.city || !body.state) {
-      throw new PricingError("Please enter your complete address");
-    }
+      if (detailsError) throw new PricingError(detailsError);
 
-    if (!/^\d{6}$/.test(body.pincode)) {
-      throw new PricingError("Please enter a valid 6-digit pincode");
-    }
-
-    if (body.paymentMethod !== "RAZORPAY") {
       /* nothing about a Razorpay payment may ride along on a COD order */
       delete body.paymentId;
       delete body.razorpayOrderId;
+
     } else {
+
       body.paymentId = String(body.paymentId ?? "");
       body.razorpayOrderId = String(body.razorpayOrderId ?? "");
+
     }
 
     /* ── SERVER-SIDE PRICING ──
@@ -117,9 +103,6 @@ export async function POST(req) {
        the payable amount are rebuilt from the DB. This is the same
        call the Razorpay order used, so the amount collected and the
        amount recorded cannot disagree. */
-
-    const requestedMethod =
-      body.paymentMethod === "RAZORPAY" ? "RAZORPAY" : "COD";
 
     const priced = await priceCart({
       items: body.products,
