@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import BrandWordmark from "./BrandWordmark";
 import { usePathname, useRouter } from "next/navigation";
 
 const menus = [
@@ -95,8 +96,8 @@ export default function AdminSidebar({ isOpen = false, onClose = () => {} }) {
 
           <div>
 
-            <h1 className="font-brand text-3xl text-white tracking-widest">
-              ANAMYST
+            <h1 className="text-white">
+              <BrandWordmark className="h-7 w-auto" />
             </h1>
 
             <p className="text-[#D4AF37] text-sm mt-2">

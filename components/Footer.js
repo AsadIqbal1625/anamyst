@@ -1,6 +1,7 @@
 import { FaInstagram }
 from "react-icons/fa";
 import Link from "next/link";
+import BrandWordmark from "./BrandWordmark";
 
 import {
   Mail,
@@ -21,9 +22,9 @@ export default function Footer() {
           {/* BRAND */}
           <div>
 
-            <h2 className="font-brand text-3xl tracking-[0.25em] mb-5">
+            <h2 className="mb-5">
 
-              ANAMYST
+              <BrandWordmark className="h-7 w-auto" />
 
             </h2>
 

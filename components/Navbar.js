@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import BrandWordmark from "./BrandWordmark";
 import Image from "next/image";
 
 import {
@@ -231,9 +232,9 @@ export default function Navbar({ initialCoupon = null }) {
                   className="rounded-lg object-cover"
                 />
 
-                <h1 className="font-brand text-white text-2xl sm:text-4xl tracking-[0.2em]">
+                <h1 className="text-white">
 
-                  ANAMYST
+                  <BrandWordmark className="h-6 sm:h-8 w-auto" />
 
                 </h1>
 

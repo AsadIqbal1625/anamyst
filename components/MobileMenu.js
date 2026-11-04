@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import BrandWordmark from "./BrandWordmark";
 
 const collections = [
   { title: "Perfumes", href: "/shop/perfumes" },
@@ -75,11 +76,11 @@ export default function MobileMenu({
 
           </p>
 
-          <p className="text-white text-2xl font-semibold tracking-[0.3em]">
+          <div className="text-white">
 
-            ANAMYST
+            <BrandWordmark className="h-6 w-auto" />
 
-          </p>
+          </div>
 
         </div>
 

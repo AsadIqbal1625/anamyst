@@ -1,22 +1,9 @@
 
 import "./globals.css";
 import Script from "next/script";
-import { Anton } from "next/font/google";
 import SiteShell from "../components/layout/SiteShell";
 import { connectDB } from "../lib/mongodb";
 import Coupon from "../models/Coupon";
-
-/* Free stand-in for Vonique64 (commercial font, not on Google Fonts)
-   until the real font file is dropped into /public/fonts */
-const brandFont = Anton({
-  subsets: ["latin"],
-  weight: "400",
-  variable: "--font-brand",
-  /* "optional" = use the fallback font if Anton isn't ready almost
-     instantly, and never swap it in later — avoids the heading
-     reflowing (layout shift) once the custom font finishes loading */
-  display: "optional",
-});
 
 export const metadata = {
   metadataBase: new URL("https://anamyst.com"),
@@ -105,7 +92,7 @@ export default async function RootLayout({ children }) {
   return (
     <html lang="en" data-scroll-behavior="smooth">
 
-      <body className={`${brandFont.variable} min-h-screen flex flex-col bg-black text-white`}>
+      <body className="min-h-screen flex flex-col bg-black text-white">
 
                 <script
                  id="organization-schema"

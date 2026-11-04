@@ -20,6 +20,7 @@ export const metadata = {
 };
 
 import Link from "next/link";
+import BrandWordmark from "../components/BrandWordmark";
 import Testimonials from "../components/Testimonials";
 import LatestNotices from "../components/LatestNotices";
 import OccasionBanner from "../components/OccasionBanner";
@@ -120,9 +121,9 @@ export default async function Home() {
           }`}
         >
 
-          <h1 className="font-brand text-white text-5xl sm:text-7xl tracking-[0.25em] leading-tight">
+          <h1 className="text-white">
 
-            ANAMYST
+            <BrandWordmark className="h-12 sm:h-16 w-auto mx-auto" />
 
           </h1>
 
@@ -167,9 +168,9 @@ export default async function Home() {
 
             </p>
 
-            <div className="font-brand text-white text-7xl xl:text-8xl tracking-[0.2em] leading-tight mb-8">
+            <div className="text-white mb-8">
 
-              ANAMYST
+              <BrandWordmark className="h-16 xl:h-20 w-auto" />
 
             </div>
 
