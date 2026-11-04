@@ -2,6 +2,8 @@ import Razorpay from "razorpay";
 
 import { priceCart, PricingError } from "../../../lib/serverPricing";
 import { rateLimit } from "../../../lib/rateLimit";
+import { validateCheckoutDetails } from "../../../lib/validateCheckout";
+import PendingOrder from "../../../models/PendingOrder";
 
 /* CREATE A RAZORPAY ORDER
 
@@ -19,7 +21,13 @@ export async function POST(req) {
 
     const body = await req.json();
 
-    const { totals } = await priceCart({
+    /* last chance to reject anything: the customer hasn't paid yet */
+    const { details, error: detailsError } =
+      validateCheckoutDetails(body);
+
+    if (detailsError) throw new PricingError(detailsError);
+
+    const { products, couponCode, totals } = await priceCart({
       items: body.products,
       couponCode: body.couponCode,
       paymentMethod: "RAZORPAY",
@@ -51,6 +59,25 @@ export async function POST(req) {
 
       receipt: "receipt_" + Date.now(),
 
+    });
+
+    /* snapshot the order before the customer pays, so it can always be
+       completed afterwards. If this fails, no money has moved yet. */
+    await PendingOrder.create({
+      razorpayOrderId: order.id,
+      details,
+      products,
+      couponCode,
+      totals: {
+        discount: totals.discount,
+        discountLabel: totals.discountLabel,
+        shippingCost: totals.shippingCost,
+        codCharge: totals.codCharge,
+        total: totals.total,
+      },
+      notifyEmail: body.notifyEmail !== false,
+      notifyWhatsapp: Boolean(body.notifyWhatsapp),
+      sessionId: String(body.sessionId || "").slice(0, 64),
     });
 
     return Response.json({

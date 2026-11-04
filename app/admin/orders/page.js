@@ -542,6 +542,15 @@ export default function OrdersPage() {
 
               </div>
 
+              {/* PAID, BUT NEEDS THE OWNER (e.g. sold out during payment) */}
+              {order.needsReview && (
+
+                <div className="mt-5 bg-red-500/10 border border-red-500/40 rounded-xl px-4 py-3 text-sm text-red-300">
+                  ⚠ Needs review: {order.reviewNote}
+                </div>
+
+              )}
+
               {/* EDIT FORM */}
               {editingId === order._id && (
 

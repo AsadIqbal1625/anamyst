@@ -1,5 +1,23 @@
 /** @type {import('next').NextConfig} */
 
+/* Full policy, in REPORT-ONLY mode: browsers log what it would have blocked
+   but block nothing, so it cannot break payments. Once a real checkout
+   shows no violations in the console, rename the header below to
+   "Content-Security-Policy" to enforce it. */
+const CSP_REPORT_ONLY = [
+  "default-src 'self'",
+  "script-src 'self' 'unsafe-inline' https://checkout.razorpay.com https://cdn.razorpay.com https://www.googletagmanager.com https://www.google-analytics.com",
+  "connect-src 'self' https://*.razorpay.com https://*.google-analytics.com https://*.analytics.google.com https://www.googletagmanager.com",
+  "img-src 'self' data: blob: https://res.cloudinary.com https://*.razorpay.com https://*.google-analytics.com https://www.googletagmanager.com",
+  "style-src 'self' 'unsafe-inline'",
+  "font-src 'self' data:",
+  "media-src 'self'",
+  "frame-src https://*.razorpay.com",
+  "object-src 'none'",
+  "base-uri 'self'",
+  "frame-ancestors 'self'",
+].join("; ");
+
 const nextConfig = {
 
   reactStrictMode: true,
@@ -60,6 +78,15 @@ const nextConfig = {
           {
             key: "Referrer-Policy",
             value: "strict-origin-when-cross-origin",
+          },
+          {
+            /* enforced now: these rules can't affect scripts or payments */
+            key: "Content-Security-Policy",
+            value: "object-src 'none'; base-uri 'self'; frame-ancestors 'self'",
+          },
+          {
+            key: "Content-Security-Policy-Report-Only",
+            value: CSP_REPORT_ONLY,
           },
           {
             /* deny hardware APIs the store never uses */

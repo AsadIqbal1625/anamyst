@@ -528,6 +528,19 @@ export default function CheckoutPage() {
                   couponCode:
                     appliedCoupon?.code || "",
 
+                  /* saved server-side before payment, so the order can
+                     be completed even if this tab closes afterwards */
+                  customerName: form.name,
+                  email: form.email,
+                  phone: form.phone,
+                  address: form.address,
+                  city: form.city,
+                  state: form.state,
+                  pincode: form.pincode,
+                  notifyEmail,
+                  notifyWhatsapp,
+                  sessionId: getSessionId(),
+
                 }),
 
             }
@@ -748,6 +761,16 @@ export default function CheckoutPage() {
 
                   `/order-success?orderId=${data.order.orderId}`
 
+                );
+
+              } else {
+
+                /* they have paid, so silence here would be the worst
+                   outcome; the webhook completes the order regardless */
+                toast.error(
+                  data.error ||
+                    "Your payment is safe. We are confirming your order and will email you shortly.",
+                  { duration: 15000 }
                 );
 
               }

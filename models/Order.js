@@ -112,6 +112,18 @@ const OrderSchema =
         default: "Pending",
       },
 
+      /* a paid order with a problem (e.g. sold out during payment) that
+         the owner must resolve, usually by refunding */
+      needsReview: {
+        type: Boolean,
+        default: false,
+      },
+
+      reviewNote: {
+        type: String,
+        default: "",
+      },
+
       notifyEmail: {
         type: Boolean,
         default: true,

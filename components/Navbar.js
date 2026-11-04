@@ -451,7 +451,7 @@ export default function Navbar({ initialCoupon = null }) {
 
                   router.push(
 
-                    `/shop?search=${search}`
+                    `/shop?search=${encodeURIComponent(search)}`
 
                   );
 
