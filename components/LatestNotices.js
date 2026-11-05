@@ -24,39 +24,40 @@ export default function LatestNotices() {
   if (!notices.length) return null;
 
   return (
-    <section className="px-6 py-24 border-t border-white/10 bg-gradient-to-b from-black to-[#0b0b0b]">
+    <section className="px-6 lg:px-10 py-24 lg:py-32 border-t border-white/10">
       <div className="max-w-7xl mx-auto">
-        <div className="text-center mb-16">
-          <p className="uppercase tracking-[6px] text-[#D4AF37] text-xs mb-5">
+        <div className="mb-14">
+          <p className="flex items-center gap-4 uppercase tracking-[0.35em] text-[#D4AF37] text-[11px] mb-6">
+            <span className="w-8 h-px bg-[#D4AF37]" />
             New Launches
           </p>
 
-          <h2 className="text-4xl md:text-6xl font-bold mb-6">
-            Latest From ANAMYST
+          <h2 className="text-4xl md:text-6xl font-light tracking-tight">
+            Latest From <span className="accent">ANAMYST</span>
           </h2>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           {notices.map((n) => (
             <Link
               key={n._id}
               href={`/notices/${n.slug}`}
-              className="group bg-white/5 border border-white/10 rounded-[32px] overflow-hidden hover:border-[#D4AF37]/40 transition duration-500"
+              className="spotlight group overflow-hidden border border-white/10 hover:border-[#D4AF37]/50 transition-colors duration-500"
             >
               {n.image && (
-                <div className="relative h-[220px] bg-black/30">
+                <div className="relative h-[260px] overflow-hidden bg-white/5">
                   <Image
                     src={n.image}
                     alt={n.title}
                     fill
                     sizes="(max-width: 768px) 100vw, 33vw"
-                    className="object-cover group-hover:scale-105 transition duration-700"
+                    className="object-cover transition-transform duration-[1200ms] ease-out group-hover:scale-105"
                   />
                 </div>
               )}
 
               <div className="p-7">
-                <p className="text-[#D4AF37] text-xs mb-3">
+                <p className="text-[#D4AF37] text-[11px] uppercase tracking-[0.25em] mb-3">
                   {new Date(n.createdAt).toLocaleDateString("en-IN", {
                     day: "numeric",
                     month: "long",
@@ -64,9 +65,9 @@ export default function LatestNotices() {
                   })}
                 </p>
 
-                <h3 className="text-2xl font-bold mb-3">{n.title}</h3>
+                <h3 className="text-2xl font-light mb-3">{n.title}</h3>
 
-                <p className="text-gray-400 leading-7 line-clamp-2">
+                <p className="text-white/60 font-light leading-7 line-clamp-2">
                   {n.excerpt}
                 </p>
               </div>
@@ -74,10 +75,10 @@ export default function LatestNotices() {
           ))}
         </div>
 
-        <div className="text-center mt-14">
+        <div className="mt-12">
           <Link
             href="/notices"
-            className="inline-block bg-[#D4AF37] hover:opacity-90 text-black px-8 py-4 rounded-full font-semibold transition"
+            className="inline-block border border-white/30 hover:border-[#D4AF37] hover:text-[#D4AF37] px-8 py-4 text-sm uppercase tracking-[0.2em] transition-colors duration-300"
           >
             View All Updates
           </Link>

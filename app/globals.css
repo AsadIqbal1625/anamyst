@@ -63,3 +63,197 @@ select:-webkit-autofill {
   caret-color: #ffffff;
   transition: background-color 9999s ease-in-out 0s;
 }
+/* ===== HOMEPAGE ===== */
+
+/* soft gold light, used behind the hero and the closing section */
+.hero-glow {
+  background:
+    radial-gradient(60% 70% at 15% 40%, rgba(212, 175, 55, 0.13), transparent 70%),
+    radial-gradient(45% 55% at 90% 90%, rgba(212, 175, 55, 0.07), transparent 70%);
+}
+
+/* scrolling ribbon: moves one of its two identical copies, then repeats */
+.ribbon {
+  animation: ribbon-scroll 45s linear infinite;
+}
+
+@keyframes ribbon-scroll {
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+/* swipeable product rail, without a visible scrollbar */
+.scent-rail {
+  scrollbar-width: none;
+}
+
+.scent-rail::-webkit-scrollbar {
+  display: none;
+}
+
+/* scroll-in fade: hidden only once RevealOnScroll has started, so the
+   content is never lost if JavaScript fails */
+.reveal {
+  transition:
+    opacity 0.9s ease var(--d, 0ms),
+    transform 0.9s cubic-bezier(0.16, 1, 0.3, 1) var(--d, 0ms),
+    border-color 0.5s ease,
+    background-color 0.5s ease;
+}
+
+.reveal-ready .reveal:not(.is-visible) {
+  opacity: 0;
+  transform: translateY(28px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ribbon {
+    animation: none;
+  }
+
+  .reveal {
+    transition: none;
+  }
+}
+
+/* the one highlighted word in a headline */
+.accent {
+  font-family: var(--font-accent), Georgia, serif;
+  font-style: italic;
+  font-size: 1.08em;
+  color: #d4af37;
+}
+
+/* faint technical grid behind the desktop hero */
+.hero-grid {
+  background-image:
+    linear-gradient(rgba(212, 175, 55, 0.07) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(212, 175, 55, 0.07) 1px, transparent 1px);
+  background-size: 72px 72px;
+  -webkit-mask-image: radial-gradient(70% 75% at 28% 50%, black, transparent);
+  mask-image: radial-gradient(70% 75% at 28% 50%, black, transparent);
+}
+
+/* gold light that follows the mouse (see SpotlightCards) */
+.spotlight {
+  position: relative;
+}
+
+.spotlight::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: radial-gradient(
+    280px circle at var(--mx, 50%) var(--my, 50%),
+    rgba(212, 175, 55, 0.16),
+    transparent 70%
+  );
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  pointer-events: none;
+}
+
+.spotlight:hover::after {
+  opacity: 1;
+}
+
+/* gold line in The Craft: draws downward instead of fading in */
+.reveal.act-fill {
+  transition: transform 2.2s cubic-bezier(0.65, 0, 0.35, 1) 0.2s;
+}
+
+.reveal-ready .reveal.act-fill:not(.is-visible) {
+  opacity: 1;
+  transform: scaleY(0);
+}
+
+.btn-gold {
+  position: relative;
+  overflow: hidden;
+}
+
+/* all load and idle motion is opt-out via the device's reduced-motion setting */
+@media (prefers-reduced-motion: no-preference) {
+
+  /* hero wordmark writes itself letter by letter */
+  .wordmark-draw path {
+    stroke-dasharray: 1 2;
+    stroke-dashoffset: 1.02;
+    animation: wordmark-draw 1.5s cubic-bezier(0.65, 0, 0.35, 1) forwards;
+    animation-delay: calc(var(--i) * 90ms);
+  }
+
+  @keyframes wordmark-draw {
+    to {
+      stroke-dashoffset: 0;
+    }
+  }
+
+  .hero-rise {
+    animation: hero-rise 0.8s cubic-bezier(0.16, 1, 0.3, 1) var(--d, 0ms) backwards;
+  }
+
+  @keyframes hero-rise {
+    from {
+      opacity: 0;
+      transform: translateY(16px);
+    }
+  }
+
+  .glow-breathe {
+    animation: glow-breathe 9s ease-in-out infinite alternate;
+  }
+
+  @keyframes glow-breathe {
+    from {
+      opacity: 0.6;
+    }
+  }
+
+  /* slow band of light across gold buttons */
+  .btn-gold::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      105deg,
+      transparent 35%,
+      rgba(255, 255, 255, 0.55) 50%,
+      transparent 65%
+    );
+    transform: translateX(-120%);
+    animation: gold-sheen 7s ease-in-out infinite;
+    pointer-events: none;
+  }
+
+  @keyframes gold-sheen {
+    70% {
+      transform: translateX(-120%);
+    }
+    100% {
+      transform: translateX(120%);
+    }
+  }
+
+  /* hero video eases closer as the page scrolls, where browsers support it */
+  @supports (animation-timeline: scroll()) {
+    .hero-video video {
+      animation: hero-zoom linear both;
+      animation-timeline: scroll(root);
+      animation-range: 0 100vh;
+    }
+
+    @keyframes hero-zoom {
+      to {
+        transform: scale(1.12);
+      }
+    }
+  }
+}
+
+/* closing section: gold light rising from behind the button */
+.closing-glow {
+  background: radial-gradient(55% 90% at 50% 100%, rgba(212, 175, 55, 0.14), transparent 70%);
+}

@@ -22,13 +22,34 @@ export const metadata = {
   ],
 };
 
+import Image from "next/image";
 import Link from "next/link";
+import { Cormorant_Garamond, Jost } from "next/font/google";
 import BrandWordmark from "../components/BrandWordmark";
+import RevealOnScroll from "../components/RevealOnScroll";
+import SpotlightCards from "../components/SpotlightCards";
 import Testimonials from "../components/Testimonials";
 import LatestNotices from "../components/LatestNotices";
 import OccasionBanner from "../components/OccasionBanner";
 import { connectDB } from "../lib/mongodb";
 import Setting from "../models/Setting";
+import Product from "../models/Product";
+
+/* Geometric, like the wordmark. "optional" never swaps the font in late,
+   which keeps the layout-shift score at 0 on slow connections. */
+const displayFont = Jost({
+  subsets: ["latin"],
+  display: "optional",
+});
+
+/* Italic serif for the one highlighted word in each headline */
+const accentFont = Cormorant_Garamond({
+  subsets: ["latin"],
+  weight: "500",
+  style: "italic",
+  display: "optional",
+  variable: "--font-accent",
+});
 
 /* Read the campaign server-side (same approach as the promo coupon in
    layout.js) so the page knows on first paint whether the banner is
@@ -76,146 +97,280 @@ async function getCampaignData() {
 
 }
 
+const COLLECTIONS = [
+  {
+    title: "Perfumes",
+    category: "perfumes",
+    href: "/shop/perfumes",
+    desc: "Signature scents crafted for timeless elegance and modern luxury.",
+  },
+  {
+    title: "Attars",
+    category: "attars",
+    href: "/shop/attars",
+    desc: "Rich alcohol-free attars inspired by heritage and sophistication.",
+  },
+  {
+    title: "Fresheners",
+    category: "fresheners",
+    href: "/shop/fresheners",
+    desc: "Elevate your surroundings with refreshing premium aromas.",
+  },
+  {
+    title: "Premium Gifts",
+    category: "premium gifts",
+    href: "/shop/premium-gifts",
+    desc: "Luxurious gifting collections for unforgettable impressions.",
+  },
+  {
+    title: "Combos",
+    category: "combos",
+    href: "/shop/combos",
+    desc: "Carefully paired fragrance collections for premium experiences.",
+  },
+];
+
+/* A tile only appears once its collection has something to sell, so
+   adding the first attar makes that tile show up on its own. Featured
+   scents lead with best sellers and show each fragrance once, not its
+   20ml and 50ml sizes side by side. */
+
+async function getShowcase() {
+
+  try {
+
+    await connectDB();
+
+    const products = await Product.find(
+      {},
+      "name category price oldPrice image tag stock"
+    ).lean();
+
+    const collections = COLLECTIONS.map((c) => ({
+      ...c,
+      image: products.find(
+        (p) => (p.category || "").toLowerCase() === c.category
+      )?.image,
+    })).filter((c) => c.image);
+
+    const seen = new Set();
+
+    const featured = products
+      .filter((p) => p.stock > 0 && p.image)
+      .sort(
+        (a, b) =>
+          Number(b.tag === "Best Seller") -
+          Number(a.tag === "Best Seller")
+      )
+      .filter((p) => {
+        const base = p.name.split("-")[0].trim().toLowerCase();
+        if (seen.has(base)) return false;
+        seen.add(base);
+        return true;
+      })
+      .slice(0, 8);
+
+    return { collections, featured };
+
+  } catch {
+
+    return { collections: [], featured: [] };
+
+  }
+
+}
+
+const RIBBON = [
+  "Long Lasting",
+  "Premium Fragrance Oils",
+  "Luxury Packaging",
+  "Secure Checkout",
+  "Delivered Across India",
+];
+
+const SCENT_LAYERS = [
+  {
+    name: "Top Notes",
+    title: "The first impression",
+    desc: "Bright and immediate. What the world meets first.",
+  },
+  {
+    name: "Heart Notes",
+    title: "The character",
+    desc: "As the opening settles, the fragrance reveals who it is.",
+  },
+  {
+    name: "Base Notes",
+    title: "The presence",
+    desc: "Deep and slow. What stays with you, and stays with them.",
+  },
+];
+
+const EXPERIENCE = [
+  {
+    title: "Authentic Luxury",
+    desc: "Premium perfumes and attars crafted with high-quality fragrance oils.",
+  },
+  {
+    title: "Long Lasting",
+    desc: "Designed for lasting presence throughout your day and evenings.",
+  },
+  {
+    title: "Luxury Packaging",
+    desc: "Elegant packaging created for premium gifting experiences.",
+  },
+  {
+    title: "Secure Checkout",
+    desc: "Fast, secure payments and reliable nationwide delivery.",
+  },
+];
+
+function SectionLabel({ children }) {
+
+  return (
+
+    <p className="flex items-center gap-4 uppercase tracking-[0.35em] text-[#D4AF37] text-[11px] mb-6">
+
+      <span className="w-8 h-px bg-[#D4AF37]" />
+
+      {children}
+
+    </p>
+
+  );
+
+}
+
+const COLLECTION_SPANS = [
+  "md:col-span-7",
+  "md:col-span-5",
+  "md:col-span-4",
+  "md:col-span-4",
+  "md:col-span-4",
+];
+
 export default async function Home() {
 
-  const campaignData = await getCampaignData();
+  const [campaignData, { collections, featured }] = await Promise.all([
+    getCampaignData(),
+    getShowcase(),
+  ]);
 
   const hasCampaign = Boolean(campaignData);
 
   return (
 
-    <main className="w-full bg-black overflow-hidden text-white">
+    <main
+      className={`${displayFont.className} ${accentFont.variable} w-full bg-black overflow-hidden text-white`}
+    >
+
+      <RevealOnScroll />
+
+      <SpotlightCards />
 
       {/* OCCASION CAMPAIGN BANNER (spend more, save more) —
           above the hero so it's visible without scrolling */}
       <OccasionBanner initialSettings={campaignData} />
 
-      {/* ================= MOBILE HERO (full-screen video) ================= */}
+      {/* ================= HERO =================
+          One video element for every screen size: full-bleed behind the
+          text on phones, a framed panel on desktop. */}
       <section
-        className={`relative w-full overflow-hidden lg:hidden ${
-          hasCampaign ? "min-h-[62vh]" : "min-h-[100dvh]"
+        className={`relative isolate flex overflow-hidden ${
+          hasCampaign
+            ? "min-h-[62vh] lg:min-h-[74vh]"
+            : "min-h-[100dvh] lg:min-h-[92vh]"
         }`}
       >
 
-        {/* VIDEO */}
-        <video
-          autoPlay
-          muted
-          loop
-          playsInline
-          preload="metadata"
-          className="absolute inset-0 w-full h-full object-cover"
-        >
-          <source
-            src="/perfume.mp4"
-            type="video/mp4"
-          />
-        </video>
+        <div className="hero-glow glow-breathe absolute inset-0 -z-20 hidden lg:block" />
 
-        {/* OVERLAY */}
-        <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/40 to-black z-0" />
+        <div className="hero-grid absolute inset-0 -z-20 hidden lg:block" />
 
-        {/* CONTENT */}
-        <div
-          className={`relative z-10 flex flex-col items-center justify-center px-6 text-center ${
-            hasCampaign
-              ? "min-h-[62vh] py-14"
-              : "min-h-[100dvh]"
-          }`}
-        >
+        <div className="flex flex-col justify-end lg:justify-center w-full max-w-7xl mx-auto px-6 lg:px-10 pb-14 pt-16 lg:py-16 lg:relative">
 
-          <h1 className="text-white">
+          {/* VIDEO */}
+          <div className="hero-video absolute inset-0 -z-10 overflow-hidden lg:inset-y-10 lg:left-auto lg:right-10 lg:aspect-[4/5]">
 
-            <BrandWordmark className="h-12 sm:h-16 w-auto mx-auto" />
+            <video
+              autoPlay
+              muted
+              loop
+              playsInline
+              preload="metadata"
+              poster="/perfume-poster.jpg"
+              className="w-full h-full object-cover"
+            >
+              <source
+                src="/perfume.mp4"
+                type="video/mp4"
+              />
+            </video>
 
-          </h1>
+            {/* PHONE: keeps the text readable over the video */}
+            <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/30 to-black lg:hidden" />
 
-          <p className="text-white/90 text-lg sm:text-2xl mt-6 max-w-2xl leading-relaxed">
+            {/* DESKTOP: viewfinder corners and a hairline frame */}
+            <div className="absolute inset-0 border border-[#D4AF37]/20 hidden lg:block" />
 
-            Discover fragrances that define your presence
+            {["top-0 left-0 border-t border-l", "top-0 right-0 border-t border-r", "bottom-0 left-0 border-b border-l", "bottom-0 right-0 border-b border-r"].map(
+              (corner) => (
+                <span
+                  key={corner}
+                  className={`absolute w-6 h-6 border-[#D4AF37] hidden lg:block ${corner}`}
+                />
+              )
+            )}
 
-          </p>
+          </div>
 
-          <Link href="/shop">
+          {/* BRAND */}
+          <div className="lg:max-w-[50%]">
 
-            <button className="mt-10 bg-[#D4AF37] hover:bg-[#c19b2e] text-black text-lg sm:text-xl px-8 sm:px-10 py-4 sm:py-5 rounded-full shadow-2xl transition-all duration-500 hover:scale-105 font-semibold tracking-wide">
-
-              Explore Collection
-
-            </button>
-
-          </Link>
-
-        </div>
-
-      </section>
-
-      {/* ================= DESKTOP HERO (split layout) ================= */}
-      <section
-        className={`relative w-full overflow-hidden hidden lg:flex items-center ${
-          hasCampaign ? "min-h-[74vh]" : "min-h-[92vh]"
-        }`}
-      >
-
-        {/* BACKGROUND GLOW */}
-        <div className="absolute inset-0 bg-gradient-to-br from-[#D4AF37]/10 via-transparent to-[#D4AF37]/5 pointer-events-none" />
-
-        <div className="relative max-w-7xl mx-auto px-10 grid grid-cols-2 gap-16 items-center w-full">
-
-          {/* LEFT — BRAND */}
-          <div>
-
-            <p className="uppercase tracking-[8px] text-[#D4AF37] text-sm mb-8">
+            <p className="hero-rise uppercase tracking-[0.35em] text-[#D4AF37] text-[11px] lg:text-xs mb-6 lg:mb-8">
 
               Luxury Fragrance House
 
             </p>
 
-            <div className="text-white mb-8">
+            <h1 className="text-white">
 
-              <BrandWordmark className="h-16 xl:h-20 w-auto" />
+              <BrandWordmark draw className="w-full max-w-[560px] h-auto" />
 
-            </div>
+            </h1>
 
-            <p className="text-white/80 text-2xl max-w-xl leading-relaxed mb-12">
+            <p
+              className="hero-rise text-white/80 text-xl lg:text-2xl font-light mt-6 lg:mt-8 max-w-md leading-relaxed"
+              style={{ "--d": "250ms" }}
+            >
 
-              Discover fragrances that define your presence
+              Discover fragrances that define your{" "}
+              <span className="accent">presence</span>
 
             </p>
 
-            <Link href="/shop">
+            <div
+              className="hero-rise flex flex-wrap gap-3 mt-8 lg:mt-10"
+              style={{ "--d": "400ms" }}
+            >
 
-              <button className="bg-[#D4AF37] hover:bg-[#c19b2e] text-black text-xl px-12 py-5 rounded-full shadow-2xl transition-all duration-500 hover:scale-105 font-semibold tracking-wide">
-
-                Explore Collection
-
-              </button>
-
-            </Link>
-
-          </div>
-
-          {/* RIGHT — FRAMED VIDEO */}
-          <div className="flex justify-center">
-
-            <div className="relative rounded-[36px] overflow-hidden border border-[#D4AF37]/30 shadow-[0_0_80px_rgba(212,175,55,0.15)] max-h-[78vh]">
-
-              <video
-                autoPlay
-                muted
-                loop
-                playsInline
-                preload="metadata"
-                className="h-[78vh] w-auto object-cover"
+              <Link
+                href="/shop"
+                className="btn-gold bg-[#D4AF37] hover:bg-[#e6c34a] text-black px-8 py-4 text-sm uppercase tracking-[0.2em] font-medium transition-colors duration-300"
               >
-                <source
-                  src="/perfume.mp4"
-                  type="video/mp4"
-                />
-              </video>
+                Explore Collection
+              </Link>
 
-              {/* SUBTLE BOTTOM FADE */}
-              <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-black/60 to-transparent" />
+              {featured.length > 0 && (
+
+                <Link
+                  href="#signature"
+                  className="border border-white/30 hover:border-[#D4AF37] hover:text-[#D4AF37] text-white px-8 py-4 text-sm uppercase tracking-[0.2em] transition-colors duration-300"
+                >
+                  Signature Scents
+                </Link>
+
+              )}
 
             </div>
 
@@ -225,357 +380,283 @@ export default async function Home() {
 
       </section>
 
-      {/* SHOP BY COLLECTION */}
-      <section className="relative px-6 py-24 border-t border-white/10">
-       
-        {/* BACKGROUND GLOW */}
-        <div className="absolute inset-0 bg-gradient-to-b from-[#D4AF37]/5 to-transparent pointer-events-none" />
+      {/* RIBBON — doubled so the scroll loops without a visible jump */}
+      <div className="border-y border-white/10 py-4 overflow-hidden">
 
-        <div className="relative max-w-7xl mx-auto">
+        <div className="ribbon flex w-max">
 
-          {/* HEADER */}
-          <div className="text-center mb-16">
+          {[0, 1].map((copy) => (
 
-            <p className="uppercase tracking-[6px] text-[#D4AF37] text-xs mb-5">
-
-              ANAMYST Collections
-
-            </p>
-
-            <h2 className="text-4xl md:text-6xl font-bold mb-6">
-
-              Shop By Collection
-
-            </h2>
-
-            <p className="text-gray-400 text-lg max-w-3xl mx-auto leading-9">
-
-              Explore our curated fragrance categories designed for elegance, luxury, and unforgettable presence.
-
-            </p>
-
-          </div>
-
-          {/* COLLECTION GRID */}
-          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
-
-            {/* PERFUMES */}
-            <Link
-              href="/shop/perfumes"
-              className="group relative overflow-hidden rounded-[32px] border border-white/10 bg-white/5 p-10 hover:border-[#D4AF37]/40 transition duration-500"
+            <div
+              key={copy}
+              aria-hidden={copy === 1}
+              className="flex shrink-0"
             >
 
-              <div className="absolute inset-0 bg-gradient-to-br from-[#D4AF37]/10 to-transparent opacity-0 group-hover:opacity-100 transition duration-500" />
+              {[...RIBBON, ...RIBBON].map((item, i) => (
 
-              <div className="relative z-10">
+                <span
+                  key={i}
+                  className="flex items-center gap-10 pr-10 uppercase tracking-[0.3em] text-[11px] text-white/50 whitespace-nowrap"
+                >
 
-                <p className="text-[#D4AF37] uppercase tracking-[4px] text-xs mb-5">
+                  {item}
 
-                  Luxury Fragrances
-
-                </p>
-
-                <h3 className="text-4xl font-bold mb-5">
-
-                  Perfumes
-
-                </h3>
-
-                <p className="text-gray-400 leading-8 mb-8">
-
-                  Signature scents crafted for timeless elegance and modern luxury.
-
-                </p>
-
-                <span className="text-[#D4AF37] text-lg font-semibold">
-
-                  Explore →
+                  <span className="w-1 h-1 rotate-45 bg-[#D4AF37]" />
 
                 </span>
 
-              </div>
+              ))}
 
-            </Link>
+            </div>
 
-            {/* ATTARS */}
-            <Link
-              href="/shop/attars"
-              className="group relative overflow-hidden rounded-[32px] border border-white/10 bg-white/5 p-10 hover:border-[#D4AF37]/40 transition duration-500"
-            >
-
-              <div className="absolute inset-0 bg-gradient-to-br from-[#D4AF37]/10 to-transparent opacity-0 group-hover:opacity-100 transition duration-500" />
-
-              <div className="relative z-10">
-
-                <p className="text-[#D4AF37] uppercase tracking-[4px] text-xs mb-5">
-
-                  Traditional Luxury
-
-                </p>
-
-                <h3 className="text-4xl font-bold mb-5">
-
-                  Attars
-
-                </h3>
-
-                <p className="text-gray-400 leading-8 mb-8">
-
-                  Rich alcohol-free attars inspired by heritage and sophistication.
-
-                </p>
-
-                <span className="text-[#D4AF37] text-lg font-semibold">
-
-                  Explore →
-
-                </span>
-
-              </div>
-
-            </Link>
-
-            {/* FRESHENERS */}
-            <Link
-              href="/shop/fresheners"
-              className="group relative overflow-hidden rounded-[32px] border border-white/10 bg-white/5 p-10 hover:border-[#D4AF37]/40 transition duration-500"
-            >
-
-              <div className="absolute inset-0 bg-gradient-to-br from-[#D4AF37]/10 to-transparent opacity-0 group-hover:opacity-100 transition duration-500" />
-
-              <div className="relative z-10">
-
-                <p className="text-[#D4AF37] uppercase tracking-[4px] text-xs mb-5">
-
-                  Refreshing Experience
-
-                </p>
-
-                <h3 className="text-4xl font-bold mb-5">
-
-                  Fresheners
-
-                </h3>
-
-                <p className="text-gray-400 leading-8 mb-8">
-
-                  Elevate your surroundings with refreshing premium aromas.
-
-                </p>
-
-                <span className="text-[#D4AF37] text-lg font-semibold">
-
-                  Explore →
-
-                </span>
-
-              </div>
-
-            </Link>
-
-            {/* GIFTS */}
-            <Link
-              href="/shop/premium-gifts"
-              className="group relative overflow-hidden rounded-[32px] border border-white/10 bg-white/5 p-10 hover:border-[#D4AF37]/40 transition duration-500"
-            >
-
-              <div className="absolute inset-0 bg-gradient-to-br from-[#D4AF37]/10 to-transparent opacity-0 group-hover:opacity-100 transition duration-500" />
-
-              <div className="relative z-10">
-
-                <p className="text-[#D4AF37] uppercase tracking-[4px] text-xs mb-5">
-
-                  Elegant Gifting
-
-                </p>
-
-                <h3 className="text-4xl font-bold mb-5">
-
-                  Premium Gifts
-
-                </h3>
-
-                <p className="text-gray-400 leading-8 mb-8">
-
-                  Luxurious gifting collections for unforgettable impressions.
-
-                </p>
-
-                <span className="text-[#D4AF37] text-lg font-semibold">
-
-                  Explore →
-
-                </span>
-
-              </div>
-
-            </Link>
-
-            {/* COMBOS */}
-            <Link
-              href="/shop/combos"
-              className="group relative overflow-hidden rounded-[32px] border border-white/10 bg-white/5 p-10 hover:border-[#D4AF37]/40 transition duration-500 md:col-span-2 xl:col-span-1"
-            >
-
-              <div className="absolute inset-0 bg-gradient-to-br from-[#D4AF37]/10 to-transparent opacity-0 group-hover:opacity-100 transition duration-500" />
-
-              <div className="relative z-10">
-
-                <p className="text-[#D4AF37] uppercase tracking-[4px] text-xs mb-5">
-
-                  Curated Bundles
-
-                </p>
-
-                <h3 className="text-4xl font-bold mb-5">
-
-                  Combos
-
-                </h3>
-
-                <p className="text-gray-400 leading-8 mb-8">
-
-                  Carefully paired fragrance collections for premium experiences.
-
-                </p>
-
-                <span className="text-[#D4AF37] text-lg font-semibold">
-
-                  Explore →
-
-                </span>
-
-              </div>
-
-            </Link>
-
-          </div>
+          ))}
 
         </div>
 
-      </section>
+      </div>
 
-      {/* LUXURY CTA */}
-      <section className="px-6 py-24 border-t border-white/10">
+      {/* COLLECTIONS */}
+      {collections.length > 0 && (
 
-        <div className="max-w-5xl mx-auto text-center bg-white/5 border border-white/10 rounded-[40px] p-10 md:p-16 relative overflow-hidden">
-
-          <div className="absolute inset-0 bg-gradient-to-r from-[#D4AF37]/10 to-transparent" />
-
-          <div className="relative z-10">
-
-            <p className="uppercase tracking-[6px] text-[#D4AF37] text-xs mb-5">
-
-              Luxury Redefined
-
-            </p>
-
-            <h2 className="text-4xl md:text-6xl font-bold mb-8">
-
-              Crafted For Presence
-
-            </h2>
-
-            <p className="text-gray-300 text-lg leading-9 max-w-3xl mx-auto mb-10">
-
-              ANAMYST blends sophistication, elegance, and timeless fragrance artistry into every bottle.
-
-            </p>
-
-            <Link href="/shop">
-
-              <button className="mt-10 bg-[#D4AF37] hover:bg-[#c19b2e] text-black text-lg sm:text-xl px-8 sm:px-10 py-4 sm:py-5 rounded-full shadow-2xl transition-all duration-500 hover:scale-105 font-semibold tracking-wide">
-
-                Explore All Collections
-
-              </button>
-
-            </Link>
-
-          </div>
-
-        </div>
-
-      </section>
-              {/* WHY CHOOSE ANAMYST */}
-        <section className="px-6 py-24 border-t border-white/10 bg-gradient-to-b from-black to-[#0b0b0b]">
+        <section className="px-6 lg:px-10 py-24 lg:py-32">
 
           <div className="max-w-7xl mx-auto">
 
-            {/* HEADER */}
-            <div className="text-center mb-16">
+            <div className="reveal mb-14">
 
-              <p className="uppercase tracking-[6px] text-[#D4AF37] text-xs mb-5">
+              <SectionLabel>The Collections</SectionLabel>
 
-                Why Choose Us
+              <h2 className="text-4xl md:text-6xl font-light tracking-tight">
 
-              </p>
-
-              <h2 className="text-4xl md:text-6xl font-bold mb-6">
-
-                The ANAMYST Experience
+                Shop By <span className="accent">Collection</span>
 
               </h2>
 
-              <p className="text-gray-400 text-lg max-w-3xl mx-auto leading-9">
-
-                Crafted with premium fragrance oils, luxury presentation,
-                and timeless elegance for unforgettable impressions.
-
-              </p>
-
             </div>
 
-            {/* FEATURES */}
-            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-8">
+            <div className="grid grid-cols-1 md:grid-cols-12 gap-4">
 
-              {[
-                {
-                  title: "Authentic Luxury",
-                  desc: "Premium perfumes and attars crafted with high-quality fragrance oils.",
-                },
-                {
-                  title: "Long Lasting",
-                  desc: "Designed for lasting presence throughout your day and evenings.",
-                },
-                {
-                  title: "Luxury Packaging",
-                  desc: "Elegant packaging created for premium gifting experiences.",
-                },
-                {
-                  title: "Secure Checkout",
-                  desc: "Fast, secure payments and reliable nationwide delivery.",
-                },
-              ].map((item, index) => (
+              {collections.map((c, i) => (
 
-                <div
-                  key={index}
-                  className="group bg-white/5 border border-white/10 rounded-[32px] p-10 hover:border-[#D4AF37]/40 transition duration-500 relative overflow-hidden"
+                <Link
+                  key={c.href}
+                  href={c.href}
+                  className={`reveal spotlight group relative block overflow-hidden h-[420px] lg:h-[520px] border border-white/10 hover:border-[#D4AF37]/50 transition-colors duration-500 ${COLLECTION_SPANS[i]}`}
+                  style={{ "--d": `${(i % 3) * 110}ms` }}
                 >
 
-                  <div className="absolute inset-0 bg-gradient-to-br from-[#D4AF37]/10 to-transparent opacity-0 group-hover:opacity-100 transition duration-500" />
+                  <Image
+                    src={c.image}
+                    alt={`Anamyst ${c.title}`}
+                    fill
+                    sizes="(max-width: 768px) 100vw, 60vw"
+                    className="object-cover transition-transform duration-[1200ms] ease-out group-hover:scale-105"
+                  />
 
-                  <div className="relative z-10">
+                  <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent" />
 
-                    <div className="w-14 h-14 rounded-full bg-[#D4AF37]/10 border border-[#D4AF37]/30 flex items-center justify-center text-[#D4AF37] text-2xl mb-6">
+                  <div className="absolute inset-x-0 bottom-0 p-7 lg:p-9">
 
-                      ✦
+                    <p className="text-[#D4AF37] text-[11px] tracking-[0.3em] mb-3">
 
-                    </div>
-
-                    <h3 className="text-2xl font-bold mb-5">
-
-                      {item.title}
-
-                    </h3>
-
-                    <p className="text-gray-400 leading-8">
-
-                      {item.desc}
+                      0{i + 1}
 
                     </p>
 
+                    <h3 className="text-3xl lg:text-4xl font-light mb-3">
+
+                      {c.title}
+
+                    </h3>
+
+                    <p className="text-white/70 font-light leading-relaxed max-w-sm mb-5">
+
+                      {c.desc}
+
+                    </p>
+
+                    <span className="uppercase tracking-[0.25em] text-[11px] text-[#D4AF37]">
+
+                      Explore →
+
+                    </span>
+
                   </div>
+
+                </Link>
+
+              ))}
+
+            </div>
+
+          </div>
+
+        </section>
+
+      )}
+
+      {/* SIGNATURE SCENTS — swipeable rail */}
+      {featured.length > 0 && (
+
+        <section
+          id="signature"
+          className="py-24 lg:py-32 border-t border-white/10 scroll-mt-28"
+        >
+
+          <div className="reveal max-w-7xl mx-auto px-6 lg:px-10 mb-12 flex flex-wrap items-end justify-between gap-6">
+
+            <div>
+
+              <SectionLabel>Signature Scents</SectionLabel>
+
+              <h2 className="text-4xl md:text-6xl font-light tracking-tight">
+
+                Wear Your <span className="accent">Presence</span>
+
+              </h2>
+
+            </div>
+
+            <Link
+              href="/shop"
+              className="uppercase tracking-[0.25em] text-[11px] text-[#D4AF37] hover:text-white transition-colors"
+            >
+              View All →
+            </Link>
+
+          </div>
+
+          <div className="scent-rail flex gap-4 lg:gap-y-10 overflow-x-auto snap-x snap-mandatory px-6 pb-4 lg:grid lg:grid-cols-4 lg:overflow-visible lg:max-w-7xl lg:mx-auto lg:px-10">
+
+            {featured.map((p, i) => (
+
+              <Link
+                key={String(p._id)}
+                href={`/product/${p._id}`}
+                className="reveal group snap-start shrink-0 w-[72vw] sm:w-[320px] lg:w-auto"
+                style={{ "--d": `${(i % 4) * 90}ms` }}
+              >
+
+                <div className="spotlight relative aspect-[4/5] overflow-hidden border border-white/10 group-hover:border-[#D4AF37]/50 transition-colors duration-500 bg-white/5">
+
+                  <Image
+                    src={p.image}
+                    alt={p.name}
+                    fill
+                    sizes="(max-width: 640px) 72vw, (max-width: 1024px) 320px, 25vw"
+                    className="object-cover transition-transform duration-[1200ms] ease-out group-hover:scale-105"
+                  />
+
+                  {p.tag && (
+
+                    <span className="absolute top-3 left-3 bg-black/70 backdrop-blur text-[10px] uppercase tracking-[0.2em] px-3 py-1.5">
+
+                      {p.tag}
+
+                    </span>
+
+                  )}
+
+                </div>
+
+                <h3 className="mt-4 text-lg font-light leading-snug group-hover:text-[#D4AF37] transition-colors">
+
+                  {p.name}
+
+                </h3>
+
+                <p className="mt-1 text-white/70">
+
+                  ₹{p.price}
+
+                  {p.oldPrice > p.price && (
+
+                    <span className="ml-2 text-white/40 line-through text-sm">
+
+                      ₹{p.oldPrice}
+
+                    </span>
+
+                  )}
+
+                </p>
+
+              </Link>
+
+            ))}
+
+          </div>
+
+        </section>
+
+      )}
+
+      {/* ANATOMY OF A SCENT */}
+      <section className="px-6 lg:px-10 py-24 lg:py-32 border-t border-white/10">
+
+        <div className="max-w-7xl mx-auto grid lg:grid-cols-2 gap-14 lg:gap-24 items-center">
+
+          <div className="reveal relative aspect-[4/5] max-w-md mx-auto w-full border border-[#D4AF37]/20 shadow-[0_0_120px_rgba(212,175,55,0.12)]">
+
+            <span className="absolute -inset-3 border border-[#D4AF37]/10 pointer-events-none" />
+
+            <Image
+              src="/perfume-poster.jpg"
+              alt="Anamyst attar bottle with gold cap"
+              fill
+              sizes="(max-width: 1024px) 90vw, 448px"
+              className="object-cover"
+            />
+
+          </div>
+
+          <div>
+
+            <div className="reveal">
+
+              <SectionLabel>The Craft</SectionLabel>
+
+              <h2 className="text-4xl md:text-6xl font-light tracking-tight mb-12">
+
+                A Scent Unfolds In <span className="accent">Three Acts</span>
+
+              </h2>
+
+            </div>
+
+            <div className="relative border-l border-[#D4AF37]/20">
+
+              {/* gold line that draws itself down the three stages */}
+              <span className="reveal act-fill absolute -left-px top-0 w-px h-full bg-[#D4AF37] origin-top" />
+
+              {SCENT_LAYERS.map((layer, i) => (
+
+                <div
+                  key={layer.name}
+                  className="reveal relative pl-8 pb-10 last:pb-0"
+                  style={{ "--d": `${i * 220}ms` }}
+                >
+
+                  <span className="absolute -left-[4px] top-2 w-2 h-2 rotate-45 bg-[#D4AF37]" />
+
+                  <p className="uppercase tracking-[0.3em] text-[11px] text-[#D4AF37] mb-2">
+
+                    {layer.name}
+
+                  </p>
+
+                  <h3 className="text-2xl font-light mb-2">
+
+                    {layer.title}
+
+                  </h3>
+
+                  <p className="text-white/60 font-light leading-relaxed">
+
+                    {layer.desc}
+
+                  </p>
 
                 </div>
 
@@ -585,7 +666,65 @@ export default async function Home() {
 
           </div>
 
-        </section>
+        </div>
+
+      </section>
+
+      {/* THE ANAMYST EXPERIENCE */}
+      <section className="px-6 lg:px-10 py-24 lg:py-32 border-t border-white/10">
+
+        <div className="max-w-7xl mx-auto">
+
+          <div className="reveal mb-14">
+
+            <SectionLabel>Why Choose Us</SectionLabel>
+
+            <h2 className="text-4xl md:text-6xl font-light tracking-tight">
+
+              The ANAMYST <span className="accent">Experience</span>
+
+            </h2>
+
+          </div>
+
+          {/* gap-px over a tinted grid draws the hairlines between cells */}
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-px bg-white/10 border border-white/10">
+
+            {EXPERIENCE.map((item, i) => (
+
+              <div
+                key={item.title}
+                className="reveal spotlight bg-black hover:bg-[#0d0b05] transition-colors duration-500 p-8 lg:p-10"
+                style={{ "--d": `${i * 90}ms` }}
+              >
+
+                <p className="text-[#D4AF37] text-[11px] tracking-[0.3em] mb-10">
+
+                  0{i + 1}
+
+                </p>
+
+                <h3 className="text-2xl font-light mb-4">
+
+                  {item.title}
+
+                </h3>
+
+                <p className="text-white/60 font-light leading-relaxed">
+
+                  {item.desc}
+
+                </p>
+
+              </div>
+
+            ))}
+
+          </div>
+
+        </div>
+
+      </section>
 
       {/* Tells Google the site's name, including the spellings people use */}
       <script
@@ -603,17 +742,17 @@ export default async function Home() {
       />
 
       {/* WHAT IS ANAMYST — real text, because the logo is a drawing */}
-      <section className="px-6 py-20 border-t border-white/10">
+      <section className="px-6 py-24 border-t border-white/10">
 
-        <div className="max-w-3xl mx-auto text-center">
+        <div className="reveal max-w-3xl mx-auto text-center">
 
-          <h2 className="text-3xl md:text-4xl font-bold mb-6">
+          <h2 className="text-3xl md:text-4xl font-light mb-6">
 
             What is Anamyst?
 
           </h2>
 
-          <p className="text-gray-400 text-lg leading-9">
+          <p className="text-white/60 text-lg font-light leading-9">
 
             Anamyst is an Indian luxury fragrance brand based in Lucknow,
             Uttar Pradesh. Anamyst creates long-lasting perfumes, attars,
@@ -628,6 +767,48 @@ export default async function Home() {
       <LatestNotices />
 
       <Testimonials />
+
+      {/* CLOSING */}
+      <section className="closing-glow px-6 py-20 lg:py-28 border-t border-white/10 text-center">
+
+        <div className="reveal max-w-3xl mx-auto">
+
+          {/* small gold ornament */}
+          <div
+            aria-hidden="true"
+            className="flex items-center justify-center gap-4 mb-8"
+          >
+
+            <span className="w-16 h-px bg-gradient-to-r from-transparent to-[#D4AF37]" />
+
+            <span className="w-1.5 h-1.5 rotate-45 bg-[#D4AF37]" />
+
+            <span className="w-16 h-px bg-gradient-to-l from-transparent to-[#D4AF37]" />
+
+          </div>
+
+          <h2 className="text-5xl md:text-7xl font-light tracking-tight mb-6">
+
+            Crafted For <span className="accent">Presence</span>
+
+          </h2>
+
+          <p className="text-white/60 text-lg font-light leading-8 mb-10">
+
+            ANAMYST blends sophistication, elegance, and timeless fragrance artistry into every bottle.
+
+          </p>
+
+          <Link
+            href="/shop"
+            className="btn-gold inline-block bg-[#D4AF37] hover:bg-[#e6c34a] text-black px-10 py-4 text-sm uppercase tracking-[0.2em] font-medium transition-colors duration-300"
+          >
+            Explore All Collections
+          </Link>
+
+        </div>
+
+      </section>
 
     </main>
 

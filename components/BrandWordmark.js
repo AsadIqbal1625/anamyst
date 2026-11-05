@@ -3,6 +3,7 @@
    bottom of the viewBox on purpose: the SVG clips them to clean flat ends.
 
    Size it with height classes, e.g. className="h-8 w-auto".
+   Pass draw to have the letters write themselves in on page load.
    The hidden text keeps the brand name readable to search engines and
    screen readers. */
 
@@ -22,6 +23,7 @@ const LETTERS = [
 export default function BrandWordmark({
   className = "",
   strokeWidth = 7,
+  draw = false,
 }) {
   return (
     <>
@@ -37,13 +39,17 @@ export default function BrandWordmark({
         strokeLinecap="square"
         strokeLinejoin="miter"
         strokeMiterlimit="10"
-        className={className}
+        className={`${className} ${draw ? "wordmark-draw" : ""}`}
       >
         {LETTERS.map((letter, i) => (
           <path
             key={i}
             d={letter.d}
             transform={`translate(${letter.x} 0)`}
+            {...(draw && {
+              pathLength: 1,
+              style: { "--i": i },
+            })}
           />
         ))}
       </svg>
