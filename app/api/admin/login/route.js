@@ -1,10 +1,20 @@
-import crypto from "crypto";
 import { NextResponse } from "next/server";
 import { createAdminToken } from "../../../../lib/adminToken";
 import { connectDB } from "../../../../lib/mongodb";
+import { safeEqual } from "../../../../lib/safeEqual";
 import LoginAttempt from "../../../../models/LoginAttempt";
 
 const MAX_ATTEMPTS = 5; // per 15 min (TTL on the model)
+
+function lockedOut() {
+  return NextResponse.json(
+    {
+      success: false,
+      error: "Too many failed attempts. Try again in 15 minutes.",
+    },
+    { status: 429 }
+  );
+}
 
 export async function POST(req) {
   try {
@@ -20,13 +30,7 @@ export async function POST(req) {
     const failures = await LoginAttempt.countDocuments({ key: ip });
 
     if (failures >= MAX_ATTEMPTS) {
-      return NextResponse.json(
-        {
-          success: false,
-          error: "Too many failed attempts. Try again in 15 minutes.",
-        },
-        { status: 429 }
-      );
+      return lockedOut();
     }
 
     const adminEmail = process.env.ADMIN_EMAIL;
@@ -41,20 +45,20 @@ export async function POST(req) {
       });
     }
 
-    /* constant-time compare so response timing can't leak how much of
-       the email/password was right */
-    const same = (a, b) => {
-      const x = Buffer.from(String(a ?? ""));
-      const y = Buffer.from(String(b ?? ""));
-      return x.length === y.length && crypto.timingSafeEqual(x, y);
-    };
+    /* count this attempt BEFORE testing the password. If it were recorded
+       only after a failure, a burst of parallel guesses would all pass
+       the check above and the lockout would never apply to them. */
+    await LoginAttempt.create({ key: ip });
+
+    if ((await LoginAttempt.countDocuments({ key: ip })) > MAX_ATTEMPTS) {
+      return lockedOut();
+    }
 
     const credsOk =
-      same(email, adminEmail) & same(password, adminPassword);
+      safeEqual(email, adminEmail) & safeEqual(password, adminPassword);
 
     if (!credsOk) {
-      /* record failure + slow down brute-force attempts */
-      await LoginAttempt.create({ key: ip }).catch(() => {});
+      /* slow down brute-force attempts */
       await new Promise((r) => setTimeout(r, 800));
 
       return NextResponse.json(

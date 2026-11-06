@@ -1,6 +1,9 @@
 import crypto
 from "crypto";
 
+import { safeEqual }
+from "../../../lib/safeEqual";
+
 export async function POST(req) {
 
   try {
@@ -42,8 +45,10 @@ export async function POST(req) {
 
     const isAuthentic =
 
-      generatedSignature ===
-      razorpay_signature;
+      safeEqual(
+        generatedSignature,
+        razorpay_signature
+      );
 
     return Response.json({
 
