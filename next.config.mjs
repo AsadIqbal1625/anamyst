@@ -27,8 +27,12 @@ const nextConfig = {
     remotePatterns: [
 
       {
+        /* this store's own Cloudinary account only, so nobody can run
+           other people's images through our image optimizer. Keep in
+           step with hasUsableImage in lib/cart.js. */
         protocol: "https",
         hostname: "res.cloudinary.com",
+        pathname: "/dtmunbdlt/**",
       },
 
     ],
