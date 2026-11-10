@@ -115,7 +115,11 @@ export default async function ProductPage({ params }) {
       url: `https://www.anamyst.com/product/${id}`,
       priceCurrency: "INR",
       price: String(product.price),
-      availability: "https://schema.org/InStock",
+      /* tell Google the truth, so sold-out items aren't shown as buyable */
+      availability:
+        typeof product.stock === "number" && product.stock <= 0
+          ? "https://schema.org/OutOfStock"
+          : "https://schema.org/InStock",
       itemCondition: "https://schema.org/NewCondition",
     },
   };
