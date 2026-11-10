@@ -21,6 +21,7 @@ export default function ProductClient({
   productId,
   initialProduct = null,
   initialRelated = [],
+  reviewsSection = null,
 }) {
 
   const [product, setProduct] =
@@ -331,32 +332,55 @@ export default function ProductClient({
             {/* RATING */}
             <div className="flex items-center justify-between flex-wrap gap-2 mb-4">
 
-              <div className="flex items-center gap-3">
+              {/* jumps to the reviews section below */}
+              {product.reviews > 0 ? (
 
-                <span className="text-[#D4AF37] text-lg">
+                <a href="#reviews" className="flex items-center gap-3">
 
-                  ★★★★★
+                  <span className="text-[#D4AF37] text-lg">
+
+                    {"★".repeat(Math.round(product.rating))}
+                    {"☆".repeat(5 - Math.round(product.rating))}
+
+                  </span>
+
+                  <span className="text-gray-400 text-sm">
+
+                    {product.rating} ({product.reviews}{" "}
+                    {product.reviews === 1 ? "review" : "reviews"})
+
+                  </span>
+
+                </a>
+
+              ) : (
+
+                <a
+                  href="#reviews"
+                  className="text-gray-400 text-sm hover:text-[#D4AF37] transition"
+                >
+                  No reviews yet
+                </a>
+
+              )}
+
+              {typeof product.stock === "number" && product.stock <= 0 ? (
+
+                <span className="text-red-400 font-semibold">
+
+                  Out of Stock
 
                 </span>
 
-                <span className="text-gray-400 text-sm">
+              ) : (
 
-                  {product.rating}
-                  {" "}
-                  (
-                  {product.reviews}
-                  {" "}
-                  reviews)
+                <span className="text-green-400 font-semibold">
+
+                  In Stock
 
                 </span>
 
-              </div>
-
-              <span className="text-green-400 font-semibold">
-
-                In Stock
-
-              </span>
+              )}
 
             </div>
 
@@ -568,6 +592,8 @@ export default function ProductClient({
         </div>
 
       </section>
+
+      {reviewsSection}
 
       {/* RELATED PRODUCTS */}
       <section className="px-6 py-20">

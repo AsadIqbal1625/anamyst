@@ -1,6 +1,9 @@
 import { connectDB } from "../../../lib/mongodb";
 import Product from "../../../models/Product";
 import ProductClient from "./ProductClient";
+import ProductReviews from "./ProductReviews";
+import Review from "../../../models/Review";
+import { getReviewStats } from "../../../lib/reviews";
 import mongoose from "mongoose";
 import { notFound } from "next/navigation";
 
@@ -94,7 +97,17 @@ export default async function ProductPage({ params }) {
     notFound();
   }
 
-  const relatedProducts = await getRelatedProducts(product);
+  const [relatedProducts, reviewStats, approvedReviews] = await Promise.all([
+    getRelatedProducts(product),
+    getReviewStats(id),
+    Review.find(
+      { productId: id, status: "approved" },
+      "name rating text createdAt"
+    )
+      .sort({ createdAt: -1 })
+      .limit(30)
+      .lean(),
+  ]);
 
   // Serialize ObjectIds / Dates for the client component
   const productData = JSON.parse(JSON.stringify(product));
@@ -123,6 +136,32 @@ export default async function ProductPage({ params }) {
       itemCondition: "https://schema.org/NewCondition",
     },
   };
+  /* stars in Google results, only ever from real, approved reviews */
+  if (reviewStats.count > 0) {
+
+    productSchema.aggregateRating = {
+      "@type": "AggregateRating",
+      ratingValue: reviewStats.average,
+      reviewCount: reviewStats.count,
+      bestRating: 5,
+      worstRating: 1,
+    };
+
+    productSchema.review = approvedReviews.slice(0, 5).map((r) => ({
+      "@type": "Review",
+      author: { "@type": "Person", name: r.name },
+      datePublished: new Date(r.createdAt).toISOString().slice(0, 10),
+      reviewBody: r.text,
+      reviewRating: {
+        "@type": "Rating",
+        ratingValue: r.rating,
+        bestRating: 5,
+        worstRating: 1,
+      },
+    }));
+
+  }
+
   const breadcrumbSchema = {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
@@ -173,6 +212,12 @@ export default async function ProductPage({ params }) {
         productId={id}
         initialProduct={productData}
         initialRelated={relatedData}
+        reviewsSection={
+          <ProductReviews
+            reviews={JSON.parse(JSON.stringify(approvedReviews))}
+            stats={reviewStats}
+          />
+        }
       />
     </>
   );

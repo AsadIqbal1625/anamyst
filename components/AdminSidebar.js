@@ -51,6 +51,11 @@ const menus = [
     icon: "💬",
   },
   {
+    title: "Reviews",
+    href: "/admin/reviews",
+    icon: "⭐",
+  },
+  {
     title: "Notices",
     href: "/admin/notices",
     icon: "📰",

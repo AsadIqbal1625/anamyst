@@ -81,33 +81,42 @@ export default function ProductCard({ product, priority = false }) {
 
           )}
 
-          {/* RATING */}
-          <div className="flex items-center gap-1 mt-3">
+          {/* RATING — only once real reviews exist; the empty row keeps
+              cards in a grid lined up */}
+          {product.reviews > 0 ? (
 
-            {[1, 2, 3, 4, 5].map((star) => (
+            <div className="flex items-center gap-1 mt-3 h-5">
 
-              <span
-                key={star}
-                className={`text-sm ${
-                  star <= product.rating
-                    ? "text-[#D4AF37]"
-                    : "text-gray-700"
-                }`}
-              >
+              {[1, 2, 3, 4, 5].map((star) => (
 
-                ★
+                <span
+                  key={star}
+                  className={`text-sm ${
+                    star <= Math.round(product.rating)
+                      ? "text-[#D4AF37]"
+                      : "text-gray-700"
+                  }`}
+                >
+
+                  ★
+
+                </span>
+
+              ))}
+
+              <span className="text-gray-500 text-xs ml-2">
+
+                ({product.reviews})
 
               </span>
 
-            ))}
+            </div>
 
-            <span className="text-gray-500 text-xs ml-2">
+          ) : (
 
-              ({product.reviews || 0})
+            <div className="mt-3 h-5" />
 
-            </span>
-
-          </div>
+          )}
 
           {/* PRICE + BUTTON (pinned to bottom) */}
           <div className="mt-auto pt-4">
