@@ -124,6 +124,17 @@ const OrderSchema =
         default: "",
       },
 
+      /* outcome of the confirmation email: "sent", "failed" or "" (not tried) */
+      emailStatus: {
+        type: String,
+        default: "",
+      },
+
+      emailError: {
+        type: String,
+        default: "",
+      },
+
       notifyEmail: {
         type: Boolean,
         default: true,

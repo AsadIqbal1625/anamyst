@@ -551,6 +551,15 @@ export default function OrdersPage() {
 
               )}
 
+              {/* CONFIRMATION EMAIL DID NOT GO OUT */}
+              {order.emailStatus === "failed" && (
+
+                <div className="mt-5 bg-yellow-500/10 border border-yellow-500/40 rounded-xl px-4 py-3 text-sm text-yellow-300">
+                  ✉ Confirmation email was not sent: {order.emailError || "unknown reason"}
+                </div>
+
+              )}
+
               {/* EDIT FORM */}
               {editingId === order._id && (
 
