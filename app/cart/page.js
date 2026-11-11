@@ -542,6 +542,7 @@ export default function CartPage() {
                       tiers={settings.discountTiers}
                       total={total}
                       size="sm"
+                      withMessage
                     />
 
                   </div>

@@ -8,6 +8,8 @@ import {
 
 import Image from "next/image";
 
+import Link from "next/link";
+
 import Script from "next/script";
 
 import { useRouter }
@@ -18,7 +20,11 @@ import {
   clearCart,
 } from "../../lib/cart";
 
-import { getOrderTotals } from "../../lib/pricing";
+import {
+  getOrderTotals,
+  getPricingBenefits,
+  describeTierReward,
+} from "../../lib/pricing";
 
 import { getSessionId } from "../../lib/track";
 
@@ -219,6 +225,21 @@ export default function CheckoutPage() {
   const [applying,
     setApplying] =
     useState(false);
+
+  /* which "spend more, save more" offers this cart has reached, and
+     the next one within reach (same rules as the bar under the navbar) */
+  const tierOffer = getPricingBenefits(total, settings.discountTiers);
+
+  const amountToNextTier = tierOffer.nextTier
+    ? Math.max(Math.ceil(tierOffer.nextTier.minAmount - total), 0)
+    : 0;
+
+  const unlockedReward = [
+    tierOffer.freeShipping && "Free Shipping",
+    tierOffer.discountPercent > 0 && `${tierOffer.discountPercent}% OFF`,
+  ]
+    .filter(Boolean)
+    .join(" + ");
 
   /* FULL BREAKDOWN — one shared calculation, also run server-side on
      the order API so the shown price always matches what is charged */
@@ -1067,8 +1088,56 @@ export default function CheckoutPage() {
 
               </div>
 
-              {/* PAYMENT */}
+              {/* SPEND A LITTLE MORE, SAVE MORE — hidden while a coupon is
+                  applied, because a coupon replaces these offers */}
+              {!appliedCoupon && tierOffer.nextTier && (
 
+                <div className="mt-6 border border-gold/40 bg-gold/10 rounded-2xl px-4 py-4">
+
+                  <p className="text-sm font-semibold text-gold">
+                    ✦ Add ₹{amountToNextTier} more to unlock{" "}
+                    {describeTierReward(tierOffer.nextTier)}
+                  </p>
+
+                  {/* how close the cart is */}
+                  <div className="mt-3 h-1.5 rounded-full bg-white/10 overflow-hidden">
+                    <div
+                      className="h-full rounded-full bg-gold transition-[width] duration-500"
+                      style={{
+                        width: `${Math.min(
+                          (total / tierOffer.nextTier.minAmount) * 100,
+                          100
+                        )}%`,
+                      }}
+                    />
+                  </div>
+
+                  {unlockedReward && (
+                    <p className="mt-3 text-xs text-green-400">
+                      ✓ Already unlocked: {unlockedReward}
+                    </p>
+                  )}
+
+                  <Link
+                    href="/shop"
+                    className="inline-block mt-3 text-xs uppercase tracking-[0.15em] text-white/70 hover:text-gold underline underline-offset-4 transition-colors"
+                  >
+                    Add more fragrances →
+                  </Link>
+
+                </div>
+
+              )}
+
+              {!appliedCoupon && !tierOffer.nextTier && unlockedReward && (
+
+                <div className="mt-6 border border-green-500/40 bg-green-500/10 rounded-2xl px-4 py-3 text-sm font-semibold text-green-400">
+                  🎉 You&apos;ve unlocked {unlockedReward}
+                </div>
+
+              )}
+
+              {/* PAYMENT */}
               <div className="mt-10">
 
                 <h3 className="text-xl font-bold mb-4">

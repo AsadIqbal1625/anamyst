@@ -1,89 +1,136 @@
 "use client";
 
-import { getTierSteps, describeTierReward } from "../lib/pricing";
+import {
+  getTierSteps,
+  getPricingBenefits,
+  describeTierReward,
+} from "../lib/pricing";
 
-/* MULTI-STEP "SPEND MORE, SAVE MORE" TRACK
-   Each tier lights up in its own color the moment the cart crosses
-   it, the next unclaimed tier pulses to draw the eye, and everything
-   past it stays dim — so progress reads at a glance. */
+/* "SPEND MORE, SAVE MORE" PROGRESS
+   Brand gold throughout: a gold line fills as the cart grows, reached
+   offers are ticked, the next one is outlined, later ones stay dim.
+
+   withMessage adds the plain-words line above the bar ("Add ₹300 more
+   to unlock Free Shipping"), in the same gold box the checkout uses. */
 
 export default function OccasionTierTrack({
   tiers,
   total,
   size = "lg",
+  withMessage = false,
 }) {
 
   const steps = getTierSteps(total, tiers);
 
   if (steps.length === 0) return null;
 
+  const amount = Number(total) || 0;
+
   const lastMin = Math.max(...steps.map((s) => Number(s.minAmount) || 0));
 
   const fillPercent = lastMin > 0
-    ? Math.min((Number(total) / lastMin) * 100, 100)
+    ? Math.min((amount / lastMin) * 100, 100)
     : 0;
 
   const compact = size === "sm";
 
-  return (
+  const offer = getPricingBenefits(amount, tiers);
 
-    <div className="w-full">
+  const unlockedReward = [
+    offer.freeShipping && "Free Shipping",
+    offer.discountPercent > 0 && `${offer.discountPercent}% OFF`,
+  ]
+    .filter(Boolean)
+    .join(" + ");
 
-      {/* CONNECTING PROGRESS LINE */}
+  const track = (
 
+    <>
+
+      {/* PROGRESS LINE */}
       <div
-        className={`relative w-full ${compact ? "h-1" : "h-1.5"} rounded-full bg-white/10 overflow-hidden`}
+        className={`relative w-full ${compact ? "h-1.5" : "h-1.5"} rounded-full bg-white/10 overflow-hidden`}
       >
 
         <div
-          className="h-full rounded-full transition-all duration-700 ease-out"
-          style={{
-            width: `${fillPercent}%`,
-            background: "linear-gradient(90deg, #D4AF37, #FF9635, #FF5C7A, #22C55E)",
-          }}
+          className="h-full rounded-full bg-gold transition-[width] duration-700 ease-out"
+          style={{ width: `${fillPercent}%` }}
         />
 
       </div>
 
-      {/* STEP CHIPS */}
+      {/* CHECKPOINTS — only useful when there is more than one offer */}
+      {(steps.length > 1 || !withMessage) && (
 
-      <div
-        className={`flex flex-wrap items-center gap-2 ${compact ? "mt-2" : "mt-4"} justify-center`}
-      >
+        <div
+          className={`flex flex-wrap items-center gap-2 ${compact ? "mt-3" : "mt-4"} ${
+            withMessage ? "justify-start" : "justify-center"
+          }`}
+        >
 
-        {steps.map((step, i) => (
+          {steps.map((step, i) => (
 
-          <div
-            key={i}
-            className={`flex items-center gap-1.5 rounded-full border transition-all duration-300 ${
-              compact ? "px-2.5 py-1 text-[10px]" : "px-4 py-2 text-xs sm:text-sm"
-            } ${
-              step.unlocked
-                ? "font-semibold"
-                : step.isNext
-                ? "font-semibold animate-pulse"
-                : "opacity-50"
-            }`}
-            style={{
-              borderColor: step.unlocked || step.isNext ? step.color : "rgba(255,255,255,0.15)",
-              backgroundColor: step.unlocked
-                ? `${step.color}26`
-                : step.isNext
-                ? `${step.color}14`
-                : "rgba(255,255,255,0.04)",
-              color: step.unlocked || step.isNext ? step.color : "#9ca3af",
-            }}
-          >
+            <div
+              key={i}
+              className={`flex items-center gap-1.5 rounded-full border transition-colors duration-300 ${
+                compact ? "px-2.5 py-1 text-[10px]" : "px-4 py-2 text-xs sm:text-sm"
+              } ${
+                step.unlocked
+                  ? "border-gold bg-gold/15 text-gold font-semibold"
+                  : step.isNext
+                  ? "border-gold/60 text-gold font-semibold"
+                  : "border-white/15 text-white/40"
+              }`}
+            >
 
-            <span>{step.unlocked ? "✓" : "₹" + step.minAmount}</span>
+              <span>{step.unlocked ? "✓" : "₹" + step.minAmount}</span>
 
-            <span>{describeTierReward(step)}</span>
+              <span>{describeTierReward(step)}</span>
 
-          </div>
+            </div>
 
-        ))}
+          ))}
 
-      </div>
+        </div>
+
+      )}
+
+    </>
+
+  );
+
+  if (!withMessage) {
+
+    return <div className="w-full">{track}</div>;
+
+  }
+
+  return (
+
+    <div className="w-full border border-gold/40 bg-gold/10 rounded-2xl px-4 py-4">
+
+      <p className="text-sm font-semibold text-gold mb-3">
+
+        {offer.nextTier ? (
+          <>
+            ✦ Add ₹{Math.max(Math.ceil(offer.nextTier.minAmount - amount), 0)}{" "}
+            more to unlock {describeTierReward(offer.nextTier)}
+          </>
+        ) : (
+          <>🎉 You&apos;ve unlocked {unlockedReward || "every offer"}</>
+        )}
+
+      </p>
+
+      {track}
+
+      {offer.nextTier && unlockedReward && (
+
+        <p className="mt-3 text-xs text-green-400">
+          ✓ Already unlocked: {unlockedReward}
+        </p>
+
+      )}
 
     </div>
 
