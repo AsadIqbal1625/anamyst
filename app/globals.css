@@ -552,3 +552,8 @@ select:-webkit-autofill {
     linear-gradient(rgba(140, 106, 18, 0.12) 1px, transparent 1px),
     linear-gradient(90deg, rgba(140, 106, 18, 0.12) 1px, transparent 1px);
 }
+
+/* admin "Recovery rate" stat: deeper sky blue on ivory */
+:root[data-theme="light"] {
+  --color-sky-400: oklch(58.8% 0.158 241.966);
+}

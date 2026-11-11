@@ -1,6 +1,7 @@
 "use client";
 
 import { usePathname } from "next/navigation";
+import ThemeToggle from "./ThemeToggle";
 
 export default function AdminTopbar({ onMenuClick = () => {} }) {
 
@@ -46,7 +47,12 @@ export default function AdminTopbar({ onMenuClick = () => {} }) {
 
       </div>
 
-      <div className="flex items-center gap-5" />
+      <div className="flex items-center gap-5">
+
+        {/* DARK / LIGHT SWITCH (shared with the store) */}
+        <ThemeToggle />
+
+      </div>
 
     </header>
 

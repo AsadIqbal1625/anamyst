@@ -75,22 +75,22 @@ export default function AbandonedPage() {
             {
               label: "Open carts",
               value: stats.openCount,
-              accent: "#D4AF37",
+              accent: "var(--color-gold)",
             },
             {
               label: "Value at risk",
               value: `₹${stats.openValue}`,
-              accent: "#eab308",
+              accent: "var(--color-yellow-400)",
             },
             {
               label: "Contactable",
               value: `${stats.contactableCount} · ₹${stats.contactableValue}`,
-              accent: "#22c55e",
+              accent: "var(--color-green-400)",
             },
             {
               label: "Recovery rate",
               value: `${stats.recoveryRate}%`,
-              accent: "#38bdf8",
+              accent: "var(--color-sky-400, #38bdf8)",
             },
           ].map((s) => (
             <div

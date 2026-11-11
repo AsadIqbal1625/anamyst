@@ -89,7 +89,7 @@ export default function AdminLogin() {
 
   return (
 
-    <div className="theme-dark min-h-screen bg-black text-white flex items-center justify-center px-4">
+    <div className="min-h-screen bg-black text-white flex items-center justify-center px-4">
 
       <div className="w-full max-w-md bg-white/5 border border-white/10 rounded-[32px] p-8">
 

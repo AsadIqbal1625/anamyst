@@ -325,10 +325,10 @@ export default function OrdersPage() {
 
         {[
 
-          { label: "Total Orders", value: orders.length, key: "All", accent: "#D4AF37" },
-          { label: "Pending", value: orders.filter((o) => o.orderStatus === "Pending").length, key: "Pending", accent: "#eab308" },
-          { label: "Delivered", value: orders.filter((o) => o.orderStatus === "Delivered").length, key: "Delivered", accent: "#22c55e" },
-          { label: "Cancelled", value: orders.filter((o) => o.orderStatus === "Cancelled").length, key: "Cancelled", accent: "#ef4444" },
+          { label: "Total Orders", value: orders.length, key: "All", accent: "var(--color-gold)" },
+          { label: "Pending", value: orders.filter((o) => o.orderStatus === "Pending").length, key: "Pending", accent: "var(--color-yellow-400)" },
+          { label: "Delivered", value: orders.filter((o) => o.orderStatus === "Delivered").length, key: "Delivered", accent: "var(--color-green-400)" },
+          { label: "Cancelled", value: orders.filter((o) => o.orderStatus === "Cancelled").length, key: "Cancelled", accent: "var(--color-red-400)" },
 
         ].map((stat) => (
 
