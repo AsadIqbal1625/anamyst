@@ -557,3 +557,137 @@ select:-webkit-autofill {
 :root[data-theme="light"] {
   --color-sky-400: oklch(58.8% 0.158 241.966);
 }
+
+/* ===== FESTIVE BANNER ===== */
+
+/* four-point gold star */
+.festive-spark {
+  position: absolute;
+  background: var(--color-gold);
+  clip-path: polygon(50% 0, 62% 38%, 100% 50%, 62% 62%, 50% 100%, 38% 62%, 0 50%, 38% 38%);
+  opacity: 0.45;
+  pointer-events: none;
+}
+
+.festive-sweep {
+  opacity: 0;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+
+  .festive-spark {
+    opacity: 0;
+    animation: festive-twinkle 3.4s ease-in-out infinite;
+    animation-delay: var(--d, 0s);
+  }
+
+  @keyframes festive-twinkle {
+    0%, 100% {
+      opacity: 0;
+      transform: scale(0.4) rotate(0deg);
+    }
+    50% {
+      opacity: 0.9;
+      transform: scale(1) rotate(45deg);
+    }
+  }
+
+  /* light travelling along the top edge of the frame */
+  .festive-sweep {
+    animation: festive-sweep 5s ease-in-out infinite;
+  }
+
+  @keyframes festive-sweep {
+    0% {
+      opacity: 0;
+      transform: translateX(-100%);
+    }
+    15% {
+      opacity: 1;
+    }
+    85% {
+      opacity: 1;
+    }
+    100% {
+      opacity: 0;
+      transform: translateX(300%);
+    }
+  }
+
+  /* the gold of the title slowly shifts, like light on metal */
+  .accent-shimmer {
+    background-size: 200% auto;
+    animation: accent-shimmer 7s linear infinite;
+  }
+
+  @keyframes accent-shimmer {
+    to {
+      background-position: 200% center;
+    }
+  }
+}
+
+/* warm out-of-focus lights behind the festive banner */
+.festive-light {
+  position: absolute;
+  border-radius: 9999px;
+  background: radial-gradient(circle, rgba(255, 196, 92, 0.45), rgba(212, 175, 55, 0) 70%);
+  opacity: 0.55;
+  pointer-events: none;
+}
+
+/* the reward ticket: semicircle notches cut from both sides */
+.festive-ticket {
+  -webkit-mask:
+    radial-gradient(circle 10px at 0 50%, transparent 97%, #000) left / 51% 100% no-repeat,
+    radial-gradient(circle 10px at 100% 50%, transparent 97%, #000) right / 51% 100% no-repeat;
+  mask:
+    radial-gradient(circle 10px at 0 50%, transparent 97%, #000) left / 51% 100% no-repeat,
+    radial-gradient(circle 10px at 100% 50%, transparent 97%, #000) right / 51% 100% no-repeat;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+
+  .festive-light {
+    animation: festive-float 9s ease-in-out infinite alternate;
+    animation-delay: var(--d, 0s);
+  }
+
+  @keyframes festive-float {
+    from {
+      transform: translateY(0) scale(1);
+      opacity: 0.35;
+    }
+    to {
+      transform: translateY(-28px) scale(1.12);
+      opacity: 0.7;
+    }
+  }
+
+  .festive-spin {
+    animation: festive-spin 40s linear infinite;
+  }
+
+  @keyframes festive-spin {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+}
+
+/* the ticket's own brushed-gold finish (the button style would also
+   change its position, which broke the layout) */
+.festive-ticket {
+  background-image: linear-gradient(
+    110deg,
+    #c19b2e 0%,
+    #e6c34a 45%,
+    #d4af37 70%,
+    #c19b2e 100%
+  );
+}
+
+/* ticket text: dark ink on gold in both themes */
+.festive-ticket {
+  color: #1a1408;
+}

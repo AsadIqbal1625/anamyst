@@ -18,6 +18,8 @@ export default function OccasionTierTrack({
   total,
   size = "lg",
   withMessage = false,
+  /* "start": centred on phones, left-aligned on desktop */
+  align = "center",
 }) {
 
   const steps = getTierSteps(total, tiers);
@@ -64,7 +66,11 @@ export default function OccasionTierTrack({
 
         <div
           className={`flex flex-wrap items-center gap-2 ${compact ? "mt-3" : "mt-4"} ${
-            withMessage ? "justify-start" : "justify-center"
+            withMessage
+              ? "justify-start"
+              : align === "start"
+              ? "justify-center lg:justify-start"
+              : "justify-center"
           }`}
         >
 
