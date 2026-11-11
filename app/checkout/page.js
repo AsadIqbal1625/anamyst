@@ -839,7 +839,7 @@ export default function CheckoutPage() {
 
           <div className="max-w-6xl mx-auto text-center">
 
-            <p className="uppercase tracking-[5px] text-[#D4AF37] text-xs mb-4">
+            <p className="uppercase tracking-[5px] text-gold text-xs mb-4">
 
               ANAMYST Checkout
 
@@ -865,7 +865,7 @@ export default function CheckoutPage() {
 
         <section className="px-4 md:px-6 pb-16">
 
-          <div className="max-w-7xl mx-auto bg-[#0B0B0B] rounded-[32px] overflow-hidden grid lg:grid-cols-3">
+          <div className="max-w-7xl mx-auto bg-surface-deep rounded-[32px] overflow-hidden grid lg:grid-cols-3">
 
             {/* LEFT */}
 
@@ -931,7 +931,7 @@ export default function CheckoutPage() {
                     onChange={
                       handleChange
                     }
-                    className="bg-black border border-white/10 rounded-2xl px-5 py-3 outline-none focus:border-[#D4AF37] transition"
+                    className="bg-black border border-white/10 rounded-2xl px-5 py-3 outline-none focus:border-gold transition"
                   />
 
                 ))}
@@ -944,7 +944,7 @@ export default function CheckoutPage() {
                 value={form.address}
                 onChange={handleChange}
                 rows={5}
-                className="w-full mt-5 bg-black border border-white/10 rounded-2xl px-5 py-3 outline-none focus:border-[#D4AF37]"
+                className="w-full mt-5 bg-black border border-white/10 rounded-2xl px-5 py-3 outline-none focus:border-gold"
               />
 
               {/* NOTIFICATION PREFERENCES */}
@@ -966,7 +966,7 @@ export default function CheckoutPage() {
                       onChange={(e) =>
                         setNotifyEmail(e.target.checked)
                       }
-                      className="w-5 h-5 accent-[#D4AF37]"
+                      className="w-5 h-5 accent-gold"
                     />
 
                     <span>Notify by Email</span>
@@ -981,7 +981,7 @@ export default function CheckoutPage() {
                       onChange={(e) =>
                         setNotifyWhatsapp(e.target.checked)
                       }
-                      className="w-5 h-5 accent-[#D4AF37]"
+                      className="w-5 h-5 accent-gold"
                     />
 
                     <span>Notify by WhatsApp</span>
@@ -1017,7 +1017,7 @@ export default function CheckoutPage() {
                       className="flex gap-4"
                     >
 
-                      <div className="relative w-[72px] h-[72px] bg-[#111] rounded-2xl overflow-hidden shrink-0">
+                      <div className="relative w-[72px] h-[72px] bg-surface rounded-2xl overflow-hidden shrink-0">
 
                         <Image
                           src={item.image}
@@ -1046,7 +1046,7 @@ export default function CheckoutPage() {
 
                         </p>
 
-                        <p className="text-[#D4AF37] font-bold mt-1">
+                        <p className="text-gold font-bold mt-1">
 
                           ₹
                           {Number(
@@ -1123,7 +1123,7 @@ export default function CheckoutPage() {
                         paymentMethod ===
                         method.id
 
-                          ? "border-[#D4AF37] bg-[#D4AF37]/10"
+                          ? "border-gold bg-gold/10"
 
                           : "border-white/10 bg-black"
                       }`}
@@ -1153,7 +1153,7 @@ export default function CheckoutPage() {
 
               <div className="mt-8">
 
-                <p className="uppercase tracking-[3px] text-[#D4AF37] text-[10px] mb-3">
+                <p className="uppercase tracking-[3px] text-gold text-[10px] mb-3">
 
                   Have a coupon?
 
@@ -1161,11 +1161,11 @@ export default function CheckoutPage() {
 
                 {appliedCoupon ? (
 
-                  <div className="flex items-center justify-between bg-[#D4AF37]/10 border border-[#D4AF37]/40 rounded-2xl px-4 py-3">
+                  <div className="flex items-center justify-between bg-gold/10 border border-gold/40 rounded-2xl px-4 py-3">
 
                     <div>
 
-                      <p className="text-[#D4AF37] font-semibold text-sm">
+                      <p className="text-gold font-semibold text-sm">
 
                         {appliedCoupon.code} applied
 
@@ -1210,14 +1210,14 @@ export default function CheckoutPage() {
                         )
                       }
                       placeholder="Enter code"
-                      className="flex-1 bg-black border border-white/10 rounded-2xl px-4 py-3 text-sm outline-none focus:border-[#D4AF37] transition uppercase"
+                      className="flex-1 bg-black border border-white/10 rounded-2xl px-4 py-3 text-sm outline-none focus:border-gold transition uppercase"
                     />
 
                     <button
                       type="button"
                       onClick={applyCoupon}
                       disabled={applying}
-                      className="px-5 py-3 rounded-2xl border border-[#D4AF37]/50 text-[#D4AF37] text-sm font-semibold hover:bg-[#D4AF37] hover:text-black transition disabled:opacity-50"
+                      className="px-5 py-3 rounded-2xl border border-gold/50 text-gold text-sm font-semibold hover:bg-gold hover:text-black transition disabled:opacity-50"
                     >
 
                       {applying
@@ -1337,7 +1337,7 @@ export default function CheckoutPage() {
 
                   </span>
 
-                  <span className="text-3xl font-bold text-[#D4AF37]">
+                  <span className="text-3xl font-bold text-gold">
 
                     ₹{payable}
 
@@ -1348,7 +1348,7 @@ export default function CheckoutPage() {
                 <button
                   onClick={placeOrder}
                   disabled={loading}
-                  className="w-full mt-6 bg-[#D4AF37] text-black py-4 rounded-2xl font-semibold hover:opacity-90 transition"
+                  className="w-full mt-6 bg-gold text-black py-4 rounded-2xl font-semibold hover:opacity-90 transition"
                 >
 
                   {loading

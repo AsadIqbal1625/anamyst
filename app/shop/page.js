@@ -11,7 +11,9 @@ export const metadata = {
   },
 };
 
-export default async function ShopPage() {
+export default async function ShopPage({ searchParams }) {
+
+  const { search } = await searchParams;
   await connectDB();
 
   const products = await Product.find({})
@@ -27,6 +29,7 @@ export default async function ShopPage() {
   return (
     <ShopClient
       initialProducts={serializedProducts}
+      search={String(search || "").trim().toLowerCase()}
     />
   );
 }

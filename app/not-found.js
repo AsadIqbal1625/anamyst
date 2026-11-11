@@ -3,7 +3,7 @@ import Link from "next/link";
 export default function NotFound() {
   return (
     <div className="min-h-screen bg-black text-white flex flex-col items-center justify-center px-6">
-      <h1 className="text-6xl font-bold text-[#D4AF37] mb-6">
+      <h1 className="text-6xl font-bold text-gold mb-6">
         404
       </h1>
 
@@ -17,7 +17,7 @@ export default function NotFound() {
 
       <Link
         href="/"
-        className="bg-[#D4AF37] text-black px-8 py-4 rounded-2xl font-semibold hover:opacity-90 transition"
+        className="bg-gold text-black px-8 py-4 rounded-2xl font-semibold hover:opacity-90 transition"
       >
         Return to Home
       </Link>

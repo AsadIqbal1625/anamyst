@@ -90,7 +90,7 @@ export default function AdminSidebar({ isOpen = false, onClose = () => {} }) {
       )}
 
       <aside
-        className={`w-72 min-h-screen bg-[#111] border-r border-[#D4AF37]/20 flex flex-col
+        className={`w-72 min-h-screen bg-surface border-r border-gold/20 flex flex-col
           fixed inset-y-0 left-0 z-50 transform transition-transform duration-300 overflow-y-auto
           lg:static lg:translate-x-0
           ${isOpen ? "translate-x-0" : "-translate-x-full"}
@@ -105,7 +105,7 @@ export default function AdminSidebar({ isOpen = false, onClose = () => {} }) {
               <BrandWordmark className="h-7 w-auto" />
             </h1>
 
-            <p className="text-[#D4AF37] text-sm mt-2">
+            <p className="text-gold text-sm mt-2">
               Admin Dashboard
             </p>
 
@@ -133,8 +133,8 @@ export default function AdminSidebar({ isOpen = false, onClose = () => {} }) {
 
               ${
                 pathname === menu.href
-                  ? "bg-[#D4AF37] text-black font-semibold"
-                  : "text-gray-300 hover:bg-[#D4AF37]/10 hover:text-white"
+                  ? "bg-gold text-black font-semibold"
+                  : "text-gray-300 hover:bg-gold/10 hover:text-white"
               }
               `}
             >

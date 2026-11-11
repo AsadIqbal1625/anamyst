@@ -22,14 +22,14 @@ export default function ProductReviews({ reviews, stats }) {
 
           <div>
 
-            <p className="uppercase tracking-[0.35em] text-[#D4AF37] text-[11px] mb-4">
+            <p className="uppercase tracking-[0.35em] text-gold text-[11px] mb-4">
               Customer Reviews
             </p>
 
             {stats.count > 0 ? (
 
               <p className="flex items-center gap-3 text-2xl font-light">
-                <span className="text-[#D4AF37]">{stars(stats.average)}</span>
+                <span className="text-gold">{stars(stats.average)}</span>
                 {stats.average.toFixed(1)}
                 <span className="text-white/50 text-base">
                   from {stats.count} {stats.count === 1 ? "review" : "reviews"}
@@ -48,7 +48,7 @@ export default function ProductReviews({ reviews, stats }) {
 
           <Link
             href="/review"
-            className="border border-white/30 hover:border-[#D4AF37] hover:text-[#D4AF37] px-6 py-3 text-xs uppercase tracking-[0.2em] transition-colors"
+            className="border border-white/30 hover:border-gold hover:text-gold px-6 py-3 text-xs uppercase tracking-[0.2em] transition-colors"
           >
             Write a Review
           </Link>
@@ -63,7 +63,7 @@ export default function ProductReviews({ reviews, stats }) {
 
               <article key={String(r._id)} className="py-6">
 
-                <p className="text-[#D4AF37] mb-2" aria-label={`${r.rating} out of 5 stars`}>
+                <p className="text-gold mb-2" aria-label={`${r.rating} out of 5 stars`}>
                   {stars(r.rating)}
                 </p>
 

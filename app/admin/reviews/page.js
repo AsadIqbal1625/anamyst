@@ -85,7 +85,7 @@ export default function ReviewsAdminPage() {
 
       <p className="text-gray-400 text-sm">
         Share this link with customers after delivery:{" "}
-        <span className="text-[#D4AF37] select-all">www.anamyst.com/review</span>
+        <span className="text-gold select-all">www.anamyst.com/review</span>
       </p>
 
       <div className="flex flex-wrap gap-2">
@@ -97,8 +97,8 @@ export default function ReviewsAdminPage() {
             onClick={() => setTab(t.key)}
             className={`px-4 py-2 rounded-xl text-sm border transition ${
               tab === t.key
-                ? "bg-[#D4AF37] text-black border-[#D4AF37]"
-                : "border-white/10 text-gray-300 hover:border-[#D4AF37]/50"
+                ? "bg-gold text-black border-gold"
+                : "border-white/10 text-gray-300 hover:border-gold/50"
             }`}
           >
             {t.label} ({count(t.key)})
@@ -134,7 +134,7 @@ export default function ReviewsAdminPage() {
                 <Link
                   href={`/product/${r.productId}`}
                   target="_blank"
-                  className="font-semibold hover:text-[#D4AF37]"
+                  className="font-semibold hover:text-gold"
                 >
                   {r.productName || "Product"}
                 </Link>
@@ -145,7 +145,7 @@ export default function ReviewsAdminPage() {
 
               </div>
 
-              <p className="text-[#D4AF37] mb-2">
+              <p className="text-gold mb-2">
                 {"★".repeat(r.rating)}
                 <span className="text-gray-600">{"★".repeat(5 - r.rating)}</span>
               </p>

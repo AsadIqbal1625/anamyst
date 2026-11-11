@@ -27,6 +27,7 @@ import Link from "next/link";
 import { Cormorant_Garamond, Jost } from "next/font/google";
 import BrandWordmark from "../components/BrandWordmark";
 import RevealOnScroll from "../components/RevealOnScroll";
+import ScentRail from "../components/ScentRail";
 import SpotlightCards from "../components/SpotlightCards";
 import Testimonials from "../components/Testimonials";
 import LatestNotices from "../components/LatestNotices";
@@ -229,9 +230,9 @@ function SectionLabel({ children }) {
 
   return (
 
-    <p className="flex items-center gap-4 uppercase tracking-[0.35em] text-[#D4AF37] text-[11px] mb-6">
+    <p className="flex items-center gap-4 uppercase tracking-[0.35em] text-gold text-[11px] mb-6">
 
-      <span className="w-8 h-px bg-[#D4AF37]" />
+      <span className="w-8 h-px bg-gold" />
 
       {children}
 
@@ -276,7 +277,7 @@ export default async function Home() {
           One video element for every screen size: full-bleed behind the
           text on phones, a framed panel on desktop. */}
       <section
-        className={`relative isolate flex overflow-hidden ${
+        className={`theme-dark-mobile relative isolate flex overflow-hidden ${
           hasCampaign
             ? "min-h-[62vh] lg:min-h-[74vh]"
             : "min-h-[100dvh] lg:min-h-[92vh]"
@@ -311,13 +312,13 @@ export default async function Home() {
             <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/30 to-black lg:hidden" />
 
             {/* DESKTOP: viewfinder corners and a hairline frame */}
-            <div className="absolute inset-0 border border-[#D4AF37]/20 hidden lg:block" />
+            <div className="absolute inset-0 border border-gold/20 hidden lg:block" />
 
             {["top-0 left-0 border-t border-l", "top-0 right-0 border-t border-r", "bottom-0 left-0 border-b border-l", "bottom-0 right-0 border-b border-r"].map(
               (corner) => (
                 <span
                   key={corner}
-                  className={`absolute w-6 h-6 border-[#D4AF37] hidden lg:block ${corner}`}
+                  className={`absolute w-6 h-6 border-gold hidden lg:block ${corner}`}
                 />
               )
             )}
@@ -327,7 +328,7 @@ export default async function Home() {
           {/* BRAND */}
           <div className="lg:max-w-[50%]">
 
-            <p className="hero-rise uppercase tracking-[0.35em] text-[#D4AF37] text-[11px] lg:text-xs mb-6 lg:mb-8">
+            <p className="hero-rise uppercase tracking-[0.35em] text-gold text-[11px] lg:text-xs mb-6 lg:mb-8">
 
               Luxury Fragrance House
 
@@ -356,7 +357,7 @@ export default async function Home() {
 
               <Link
                 href="/shop"
-                className="btn-gold bg-[#D4AF37] hover:bg-[#e6c34a] text-black px-8 py-4 text-sm uppercase tracking-[0.2em] font-medium transition-colors duration-300"
+                className="btn-gold bg-gold hover:bg-gold-bright text-black px-8 py-4 text-sm uppercase tracking-[0.2em] font-medium transition-colors duration-300"
               >
                 Explore Collection
               </Link>
@@ -365,7 +366,7 @@ export default async function Home() {
 
                 <Link
                   href="#signature"
-                  className="border border-white/30 hover:border-[#D4AF37] hover:text-[#D4AF37] text-white px-8 py-4 text-sm uppercase tracking-[0.2em] transition-colors duration-300"
+                  className="border border-white/30 hover:border-gold hover:text-gold text-white px-8 py-4 text-sm uppercase tracking-[0.2em] transition-colors duration-300"
                 >
                   Signature Scents
                 </Link>
@@ -402,7 +403,7 @@ export default async function Home() {
 
                   {item}
 
-                  <span className="w-1 h-1 rotate-45 bg-[#D4AF37]" />
+                  <span className="w-1 h-1 rotate-45 bg-gold" />
 
                 </span>
 
@@ -442,7 +443,7 @@ export default async function Home() {
                 <Link
                   key={c.href}
                   href={c.href}
-                  className={`reveal spotlight group relative block overflow-hidden h-[420px] lg:h-[520px] border border-white/10 hover:border-[#D4AF37]/50 transition-colors duration-500 ${COLLECTION_SPANS[i]}`}
+                  className={`theme-dark reveal spotlight group relative block overflow-hidden h-[420px] lg:h-[520px] border border-white/10 hover:border-gold/50 transition-colors duration-500 ${COLLECTION_SPANS[i]}`}
                   style={{ "--d": `${(i % 3) * 110}ms` }}
                 >
 
@@ -458,7 +459,7 @@ export default async function Home() {
 
                   <div className="absolute inset-x-0 bottom-0 p-7 lg:p-9">
 
-                    <p className="text-[#D4AF37] text-[11px] tracking-[0.3em] mb-3">
+                    <p className="text-gold text-[11px] tracking-[0.3em] mb-3">
 
                       0{i + 1}
 
@@ -476,7 +477,7 @@ export default async function Home() {
 
                     </p>
 
-                    <span className="uppercase tracking-[0.25em] text-[11px] text-[#D4AF37]">
+                    <span className="uppercase tracking-[0.25em] text-[11px] text-gold">
 
                       Explore →
 
@@ -520,37 +521,40 @@ export default async function Home() {
 
             <Link
               href="/shop"
-              className="uppercase tracking-[0.25em] text-[11px] text-[#D4AF37] hover:text-white transition-colors"
+              className="uppercase tracking-[0.25em] text-[11px] text-gold hover:text-white transition-colors"
             >
               View All →
             </Link>
 
           </div>
 
-          <div className="scent-rail flex gap-4 lg:gap-y-10 overflow-x-auto snap-x snap-mandatory px-6 pb-4 lg:grid lg:grid-cols-4 lg:overflow-visible lg:max-w-7xl lg:mx-auto lg:px-10">
+          {/* phones and tablets: swipe sideways, two cards in full view with a
+              peek of the next; scroll-px keeps the margin after every swipe.
+              desktop: a 4-column grid */}
+          <ScentRail className="scent-rail max-w-7xl mx-auto flex gap-3 sm:gap-4 overflow-x-auto snap-x snap-mandatory scroll-px-6 px-6 pb-2 lg:grid lg:grid-cols-4 lg:overflow-visible lg:px-10 lg:gap-y-10 lg:pb-0">
 
             {featured.map((p, i) => (
 
               <Link
                 key={String(p._id)}
                 href={`/product/${p._id}`}
-                className="reveal group snap-start shrink-0 w-[72vw] sm:w-[320px] lg:w-auto"
+                className="reveal group block snap-start shrink-0 w-[42vw] sm:w-[30vw] lg:w-auto min-w-0"
                 style={{ "--d": `${(i % 4) * 90}ms` }}
               >
 
-                <div className="spotlight relative aspect-[4/5] overflow-hidden border border-white/10 group-hover:border-[#D4AF37]/50 transition-colors duration-500 bg-white/5">
+                <div className="spotlight relative aspect-[4/5] overflow-hidden border border-white/10 group-hover:border-gold/50 transition-colors duration-500 bg-white/5">
 
                   <Image
                     src={p.image}
                     alt={p.name}
                     fill
-                    sizes="(max-width: 640px) 72vw, (max-width: 1024px) 320px, 25vw"
+                    sizes="(max-width: 640px) 42vw, (max-width: 1024px) 30vw, 25vw"
                     className="object-cover transition-transform duration-[1200ms] ease-out group-hover:scale-105"
                   />
 
                   {p.tag && (
 
-                    <span className="absolute top-3 left-3 bg-black/70 backdrop-blur text-[10px] uppercase tracking-[0.2em] px-3 py-1.5">
+                    <span className="absolute top-2 left-2 sm:top-3 sm:left-3 bg-black/70 backdrop-blur text-[9px] sm:text-[10px] uppercase tracking-[0.15em] sm:tracking-[0.2em] px-2 sm:px-3 py-1 sm:py-1.5">
 
                       {p.tag}
 
@@ -560,13 +564,13 @@ export default async function Home() {
 
                 </div>
 
-                <h3 className="mt-4 text-lg font-light leading-snug group-hover:text-[#D4AF37] transition-colors">
+                <h3 className="mt-3 sm:mt-4 text-sm sm:text-lg font-light leading-snug group-hover:text-gold transition-colors">
 
                   {p.name}
 
                 </h3>
 
-                <p className="mt-1 text-white/70">
+                <p className="mt-1 text-sm sm:text-base text-white/70">
 
                   ₹{p.price}
 
@@ -586,7 +590,7 @@ export default async function Home() {
 
             ))}
 
-          </div>
+          </ScentRail>
 
         </section>
 
@@ -597,9 +601,9 @@ export default async function Home() {
 
         <div className="max-w-7xl mx-auto grid lg:grid-cols-2 gap-14 lg:gap-24 items-center">
 
-          <div className="reveal relative aspect-[4/5] max-w-md mx-auto w-full border border-[#D4AF37]/20 shadow-[0_0_120px_rgba(212,175,55,0.12)]">
+          <div className="reveal relative aspect-[4/5] max-w-md mx-auto w-full border border-gold/20 shadow-[0_0_120px_rgba(212,175,55,0.12)]">
 
-            <span className="absolute -inset-3 border border-[#D4AF37]/10 pointer-events-none" />
+            <span className="absolute -inset-3 border border-gold/10 pointer-events-none" />
 
             <Image
               src="/perfume-poster.jpg"
@@ -625,10 +629,10 @@ export default async function Home() {
 
             </div>
 
-            <div className="relative border-l border-[#D4AF37]/20">
+            <div className="relative border-l border-gold/20">
 
               {/* gold line that draws itself down the three stages */}
-              <span className="reveal act-fill absolute -left-px top-0 w-px h-full bg-[#D4AF37] origin-top" />
+              <span className="reveal act-fill absolute -left-px top-0 w-px h-full bg-gold origin-top" />
 
               {SCENT_LAYERS.map((layer, i) => (
 
@@ -638,9 +642,9 @@ export default async function Home() {
                   style={{ "--d": `${i * 220}ms` }}
                 >
 
-                  <span className="absolute -left-[4px] top-2 w-2 h-2 rotate-45 bg-[#D4AF37]" />
+                  <span className="absolute -left-[4px] top-2 w-2 h-2 rotate-45 bg-gold" />
 
-                  <p className="uppercase tracking-[0.3em] text-[11px] text-[#D4AF37] mb-2">
+                  <p className="uppercase tracking-[0.3em] text-[11px] text-gold mb-2">
 
                     {layer.name}
 
@@ -694,11 +698,11 @@ export default async function Home() {
 
               <div
                 key={item.title}
-                className="reveal spotlight bg-black hover:bg-[#0d0b05] transition-colors duration-500 p-8 lg:p-10"
+                className="reveal spotlight bg-black hover:bg-surface-warm transition-colors duration-500 p-8 lg:p-10"
                 style={{ "--d": `${i * 90}ms` }}
               >
 
-                <p className="text-[#D4AF37] text-[11px] tracking-[0.3em] mb-10">
+                <p className="text-gold text-[11px] tracking-[0.3em] mb-10">
 
                   0{i + 1}
 
@@ -779,11 +783,11 @@ export default async function Home() {
             className="flex items-center justify-center gap-4 mb-8"
           >
 
-            <span className="w-16 h-px bg-gradient-to-r from-transparent to-[#D4AF37]" />
+            <span className="w-16 h-px bg-gradient-to-r from-transparent to-gold" />
 
-            <span className="w-1.5 h-1.5 rotate-45 bg-[#D4AF37]" />
+            <span className="w-1.5 h-1.5 rotate-45 bg-gold" />
 
-            <span className="w-16 h-px bg-gradient-to-l from-transparent to-[#D4AF37]" />
+            <span className="w-16 h-px bg-gradient-to-l from-transparent to-gold" />
 
           </div>
 
@@ -801,7 +805,7 @@ export default async function Home() {
 
           <Link
             href="/shop"
-            className="btn-gold inline-block bg-[#D4AF37] hover:bg-[#e6c34a] text-black px-10 py-4 text-sm uppercase tracking-[0.2em] font-medium transition-colors duration-300"
+            className="btn-gold inline-block bg-gold hover:bg-gold-bright text-black px-10 py-4 text-sm uppercase tracking-[0.2em] font-medium transition-colors duration-300"
           >
             Explore All Collections
           </Link>

@@ -132,20 +132,20 @@ export default function TestimonialsAdminPage() {
             onChange={(e) => setForm({ ...form, name: e.target.value })}
             placeholder="Customer name"
             required
-            className="bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-sm outline-none focus:border-[#D4AF37]/60"
+            className="bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-sm outline-none focus:border-gold/60"
           />
 
           <input
             value={form.location}
             onChange={(e) => setForm({ ...form, location: e.target.value })}
             placeholder="Location (optional)"
-            className="bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-sm outline-none focus:border-[#D4AF37]/60"
+            className="bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-sm outline-none focus:border-gold/60"
           />
 
           <select
             value={form.rating}
             onChange={(e) => setForm({ ...form, rating: e.target.value })}
-            className="bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-sm outline-none focus:border-[#D4AF37]/60"
+            className="bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-sm outline-none focus:border-gold/60"
           >
             {[5, 4, 3, 2, 1].map((n) => (
               <option key={n} value={n}>
@@ -162,10 +162,10 @@ export default function TestimonialsAdminPage() {
               className="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-sm outline-none"
             />
             {uploading && (
-              <p className="text-[#D4AF37] text-xs">Uploading...</p>
+              <p className="text-gold text-xs">Uploading...</p>
             )}
             {form.image && (
-              <div className="relative w-14 h-14 rounded-full overflow-hidden border border-[#D4AF37]/30">
+              <div className="relative w-14 h-14 rounded-full overflow-hidden border border-gold/30">
                 <Image
                   fill
                   sizes="56px"
@@ -183,7 +183,7 @@ export default function TestimonialsAdminPage() {
             placeholder="Testimonial text"
             required
             rows={3}
-            className="md:col-span-2 bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-sm outline-none focus:border-[#D4AF37]/60"
+            className="md:col-span-2 bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-sm outline-none focus:border-gold/60"
           />
         </div>
 
@@ -191,7 +191,7 @@ export default function TestimonialsAdminPage() {
           <button
             type="submit"
             disabled={saving || uploading}
-            className="px-6 py-3 rounded-xl bg-[#D4AF37] text-black font-semibold hover:opacity-90 transition disabled:opacity-50"
+            className="px-6 py-3 rounded-xl bg-gold text-black font-semibold hover:opacity-90 transition disabled:opacity-50"
           >
             {uploading ? "Uploading image..." : saving ? "Adding..." : "Add Testimonial"}
           </button>
@@ -218,11 +218,11 @@ export default function TestimonialsAdminPage() {
                 className="border border-white/10 rounded-2xl p-5 flex gap-4"
               >
                 {t.image ? (
-                  <div className="relative w-12 h-12 rounded-full overflow-hidden border border-[#D4AF37]/30 shrink-0">
+                  <div className="relative w-12 h-12 rounded-full overflow-hidden border border-gold/30 shrink-0">
                     <Image fill sizes="48px" src={t.image} alt={t.name} className="object-cover" />
                   </div>
                 ) : (
-                  <div className="w-12 h-12 rounded-full bg-[#D4AF37]/10 border border-[#D4AF37]/30 flex items-center justify-center text-[#D4AF37] font-bold shrink-0">
+                  <div className="w-12 h-12 rounded-full bg-gold/10 border border-gold/30 flex items-center justify-center text-gold font-bold shrink-0">
                     {t.name.charAt(0)}
                   </div>
                 )}
@@ -243,7 +243,7 @@ export default function TestimonialsAdminPage() {
                     <p className="text-gray-500 text-xs">{t.location}</p>
                   )}
 
-                  <p className="text-[#D4AF37] text-xs mt-1">
+                  <p className="text-gold text-xs mt-1">
                     {"★".repeat(t.rating)}{"☆".repeat(5 - t.rating)}
                   </p>
 
@@ -252,7 +252,7 @@ export default function TestimonialsAdminPage() {
                   <div className="flex gap-3 mt-3">
                     <button
                       onClick={() => togglePublished(t)}
-                      className="px-3 py-1.5 rounded-lg border border-white/20 text-xs hover:border-[#D4AF37] transition"
+                      className="px-3 py-1.5 rounded-lg border border-white/20 text-xs hover:border-gold transition"
                     >
                       {t.published ? "Hide" : "Publish"}
                     </button>

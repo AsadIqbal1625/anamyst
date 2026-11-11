@@ -148,12 +148,12 @@ export default function InvoicesPage() {
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           placeholder="Search by Invoice ID, Order ID or Customer..."
-          className="flex-1 bg-white/5 border border-white/10 rounded-xl px-5 py-3 text-sm outline-none focus:border-[#D4AF37]/60"
+          className="flex-1 bg-white/5 border border-white/10 rounded-xl px-5 py-3 text-sm outline-none focus:border-gold/60"
         />
 
         <a
           href="/api/invoices/export"
-          className="bg-white/10 border border-[#D4AF37]/40 hover:bg-white/20 text-white px-5 py-3 rounded-xl text-sm font-semibold transition whitespace-nowrap"
+          className="bg-white/10 border border-gold/40 hover:bg-white/20 text-white px-5 py-3 rounded-xl text-sm font-semibold transition whitespace-nowrap"
         >
           Download Invoices (Excel)
         </a>
@@ -183,7 +183,7 @@ export default function InvoicesPage() {
               <tbody>
                 {filtered.map((o) => (
                   <tr key={o._id} className="border-b border-white/5">
-                    <td className="p-4 text-[#D4AF37]">
+                    <td className="p-4 text-gold">
                       {o.invoiceId || "-"}
                     </td>
                     <td className="p-4">{o.orderId || "-"}</td>
@@ -221,7 +221,7 @@ export default function InvoicesPage() {
                     <td className="p-4">
                       <button
                         onClick={() => printInvoice(o)}
-                        className="px-4 py-2 rounded-lg bg-[#D4AF37] text-black text-xs font-semibold hover:opacity-90 transition"
+                        className="px-4 py-2 rounded-lg bg-gold text-black text-xs font-semibold hover:opacity-90 transition"
                       >
                         Print / PDF
                       </button>
@@ -244,7 +244,7 @@ export default function InvoicesPage() {
 
                 <div className="flex items-center justify-between gap-3">
 
-                  <p className="text-[#D4AF37] font-semibold">
+                  <p className="text-gold font-semibold">
                     {o.invoiceId || "-"}
                   </p>
 
@@ -293,7 +293,7 @@ export default function InvoicesPage() {
 
                   <button
                     onClick={() => printInvoice(o)}
-                    className="px-4 py-2 rounded-lg bg-[#D4AF37] text-black text-xs font-semibold hover:opacity-90 transition"
+                    className="px-4 py-2 rounded-lg bg-gold text-black text-xs font-semibold hover:opacity-90 transition"
                   >
                     Print / PDF
                   </button>

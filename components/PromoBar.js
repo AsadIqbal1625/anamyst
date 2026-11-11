@@ -78,7 +78,7 @@ export default function PromoBar({ initialCoupon = null }) {
 
   return (
 
-    <div className="relative z-40 bg-gradient-to-r from-[#8a6d1f] via-[#D4AF37] to-[#8a6d1f] text-black">
+    <div className="theme-dark relative z-40 bg-gradient-to-r from-gold-dark via-gold to-gold-dark text-black">
 
       <button
         onClick={copyCode}
@@ -91,7 +91,7 @@ export default function PromoBar({ initialCoupon = null }) {
 
         </span>
 
-        <span className="bg-black text-[#D4AF37] text-[11px] sm:text-xs font-bold tracking-[2px] px-3 py-1 rounded-full">
+        <span className="bg-black text-gold text-[11px] sm:text-xs font-bold tracking-[2px] px-3 py-1 rounded-full">
 
           {coupon.code}
 

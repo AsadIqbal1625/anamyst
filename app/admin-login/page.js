@@ -89,11 +89,11 @@ export default function AdminLogin() {
 
   return (
 
-    <div className="min-h-screen bg-black text-white flex items-center justify-center px-4">
+    <div className="theme-dark min-h-screen bg-black text-white flex items-center justify-center px-4">
 
       <div className="w-full max-w-md bg-white/5 border border-white/10 rounded-[32px] p-8">
 
-        <p className="uppercase tracking-[6px] text-[#D4AF37] text-xs mb-4 text-center">
+        <p className="uppercase tracking-[6px] text-gold text-xs mb-4 text-center">
 
           ANAMYST Admin
 
@@ -120,7 +120,7 @@ export default function AdminLogin() {
                 e.target.value
               )
             }
-            className="w-full bg-black/40 border border-white/10 rounded-2xl px-5 py-4 outline-none focus:border-[#D4AF37]"
+            className="w-full bg-black/40 border border-white/10 rounded-2xl px-5 py-4 outline-none focus:border-gold"
             required
           />
 
@@ -134,7 +134,7 @@ export default function AdminLogin() {
                 e.target.value
               )
             }
-            className="w-full bg-black/40 border border-white/10 rounded-2xl px-5 py-4 outline-none focus:border-[#D4AF37]"
+            className="w-full bg-black/40 border border-white/10 rounded-2xl px-5 py-4 outline-none focus:border-gold"
             required
           />
 
@@ -153,7 +153,7 @@ export default function AdminLogin() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-[#D4AF37] text-black py-4 rounded-2xl font-bold hover:opacity-90 transition disabled:opacity-50"
+            className="w-full bg-gold text-black py-4 rounded-2xl font-bold hover:opacity-90 transition disabled:opacity-50"
           >
 
             {loading

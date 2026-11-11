@@ -74,7 +74,7 @@ export default function AnalyticsPage() {
       <div className="flex justify-end">
         <a
           href="/api/analytics/export"
-          className="bg-white/10 border border-[#D4AF37]/40 hover:bg-white/20 text-white px-5 py-2.5 rounded-xl text-sm font-semibold transition whitespace-nowrap"
+          className="bg-white/10 border border-gold/40 hover:bg-white/20 text-white px-5 py-2.5 rounded-xl text-sm font-semibold transition whitespace-nowrap"
         >
           Download Analytics (Excel)
         </a>
@@ -84,7 +84,7 @@ export default function AnalyticsPage() {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
         <div className="bg-white/5 border border-white/10 rounded-2xl p-6">
           <p className="text-gray-400 text-sm mb-2">Total Revenue</p>
-          <p className="text-3xl font-bold text-[#D4AF37]">
+          <p className="text-3xl font-bold text-gold">
             ₹{summary.totalRevenue.toLocaleString("en-IN")}
           </p>
         </div>
@@ -106,7 +106,7 @@ export default function AnalyticsPage() {
           <p className="text-gray-400 text-sm mb-2">
             Visitors (30 days)
           </p>
-          <p className="text-3xl font-bold text-[#D4AF37]">
+          <p className="text-3xl font-bold text-gold">
             {funnel?.visitors ?? 0}
           </p>
         </div>
@@ -148,7 +148,7 @@ export default function AnalyticsPage() {
                   )}%`,
                 }}
               />
-              <div className="hidden group-hover:block absolute -top-10 left-1/2 -translate-x-1/2 bg-black border border-[#D4AF37]/30 rounded-lg px-3 py-1.5 text-xs whitespace-nowrap z-10">
+              <div className="hidden group-hover:block absolute -top-10 left-1/2 -translate-x-1/2 bg-black border border-gold/30 rounded-lg px-3 py-1.5 text-xs whitespace-nowrap z-10">
                 {d.date.slice(5)} · {d.visitors} visitors
               </div>
             </div>
@@ -178,7 +178,7 @@ export default function AnalyticsPage() {
                   </div>
                   <div className="h-2 bg-white/10 rounded-full overflow-hidden">
                     <div
-                      className="h-full bg-[#D4AF37] rounded-full"
+                      className="h-full bg-gold rounded-full"
                       style={{
                         width: `${
                           (d.visitors / totalDeviceVisitors) * 100
@@ -204,7 +204,7 @@ export default function AnalyticsPage() {
                   className="flex items-center justify-between border-b border-white/5 pb-3"
                 >
                   <span className="text-sm">{l.name}</span>
-                  <span className="text-[#D4AF37] font-semibold text-sm">
+                  <span className="text-gold font-semibold text-sm">
                     {l.visitors} visitors
                   </span>
                 </div>
@@ -226,7 +226,7 @@ export default function AnalyticsPage() {
           </h2>
           <span className="text-sm text-gray-400">
             Conversion Rate:{" "}
-            <span className="text-[#D4AF37] font-bold">
+            <span className="text-gold font-bold">
               {conversionRate}%
             </span>
           </span>
@@ -261,7 +261,7 @@ export default function AnalyticsPage() {
                   </div>
                   <div className="h-6 bg-white/10 rounded-lg overflow-hidden">
                     <div
-                      className="h-full bg-gradient-to-r from-[#D4AF37]/60 to-[#D4AF37] rounded-lg transition-all"
+                      className="h-full bg-gradient-to-r from-gold/60 to-gold rounded-lg transition-all"
                       style={{
                         width: `${Math.max(
                           (step.value / maxFunnel) * 100,
@@ -290,7 +290,7 @@ export default function AnalyticsPage() {
               style={{ height: "100%" }}
             >
               <div
-                className="absolute bottom-0 w-full bg-[#D4AF37]/70 hover:bg-[#D4AF37] rounded-t transition-all"
+                className="absolute bottom-0 w-full bg-gold/70 hover:bg-gold rounded-t transition-all"
                 style={{
                   height: `${Math.max(
                     (d.revenue / maxRevenue) * 100,
@@ -298,7 +298,7 @@ export default function AnalyticsPage() {
                   )}%`,
                 }}
               />
-              <div className="hidden group-hover:block absolute -top-12 left-1/2 -translate-x-1/2 bg-black border border-[#D4AF37]/30 rounded-lg px-3 py-1.5 text-xs whitespace-nowrap z-10">
+              <div className="hidden group-hover:block absolute -top-12 left-1/2 -translate-x-1/2 bg-black border border-gold/30 rounded-lg px-3 py-1.5 text-xs whitespace-nowrap z-10">
                 {d.date.slice(5)} · ₹{d.revenue.toLocaleString("en-IN")} ·{" "}
                 {d.orders} orders
               </div>
@@ -330,7 +330,7 @@ export default function AnalyticsPage() {
                   </div>
                   <div className="h-2 bg-white/10 rounded-full overflow-hidden">
                     <div
-                      className="h-full bg-[#D4AF37] rounded-full"
+                      className="h-full bg-gold rounded-full"
                       style={{
                         width: `${(p.revenue / maxProductRevenue) * 100}%`,
                       }}

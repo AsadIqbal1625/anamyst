@@ -55,14 +55,14 @@ export default function CustomersPage() {
             placeholder="Search by Name or Mobile..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="flex-1 rounded-xl bg-[#111] border border-[#D4AF37]/30 px-5 py-3 outline-none"
+            className="flex-1 rounded-xl bg-surface border border-gold/30 px-5 py-3 outline-none"
           />
 
           {/* file download, not a page nav — <Link> would be wrong here */}
           {/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
           <a
             href="/api/customers/export"
-            className="bg-white/10 border border-[#D4AF37]/40 hover:bg-white/20 text-white px-5 py-3 rounded-xl text-sm font-semibold transition whitespace-nowrap"
+            className="bg-white/10 border border-gold/40 hover:bg-white/20 text-white px-5 py-3 rounded-xl text-sm font-semibold transition whitespace-nowrap"
           >
             Download Customers (Excel)
           </a>
@@ -71,13 +71,13 @@ export default function CustomersPage() {
 
         {loading ? (
 
-          <p className="text-center p-8 border border-[#D4AF37]/20 rounded-2xl">
+          <p className="text-center p-8 border border-gold/20 rounded-2xl">
             Loading...
           </p>
 
         ) : filtered.length === 0 ? (
 
-          <p className="text-center p-8 border border-[#D4AF37]/20 rounded-2xl">
+          <p className="text-center p-8 border border-gold/20 rounded-2xl">
             No Customers Found
           </p>
 
@@ -86,11 +86,11 @@ export default function CustomersPage() {
           <>
 
             {/* DESKTOP TABLE */}
-            <div className="hidden md:block overflow-x-auto rounded-2xl border border-[#D4AF37]/20">
+            <div className="hidden md:block overflow-x-auto rounded-2xl border border-gold/20">
 
               <table className="w-full">
 
-                <thead className="bg-[#111]">
+                <thead className="bg-surface">
 
                   <tr>
 
@@ -112,10 +112,10 @@ export default function CustomersPage() {
 
                     <tr
                       key={customer._id}
-                      className="border-t border-[#D4AF37]/10 hover:bg-[#111]"
+                      className="border-t border-gold/10 hover:bg-surface"
                     >
 
-                      <td className="p-4 font-semibold text-[#D4AF37]">
+                      <td className="p-4 font-semibold text-gold">
                         <Link
                           href={`/admin/customers/${customer.customerId}`}
                           className="hover:underline"
@@ -127,7 +127,7 @@ export default function CustomersPage() {
                       <td className="p-4">
                         <Link
                           href={`/admin/customers/${customer.customerId}`}
-                          className="hover:underline hover:text-[#D4AF37]"
+                          className="hover:underline hover:text-gold"
                         >
                           {customer.name}
                         </Link>
@@ -171,7 +171,7 @@ export default function CustomersPage() {
                 <Link
                   key={customer._id}
                   href={`/admin/customers/${customer.customerId}`}
-                  className="block bg-white/5 border border-[#D4AF37]/20 rounded-2xl p-5"
+                  className="block bg-white/5 border border-gold/20 rounded-2xl p-5"
                 >
 
                   <div className="flex items-center justify-between gap-3 mb-3">
@@ -180,7 +180,7 @@ export default function CustomersPage() {
                       {customer.name}
                     </p>
 
-                    <span className="text-xs text-[#D4AF37] font-mono shrink-0">
+                    <span className="text-xs text-gold font-mono shrink-0">
                       {customer.customerId}
                     </span>
 
@@ -192,7 +192,7 @@ export default function CustomersPage() {
                     <p className="text-right">{customer.city}</p>
 
                     <p>{customer.totalOrders} orders</p>
-                    <p className="text-right text-[#D4AF37] font-semibold">
+                    <p className="text-right text-gold font-semibold">
                       ₹{customer.totalSpent}
                     </p>
 

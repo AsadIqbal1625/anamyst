@@ -194,10 +194,10 @@ export default function CartPage() {
             onClick={(e) =>
               e.stopPropagation()
             }
-            className="w-full max-w-sm bg-black border border-[#D4AF37]/30 rounded-[28px] p-8 text-center shadow-[0_0_80px_rgba(0,0,0,0.9)]"
+            className="w-full max-w-sm bg-black border border-gold/30 rounded-[28px] p-8 text-center shadow-[0_0_80px_rgba(0,0,0,0.9)]"
           >
 
-            <p className="uppercase tracking-[4px] text-[#D4AF37] text-[10px] mb-4">
+            <p className="uppercase tracking-[4px] text-gold text-[10px] mb-4">
 
               Remove Item
 
@@ -222,7 +222,7 @@ export default function CartPage() {
                 onClick={() =>
                   setConfirmItem(null)
                 }
-                className="py-3 rounded-xl border border-white/20 text-white hover:border-[#D4AF37] transition"
+                className="py-3 rounded-xl border border-white/20 text-white hover:border-gold transition"
               >
 
                 Keep It
@@ -258,15 +258,15 @@ export default function CartPage() {
 
       {/* HEADER (compact) */}
 
-      <section className="relative px-6 py-8 border-b border-[#D4AF37]/20">
+      <section className="relative px-6 py-8 border-b border-gold/20">
 
-        <div className="absolute inset-0 bg-gradient-to-b from-[#D4AF37]/10 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-b from-gold/10 to-transparent" />
 
         <div className="relative max-w-7xl mx-auto flex flex-wrap items-end justify-between gap-3">
 
           <div>
 
-            <p className="uppercase tracking-[5px] text-[#D4AF37] text-[10px] mb-2">
+            <p className="uppercase tracking-[5px] text-gold text-[10px] mb-2">
 
               ANAMYST Checkout
 
@@ -301,9 +301,9 @@ export default function CartPage() {
 
         <section className="px-6 py-12">
 
-          <div className="max-w-md mx-auto bg-[#0B0B0B] border border-[#D4AF37]/20 rounded-3xl p-10 text-center">
+          <div className="max-w-md mx-auto bg-surface-deep border border-gold/20 rounded-3xl p-10 text-center">
 
-            <div className="w-20 h-20 rounded-2xl bg-[#D4AF37]/10 flex items-center justify-center mx-auto mb-6">
+            <div className="w-20 h-20 rounded-2xl bg-gold/10 flex items-center justify-center mx-auto mb-6">
 
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -311,7 +311,7 @@ export default function CartPage() {
                 viewBox="0 0 24 24"
                 strokeWidth={1.5}
                 stroke="currentColor"
-                className="w-10 h-10 text-[#D4AF37]"
+                className="w-10 h-10 text-gold"
               >
 
                 <path
@@ -338,7 +338,7 @@ export default function CartPage() {
 
             <Link href="/shop">
 
-              <button className="bg-[#D4AF37] text-black px-8 py-4 rounded-2xl hover:opacity-90 transition duration-300 font-semibold">
+              <button className="bg-gold text-black px-8 py-4 rounded-2xl hover:opacity-90 transition duration-300 font-semibold">
 
                 Explore Collection
 
@@ -373,7 +373,7 @@ export default function CartPage() {
 
                     <div
                       key={`${item._id}-${index}`}
-                      className="bg-white/5 border border-white/10 rounded-[24px] p-4 md:p-5 flex gap-4 md:gap-6 items-center hover:border-[#D4AF37]/30 transition duration-300"
+                      className="bg-white/5 border border-white/10 rounded-[24px] p-4 md:p-5 flex gap-4 md:gap-6 items-center hover:border-gold/30 transition duration-300"
                     >
 
                       {/* IMAGE */}
@@ -395,7 +395,7 @@ export default function CartPage() {
 
                       <div className="flex-1 min-w-0">
 
-                        <p className="uppercase tracking-[3px] text-[#D4AF37] text-[9px] mb-1.5">
+                        <p className="uppercase tracking-[3px] text-gold text-[9px] mb-1.5">
 
                           ANAMYST Luxury
 
@@ -466,7 +466,7 @@ export default function CartPage() {
                               }
 
                             }}
-                            className="w-9 h-9 flex items-center justify-center hover:bg-[#D4AF37] hover:text-black transition"
+                            className="w-9 h-9 flex items-center justify-center hover:bg-gold hover:text-black transition"
                           >
 
                             −
@@ -490,7 +490,7 @@ export default function CartPage() {
                               loadCart();
 
                             }}
-                            className="w-9 h-9 flex items-center justify-center hover:bg-[#D4AF37] hover:text-black transition"
+                            className="w-9 h-9 flex items-center justify-center hover:bg-gold hover:text-black transition"
                           >
 
                             +
@@ -499,7 +499,7 @@ export default function CartPage() {
 
                         </div>
 
-                        <p className="text-lg md:text-xl font-bold text-[#D4AF37]">
+                        <p className="text-lg md:text-xl font-bold text-gold">
 
                           ₹{price * quantity}
 
@@ -522,7 +522,7 @@ export default function CartPage() {
 
               <div className="bg-white/5 rounded-[24px] p-7 sticky top-24 border border-white/10">
 
-                <p className="uppercase tracking-[4px] text-[#D4AF37] text-[10px] mb-2">
+                <p className="uppercase tracking-[4px] text-gold text-[10px] mb-2">
 
                   Summary
 
@@ -629,7 +629,7 @@ export default function CartPage() {
 
                   </span>
 
-                  <span className="text-3xl font-bold text-[#D4AF37]">
+                  <span className="text-3xl font-bold text-gold">
 
                     ₹{grandTotal}
 
@@ -650,7 +650,7 @@ export default function CartPage() {
                       className="flex items-center gap-3 text-gray-400 text-xs"
                     >
 
-                      <span className="w-5 h-[1px] bg-[#D4AF37]" />
+                      <span className="w-5 h-[1px] bg-gold" />
 
                       <span>{t}</span>
 
@@ -662,7 +662,7 @@ export default function CartPage() {
 
                 <Link href="/checkout">
 
-                  <button className="w-full bg-[#D4AF37] text-black py-4 rounded-2xl hover:opacity-90 transition font-semibold">
+                  <button className="w-full bg-gold text-black py-4 rounded-2xl hover:opacity-90 transition font-semibold">
 
                     Proceed to Checkout
 
@@ -672,7 +672,7 @@ export default function CartPage() {
 
                 <Link
                   href="/shop"
-                  className="block text-center text-gray-400 hover:text-[#D4AF37] text-sm mt-4 transition"
+                  className="block text-center text-gray-400 hover:text-gold text-sm mt-4 transition"
                 >
 
                   ← Continue Shopping

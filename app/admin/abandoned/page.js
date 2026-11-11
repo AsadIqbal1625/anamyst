@@ -124,7 +124,7 @@ export default function AbandonedPage() {
               onClick={() => setFilter(f.key)}
               className={`px-4 py-2 rounded-lg text-xs font-semibold border transition ${
                 filter === f.key
-                  ? "bg-[#D4AF37]/20 text-[#D4AF37] border-[#D4AF37]/40"
+                  ? "bg-gold/20 text-gold border-gold/40"
                   : "border-white/10 text-gray-400 hover:border-white/30"
               }`}
             >
@@ -182,7 +182,7 @@ export default function AbandonedPage() {
                 </div>
 
                 <div className="flex items-center gap-3">
-                  <span className="text-[#D4AF37] font-bold text-lg">
+                  <span className="text-gold font-bold text-lg">
                     ₹{item.cartValue}
                   </span>
 

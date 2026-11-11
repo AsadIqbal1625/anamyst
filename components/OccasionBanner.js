@@ -79,7 +79,7 @@ export default function OccasionBanner({ initialSettings = null }) {
 
   return (
 
-    <section className="relative w-full overflow-hidden border-t border-[#D4AF37]/20">
+    <section className="theme-dark relative w-full overflow-hidden border-t border-gold/20">
 
       {/* BACKGROUND */}
 
@@ -92,7 +92,7 @@ export default function OccasionBanner({ initialSettings = null }) {
 
       ) : (
 
-        <div className="absolute inset-0 bg-gradient-to-br from-[#3a1a06] via-[#7a3b0f] to-[#D4AF37]/40" />
+        <div className="absolute inset-0 bg-gradient-to-br from-[#3a1a06] via-[#7a3b0f] to-gold/40" />
 
       )}
 
@@ -100,18 +100,18 @@ export default function OccasionBanner({ initialSettings = null }) {
 
       {/* GLOW ACCENTS */}
 
-      <div className="absolute -top-24 -left-24 w-72 h-72 bg-[#D4AF37]/20 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute -top-24 -left-24 w-72 h-72 bg-gold/20 rounded-full blur-3xl pointer-events-none" />
       <div className="absolute -bottom-24 -right-24 w-72 h-72 bg-[#FF5C7A]/10 rounded-full blur-3xl pointer-events-none" />
 
       {/* BOTTOM FADE — blends into the black hero below instead of
           ending on a hard seam */}
-      <div className="absolute inset-x-0 bottom-0 h-16 bg-gradient-to-b from-transparent to-black pointer-events-none" />
+      <div className="absolute inset-x-0 bottom-0 h-16 bg-gradient-to-b from-transparent to-[var(--background)] pointer-events-none" />
 
       {/* CONTENT */}
 
       <div className="relative px-6 pt-9 pb-12 sm:pt-14 sm:pb-16 max-w-4xl mx-auto text-center">
 
-        <p className="uppercase tracking-[4px] text-[#D4AF37] text-[10px] sm:text-sm mb-2 sm:mb-3">
+        <p className="uppercase tracking-[4px] text-gold text-[10px] sm:text-sm mb-2 sm:mb-3">
 
           ✦ {campaign.tagline || "Limited Time Offer"} ✦
 
@@ -120,7 +120,7 @@ export default function OccasionBanner({ initialSettings = null }) {
         <h2 className="text-3xl sm:text-5xl font-bold mb-3 sm:mb-4 tracking-tight">
 
           {campaign.emoji}{" "}
-          <span className="bg-gradient-to-r from-[#D4AF37] via-[#FF9635] to-[#FF5C7A] bg-clip-text text-transparent">
+          <span className="bg-gradient-to-r from-gold via-[#FF9635] to-[#FF5C7A] bg-clip-text text-transparent">
 
             {campaign.title}
 
@@ -143,7 +143,7 @@ export default function OccasionBanner({ initialSettings = null }) {
 
         <Link href="/shop">
 
-          <button className="bg-[#D4AF37] hover:bg-[#c19b2e] text-black text-sm sm:text-base px-8 py-3 sm:py-3.5 rounded-full shadow-2xl transition-all duration-300 hover:scale-105 font-semibold tracking-wide">
+          <button className="bg-gold hover:bg-gold-deep text-black text-sm sm:text-base px-8 py-3 sm:py-3.5 rounded-full shadow-2xl transition-all duration-300 hover:scale-105 font-semibold tracking-wide">
 
             Shop Now
 

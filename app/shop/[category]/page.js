@@ -1,6 +1,7 @@
 import { connectDB } from "../../../lib/mongodb";
 import Product from "../../../models/Product";
 import CategoryClient from "./CategoryClient";
+import { countByCollection } from "../../../lib/shopFilters";
 
 export async function generateMetadata({ params }) {
   const { category } = await params;
@@ -23,7 +24,7 @@ export default async function CategoryPage({ params }) {
 
   await connectDB();
 
-  const products = await Product.find({}).lean();
+  const products = await Product.find({}).sort({ createdAt: -1 }).lean();
 
   const filteredProducts = products
     .filter(
@@ -42,6 +43,7 @@ export default async function CategoryPage({ params }) {
     <CategoryClient
       category={category}
       initialProducts={filteredProducts}
+      counts={countByCollection(products)}
     />
   );
 }

@@ -75,7 +75,7 @@ export default function TierPromoBar() {
       className={`relative z-30 border-b overflow-hidden ${
         unlocked
           ? "border-green-500/30"
-          : "border-[#D4AF37]/30"
+          : "border-gold/30"
       }`}
       style={{
         background: unlocked
@@ -88,7 +88,7 @@ export default function TierPromoBar() {
 
         {benefits.nextTier ? (
 
-          <p className="text-xs sm:text-sm font-semibold tracking-wide text-[#D4AF37]">
+          <p className="text-xs sm:text-sm font-semibold tracking-wide text-gold">
 
             {campaignPrefix && (
               <span className="text-white">{campaignPrefix}</span>

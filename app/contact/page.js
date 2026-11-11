@@ -5,13 +5,13 @@ export default function ContactPage() {
     <div className="min-h-screen bg-black text-white overflow-hidden">
 
       {/* HERO */}
-      <section className="relative px-6 py-16 border-b border-[#D4AF37]/20">
+      <section className="relative px-6 py-16 border-b border-gold/20">
 
-        <div className="absolute inset-0 bg-gradient-to-b from-[#D4AF37]/10 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-b from-gold/10 to-transparent" />
 
         <div className="relative max-w-5xl mx-auto text-center">
 
-          <p className="uppercase tracking-[6px] text-[#D4AF37] text-xs mb-5">
+          <p className="uppercase tracking-[6px] text-gold text-xs mb-5">
 
             Contact ANAMYST
 
@@ -41,9 +41,9 @@ export default function ContactPage() {
         <div className="max-w-5xl mx-auto grid md:grid-cols-2 gap-6">
 
           {/* EMAIL */}
-          <div className="group bg-white/5 border border-white/10 backdrop-blur-xl rounded-[28px] p-7 hover:border-[#D4AF37]/50 transition duration-500">
+          <div className="group bg-white/5 border border-white/10 backdrop-blur-xl rounded-[28px] p-7 hover:border-gold/50 transition duration-500">
 
-            <div className="w-14 h-14 rounded-2xl bg-[#D4AF37]/10 flex items-center justify-center mb-6">
+            <div className="w-14 h-14 rounded-2xl bg-gold/10 flex items-center justify-center mb-6">
 
               <span className="text-2xl">
 
@@ -59,7 +59,7 @@ export default function ContactPage() {
 
             </h2>
 
-            <p className="text-[#D4AF37] text-lg mb-3 break-all">
+            <p className="text-gold text-lg mb-3 break-all">
 
               team@anamyst.com
 
@@ -76,9 +76,9 @@ export default function ContactPage() {
           </div>
 
           {/* PHONE */}
-          <div className="group bg-white/5 border border-white/10 backdrop-blur-xl rounded-[28px] p-7 hover:border-[#D4AF37]/50 transition duration-500">
+          <div className="group bg-white/5 border border-white/10 backdrop-blur-xl rounded-[28px] p-7 hover:border-gold/50 transition duration-500">
 
-            <div className="w-14 h-14 rounded-2xl bg-[#D4AF37]/10 flex items-center justify-center mb-6">
+            <div className="w-14 h-14 rounded-2xl bg-gold/10 flex items-center justify-center mb-6">
 
               <span className="text-2xl">
 
@@ -94,7 +94,7 @@ export default function ContactPage() {
 
             </h2>
 
-            <p className="text-[#D4AF37] text-lg mb-3">
+            <p className="text-gold text-lg mb-3">
 
               +91 8840305018
 
@@ -111,9 +111,9 @@ export default function ContactPage() {
           </div>
 
           {/* INSTAGRAM */}
-          <div className="group bg-white/5 border border-white/10 backdrop-blur-xl rounded-[28px] p-7 hover:border-[#D4AF37]/50 transition duration-500">
+          <div className="group bg-white/5 border border-white/10 backdrop-blur-xl rounded-[28px] p-7 hover:border-gold/50 transition duration-500">
 
-            <div className="w-14 h-14 rounded-2xl bg-[#D4AF37]/10 flex items-center justify-center mb-6">
+            <div className="w-14 h-14 rounded-2xl bg-gold/10 flex items-center justify-center mb-6">
 
               <span className="text-2xl">
 
@@ -129,7 +129,7 @@ export default function ContactPage() {
 
             </h2>
 
-            <p className="text-[#D4AF37] text-lg mb-3">
+            <p className="text-gold text-lg mb-3">
 
               @anamyst_official
 
@@ -146,9 +146,9 @@ export default function ContactPage() {
           </div>
 
           {/* ADDRESS */}
-          <div className="group bg-white/5 border border-white/10 backdrop-blur-xl rounded-[28px] p-7 hover:border-[#D4AF37]/50 transition duration-500">
+          <div className="group bg-white/5 border border-white/10 backdrop-blur-xl rounded-[28px] p-7 hover:border-gold/50 transition duration-500">
 
-            <div className="w-14 h-14 rounded-2xl bg-[#D4AF37]/10 flex items-center justify-center mb-6">
+            <div className="w-14 h-14 rounded-2xl bg-gold/10 flex items-center justify-center mb-6">
 
               <span className="text-2xl">
 
@@ -164,7 +164,7 @@ export default function ContactPage() {
 
             </h2>
 
-            <p className="text-[#D4AF37] text-lg leading-9">
+            <p className="text-gold text-lg leading-9">
 
               ANAMYST Attars & Perfumes
               <br />
@@ -183,7 +183,7 @@ export default function ContactPage() {
       {/* CTA */}
       <section className="px-6 pb-14">
 
-        <div className="max-w-4xl mx-auto bg-gradient-to-r from-[#D4AF37]/20 to-transparent border border-[#D4AF37]/20 rounded-[36px] p-8 md:p-10 text-center">
+        <div className="max-w-4xl mx-auto bg-gradient-to-r from-gold/20 to-transparent border border-gold/20 rounded-[36px] p-8 md:p-10 text-center">
 
           <h2 className="text-3xl md:text-4xl font-bold mb-5">
 

@@ -4,7 +4,7 @@ import { useState } from "react";
 import Image from "next/image";
 
 const inputClass =
-  "w-full bg-white/5 border border-white/15 px-4 py-3 text-white placeholder:text-white/40 outline-none focus:border-[#D4AF37] transition-colors";
+  "w-full bg-white/5 border border-white/15 px-4 py-3 text-white placeholder:text-white/40 outline-none focus:border-gold transition-colors";
 
 function StarPicker({ value, onChange }) {
 
@@ -22,7 +22,7 @@ function StarPicker({ value, onChange }) {
           aria-label={`${star} star${star > 1 ? "s" : ""}`}
           onClick={() => onChange(star)}
           className={`text-3xl leading-none transition-colors ${
-            star <= value ? "text-[#D4AF37]" : "text-white/20 hover:text-white/40"
+            star <= value ? "text-gold" : "text-white/20 hover:text-white/40"
           }`}
         >
           ★
@@ -145,8 +145,8 @@ export default function ReviewForm() {
 
       <div className="max-w-2xl mx-auto">
 
-        <p className="flex items-center gap-4 uppercase tracking-[0.35em] text-[#D4AF37] text-[11px] mb-6">
-          <span className="w-8 h-px bg-[#D4AF37]" />
+        <p className="flex items-center gap-4 uppercase tracking-[0.35em] text-gold text-[11px] mb-6">
+          <span className="w-8 h-px bg-gold" />
           Your Experience
         </p>
 
@@ -185,7 +185,7 @@ export default function ReviewForm() {
             <button
               type="submit"
               disabled={busy === "lookup"}
-              className="bg-[#D4AF37] hover:bg-[#e6c34a] disabled:opacity-60 text-black px-8 py-4 text-sm uppercase tracking-[0.2em] font-medium transition-colors"
+              className="bg-gold hover:bg-gold-bright disabled:opacity-60 text-black px-8 py-4 text-sm uppercase tracking-[0.2em] font-medium transition-colors"
             >
               {busy === "lookup" ? "Finding your order…" : "Find My Order"}
             </button>
@@ -256,7 +256,7 @@ export default function ReviewForm() {
 
                   {p.reviewed ? (
 
-                    <p className="text-[#D4AF37]">
+                    <p className="text-gold">
                       ✓ Thank you! Your review will appear once it has been checked.
                     </p>
 
@@ -288,7 +288,7 @@ export default function ReviewForm() {
                         type="button"
                         onClick={() => submitReview(p.productId)}
                         disabled={busy === p.productId}
-                        className="bg-[#D4AF37] hover:bg-[#e6c34a] disabled:opacity-60 text-black px-6 py-3 text-xs uppercase tracking-[0.2em] font-medium transition-colors"
+                        className="bg-gold hover:bg-gold-bright disabled:opacity-60 text-black px-6 py-3 text-xs uppercase tracking-[0.2em] font-medium transition-colors"
                       >
                         {busy === p.productId ? "Sending…" : "Submit Review"}
                       </button>

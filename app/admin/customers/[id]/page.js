@@ -54,7 +54,7 @@ export default function CustomerDetailPage() {
     return (
       <div className="p-10 text-white">
         <p className="mb-4">Customer not found.</p>
-        <Link href="/admin/customers" className="text-[#D4AF37] hover:underline">
+        <Link href="/admin/customers" className="text-gold hover:underline">
           ← Back to Customers
         </Link>
       </div>
@@ -79,7 +79,7 @@ export default function CustomerDetailPage() {
     <div className="p-8 text-white space-y-8">
       <Link
         href="/admin/customers"
-        className="text-[#D4AF37] text-sm hover:underline"
+        className="text-gold text-sm hover:underline"
       >
         ← Back to Customers
       </Link>
@@ -88,7 +88,7 @@ export default function CustomerDetailPage() {
       <div className="bg-white/5 border border-white/10 rounded-2xl p-8">
         <div className="flex flex-wrap items-center justify-between gap-6">
           <div>
-            <p className="text-[#D4AF37] text-sm mb-1">
+            <p className="text-gold text-sm mb-1">
               {customer.customerId}
             </p>
             <h1 className="text-4xl font-bold">{customer.name}</h1>
@@ -96,13 +96,13 @@ export default function CustomerDetailPage() {
 
           <div className="flex gap-8">
             <div className="text-center">
-              <p className="text-3xl font-bold text-[#D4AF37]">
+              <p className="text-3xl font-bold text-gold">
                 {customer.totalOrders || 0}
               </p>
               <p className="text-gray-400 text-sm">Orders</p>
             </div>
             <div className="text-center">
-              <p className="text-3xl font-bold text-[#D4AF37]">
+              <p className="text-3xl font-bold text-gold">
                 ₹{(customer.totalSpent || 0).toLocaleString("en-IN")}
               </p>
               <p className="text-gray-400 text-sm">Total Spent</p>
@@ -146,7 +146,7 @@ export default function CustomerDetailPage() {
               <tbody>
                 {orders.map((o) => (
                   <tr key={o._id} className="border-b border-white/5">
-                    <td className="py-3 pr-4 text-[#D4AF37]">
+                    <td className="py-3 pr-4 text-gold">
                       {o.orderId || o._id.slice(-6)}
                     </td>
                     <td className="py-3 pr-4 text-gray-400">

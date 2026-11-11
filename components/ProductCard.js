@@ -11,7 +11,7 @@ export default function ProductCard({ product, priority = false }) {
 
     <Link href={`/product/${product._id}`} className="h-full">
 
-      <div className="group h-full flex flex-col bg-white/5 border border-white/10 rounded-[28px] overflow-hidden backdrop-blur-xl hover:border-[#D4AF37]/40 transition duration-300">
+      <div className="lux-card group h-full flex flex-col bg-white/5 border border-white/10 rounded-[28px] overflow-hidden backdrop-blur-xl hover:border-gold/40 transition duration-300">
 
         {/* IMAGE */}
         <div className="relative w-full aspect-[4/5] overflow-hidden bg-black/40">
@@ -34,7 +34,7 @@ export default function ProductCard({ product, priority = false }) {
 
           {/* BADGE */}
           {product.badge && (
-            <span className="absolute top-3 right-3 bg-[#D4AF37] text-black text-xs font-semibold px-3 py-1.5 rounded-full">
+            <span className="absolute top-3 right-3 bg-gold text-black text-xs font-semibold px-3 py-1.5 rounded-full">
               {product.badge}
             </span>
           )}
@@ -70,7 +70,7 @@ export default function ProductCard({ product, priority = false }) {
 
                   <span
                     key={index}
-                    className="bg-black/50 text-[#D4AF37] border border-[#D4AF37]/20 px-3 py-1 rounded-full text-xs"
+                    className="bg-black/50 text-gold border border-gold/20 px-3 py-1 rounded-full text-xs"
                   >
                     {note}
                   </span>
@@ -93,7 +93,7 @@ export default function ProductCard({ product, priority = false }) {
                   key={star}
                   className={`text-sm ${
                     star <= Math.round(product.rating)
-                      ? "text-[#D4AF37]"
+                      ? "text-gold"
                       : "text-gray-700"
                   }`}
                 >
@@ -157,7 +157,7 @@ export default function ProductCard({ product, priority = false }) {
                 addToCart(product);
                 toast.success("Added to cart");
               }}
-              className="w-full bg-[#D4AF37] text-black font-semibold py-3 rounded-xl hover:opacity-90 transition duration-300"
+              className="w-full bg-gold text-black font-semibold py-3 rounded-xl hover:opacity-90 transition duration-300"
             >
 
               Add to Cart

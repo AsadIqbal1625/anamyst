@@ -45,7 +45,7 @@ export default function MobileMenu({
       <div
         className={`fixed top-0 left-0 h-[100dvh] w-[85%] max-w-[340px]
         bg-black
-        border-r border-[#D4AF37]/20
+        border-r border-gold/20
         z-[999]
         shadow-[0_0_100px_rgba(0,0,0,0.9)]
         transform transition-transform duration-500 ease-out
@@ -63,14 +63,14 @@ export default function MobileMenu({
           <button
             onClick={close}
             aria-label="Close menu"
-            className="absolute top-7 right-6 text-white/60 hover:text-[#D4AF37] text-3xl font-light transition duration-300"
+            className="absolute top-7 right-6 text-white/60 hover:text-gold text-3xl font-light transition duration-300"
           >
 
             ×
 
           </button>
 
-          <p className="text-[#D4AF37] text-[10px] tracking-[5px] uppercase mb-3">
+          <p className="text-gold text-[10px] tracking-[5px] uppercase mb-3">
 
             Luxury Fragrance House
 
@@ -102,13 +102,13 @@ export default function MobileMenu({
               className="flex items-center justify-between py-3.5 border-b border-white/5 group"
             >
 
-              <span className="text-[#D4AF37] text-lg tracking-[2px] uppercase font-medium">
+              <span className="text-gold text-lg tracking-[2px] uppercase font-medium">
 
                 Shop All
 
               </span>
 
-              <span className="text-[#D4AF37]">→</span>
+              <span className="text-gold">→</span>
 
             </Link>
 
@@ -121,13 +121,13 @@ export default function MobileMenu({
                 className="flex items-center justify-between py-3.5 border-b border-white/5 group"
               >
 
-                <span className="text-white/90 text-lg tracking-[2px] uppercase font-light group-hover:text-[#D4AF37] transition duration-300">
+                <span className="text-white/90 text-lg tracking-[2px] uppercase font-light group-hover:text-gold transition duration-300">
 
                   {item.title}
 
                 </span>
 
-                <span className="text-[#D4AF37] opacity-0 group-hover:opacity-100 transition duration-300">
+                <span className="text-gold opacity-0 group-hover:opacity-100 transition duration-300">
 
                   →
 
@@ -183,9 +183,9 @@ export default function MobileMenu({
 
           <div className="flex items-center gap-2 mt-3">
 
-            <span className="w-6 h-[1px] bg-[#D4AF37]" />
+            <span className="w-6 h-[1px] bg-gold" />
 
-            <span className="text-[#D4AF37] text-[10px] tracking-[3px] uppercase">
+            <span className="text-gold text-[10px] tracking-[3px] uppercase">
 
               ANAMYST
 

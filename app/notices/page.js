@@ -28,7 +28,7 @@ export default function NoticesPage() {
     <div className="min-h-screen bg-black text-white px-4 py-16">
       <div className="max-w-6xl mx-auto">
         <div className="text-center mb-16">
-          <p className="uppercase tracking-[6px] text-[#D4AF37] text-xs mb-5">
+          <p className="uppercase tracking-[6px] text-gold text-xs mb-5">
             New Launches
           </p>
 
@@ -49,7 +49,7 @@ export default function NoticesPage() {
               <Link
                 key={n._id}
                 href={`/notices/${n.slug}`}
-                className="group bg-white/5 border border-white/10 rounded-[32px] overflow-hidden hover:border-[#D4AF37]/40 transition duration-500"
+                className="group bg-white/5 border border-white/10 rounded-[32px] overflow-hidden hover:border-gold/40 transition duration-500"
               >
                 {n.image && (
                   <div className="relative h-[220px] bg-black/30">
@@ -64,7 +64,7 @@ export default function NoticesPage() {
                 )}
 
                 <div className="p-7">
-                  <p className="text-[#D4AF37] text-xs mb-3">
+                  <p className="text-gold text-xs mb-3">
                     {new Date(n.createdAt).toLocaleDateString("en-IN", {
                       day: "numeric",
                       month: "long",

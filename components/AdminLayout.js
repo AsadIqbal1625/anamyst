@@ -8,7 +8,7 @@ export default function AdminLayout({ children }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   return (
-    <div className="flex min-h-screen bg-black">
+    <div className="theme-dark flex min-h-screen bg-black">
 
       {/* Sidebar */}
       <AdminSidebar

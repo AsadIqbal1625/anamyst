@@ -137,7 +137,7 @@ export default function SettingsPage() {
                       : e.target.value,
                 })
               }
-              className="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-sm outline-none focus:border-[#D4AF37]/60"
+              className="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-sm outline-none focus:border-gold/60"
             />
           </div>
         ))}
@@ -196,7 +196,7 @@ export default function SettingsPage() {
                 placeholder="🪔"
                 value={settings.campaign?.emoji ?? ""}
                 onChange={(e) => updateCampaign({ emoji: e.target.value })}
-                className="w-full bg-black border border-white/10 rounded-lg px-3 py-2 text-sm outline-none focus:border-[#D4AF37]/60"
+                className="w-full bg-black border border-white/10 rounded-lg px-3 py-2 text-sm outline-none focus:border-gold/60"
               />
             </div>
 
@@ -209,7 +209,7 @@ export default function SettingsPage() {
                 placeholder="DIWALI OFFER"
                 value={settings.campaign?.title ?? ""}
                 onChange={(e) => updateCampaign({ title: e.target.value })}
-                className="w-full bg-black border border-white/10 rounded-lg px-3 py-2 text-sm outline-none focus:border-[#D4AF37]/60"
+                className="w-full bg-black border border-white/10 rounded-lg px-3 py-2 text-sm outline-none focus:border-gold/60"
               />
             </div>
           </div>
@@ -223,7 +223,7 @@ export default function SettingsPage() {
               placeholder="On this auspicious occasion"
               value={settings.campaign?.tagline ?? ""}
               onChange={(e) => updateCampaign({ tagline: e.target.value })}
-              className="w-full bg-black border border-white/10 rounded-lg px-3 py-2 text-sm outline-none focus:border-[#D4AF37]/60"
+              className="w-full bg-black border border-white/10 rounded-lg px-3 py-2 text-sm outline-none focus:border-gold/60"
             />
           </div>
 
@@ -263,7 +263,7 @@ export default function SettingsPage() {
               accept="image/jpeg,image/png,image/webp,image/avif,image/gif"
               disabled={uploadingBanner}
               onChange={(e) => uploadBannerImage(e.target.files?.[0])}
-              className="w-full bg-black border border-white/10 rounded-lg px-3 py-2 text-sm text-gray-400 file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:bg-[#D4AF37]/20 file:text-[#D4AF37] file:text-xs file:font-semibold"
+              className="w-full bg-black border border-white/10 rounded-lg px-3 py-2 text-sm text-gray-400 file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:bg-gold/20 file:text-gold file:text-xs file:font-semibold"
             />
 
             {uploadingBanner && (
@@ -295,7 +295,7 @@ export default function SettingsPage() {
                   ],
                 })
               }
-              className="px-4 py-2 rounded-lg text-xs font-semibold bg-[#D4AF37]/20 text-[#D4AF37] border border-[#D4AF37]/40 hover:bg-[#D4AF37]/30 transition whitespace-nowrap"
+              className="px-4 py-2 rounded-lg text-xs font-semibold bg-gold/20 text-gold border border-gold/40 hover:bg-gold/30 transition whitespace-nowrap"
             >
               + Add Tier
             </button>
@@ -320,7 +320,7 @@ export default function SettingsPage() {
                       tiers[i] = { ...tier, label: e.target.value };
                       setSettings({ ...settings, discountTiers: tiers });
                     }}
-                    className="w-full bg-black border border-white/10 rounded-lg px-3 py-2 text-sm outline-none focus:border-[#D4AF37]/60"
+                    className="w-full bg-black border border-white/10 rounded-lg px-3 py-2 text-sm outline-none focus:border-gold/60"
                   />
                 </div>
 
@@ -339,7 +339,7 @@ export default function SettingsPage() {
                       };
                       setSettings({ ...settings, discountTiers: tiers });
                     }}
-                    className="w-full bg-black border border-white/10 rounded-lg px-3 py-2 text-sm outline-none focus:border-[#D4AF37]/60"
+                    className="w-full bg-black border border-white/10 rounded-lg px-3 py-2 text-sm outline-none focus:border-gold/60"
                   />
                 </div>
 
@@ -358,7 +358,7 @@ export default function SettingsPage() {
                       };
                       setSettings({ ...settings, discountTiers: tiers });
                     }}
-                    className="w-full bg-black border border-white/10 rounded-lg px-3 py-2 text-sm outline-none focus:border-[#D4AF37]/60"
+                    className="w-full bg-black border border-white/10 rounded-lg px-3 py-2 text-sm outline-none focus:border-gold/60"
                   />
                 </div>
 
@@ -375,7 +375,7 @@ export default function SettingsPage() {
                         };
                         setSettings({ ...settings, discountTiers: tiers });
                       }}
-                      className="w-4 h-4 accent-[#D4AF37]"
+                      className="w-4 h-4 accent-gold"
                     />
                     Free Ship
                   </label>
@@ -427,7 +427,7 @@ export default function SettingsPage() {
           <button
             type="submit"
             disabled={saving}
-            className="px-6 py-3 rounded-xl bg-[#D4AF37] text-black font-semibold hover:opacity-90 transition disabled:opacity-50"
+            className="px-6 py-3 rounded-xl bg-gold text-black font-semibold hover:opacity-90 transition disabled:opacity-50"
           >
             {saving ? "Saving..." : "Save Settings"}
           </button>

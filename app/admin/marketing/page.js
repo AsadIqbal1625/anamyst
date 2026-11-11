@@ -94,7 +94,7 @@ export default function MarketingPage() {
             }
             placeholder="Code e.g. WELCOME10"
             required
-            className="bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-sm outline-none focus:border-[#D4AF37]/60"
+            className="bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-sm outline-none focus:border-gold/60"
           />
 
           <select
@@ -102,7 +102,7 @@ export default function MarketingPage() {
             onChange={(e) =>
               setForm({ ...form, discountType: e.target.value })
             }
-            className="bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-sm outline-none focus:border-[#D4AF37]/60"
+            className="bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-sm outline-none focus:border-gold/60"
           >
             <option value="percent">Percent (%)</option>
             <option value="flat">Flat (₹)</option>
@@ -117,7 +117,7 @@ export default function MarketingPage() {
             type="number"
             min="1"
             required
-            className="bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-sm outline-none focus:border-[#D4AF37]/60"
+            className="bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-sm outline-none focus:border-gold/60"
           />
 
           <input
@@ -128,7 +128,7 @@ export default function MarketingPage() {
             placeholder="Min order ₹ (optional)"
             type="number"
             min="0"
-            className="bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-sm outline-none focus:border-[#D4AF37]/60"
+            className="bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-sm outline-none focus:border-gold/60"
           />
 
           <input
@@ -141,7 +141,7 @@ export default function MarketingPage() {
             }
             type="date"
             title="Expiry date (optional)"
-            className="bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-sm outline-none focus:border-[#D4AF37]/60"
+            className="bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-sm outline-none focus:border-gold/60"
           />
         </div>
 
@@ -149,7 +149,7 @@ export default function MarketingPage() {
           <button
             type="submit"
             disabled={saving}
-            className="px-6 py-3 rounded-xl bg-[#D4AF37] text-black font-semibold hover:opacity-90 transition disabled:opacity-50"
+            className="px-6 py-3 rounded-xl bg-gold text-black font-semibold hover:opacity-90 transition disabled:opacity-50"
           >
             {saving ? "Creating..." : "Create Coupon"}
           </button>
@@ -186,7 +186,7 @@ export default function MarketingPage() {
               <tbody>
                 {coupons.map((c) => (
                   <tr key={c._id} className="border-b border-white/5">
-                    <td className="py-3 pr-4 text-[#D4AF37] font-semibold">
+                    <td className="py-3 pr-4 text-gold font-semibold">
                       {c.code}
                     </td>
                     <td className="py-3 pr-4">
@@ -214,7 +214,7 @@ export default function MarketingPage() {
                     <td className="py-3 flex gap-3">
                       <button
                         onClick={() => toggleActive(c)}
-                        className="px-3 py-1.5 rounded-lg border border-white/20 text-xs hover:border-[#D4AF37] transition"
+                        className="px-3 py-1.5 rounded-lg border border-white/20 text-xs hover:border-gold transition"
                       >
                         {c.active ? "Disable" : "Enable"}
                       </button>

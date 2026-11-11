@@ -44,12 +44,12 @@ export default async function NoticeDetailPage({ params }) {
       <div className="max-w-3xl mx-auto">
         <Link
           href="/notices"
-          className="text-[#D4AF37] text-sm hover:underline"
+          className="text-gold text-sm hover:underline"
         >
           ← Back to Updates
         </Link>
 
-        <p className="uppercase tracking-[4px] text-[#D4AF37] text-xs mt-8 mb-4">
+        <p className="uppercase tracking-[4px] text-gold text-xs mt-8 mb-4">
           {new Date(notice.createdAt).toLocaleDateString("en-IN", {
             day: "numeric",
             month: "long",

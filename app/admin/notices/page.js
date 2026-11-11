@@ -178,7 +178,7 @@ export default function NoticesAdminPage() {
             onChange={(e) => handleTitleChange(e.target.value)}
             placeholder="Title"
             required
-            className="bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-sm outline-none focus:border-[#D4AF37]/60"
+            className="bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-sm outline-none focus:border-gold/60"
           />
 
           <input
@@ -189,7 +189,7 @@ export default function NoticesAdminPage() {
             }}
             placeholder="url-slug"
             required
-            className="bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-sm outline-none focus:border-[#D4AF37]/60"
+            className="bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-sm outline-none focus:border-gold/60"
           />
 
           <div className="md:col-span-2 space-y-2">
@@ -200,10 +200,10 @@ export default function NoticesAdminPage() {
               className="w-full bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-sm outline-none"
             />
             {uploading && (
-              <p className="text-[#D4AF37] text-xs">Uploading...</p>
+              <p className="text-gold text-xs">Uploading...</p>
             )}
             {form.image && (
-              <div className="relative w-full h-[180px] rounded-xl overflow-hidden border border-[#D4AF37]/20">
+              <div className="relative w-full h-[180px] rounded-xl overflow-hidden border border-gold/20">
                 <Image
                   fill
                   sizes="600px"
@@ -220,7 +220,7 @@ export default function NoticesAdminPage() {
             onChange={(e) => setForm({ ...form, excerpt: e.target.value })}
             placeholder="Short excerpt (shown in previews)"
             rows={2}
-            className="md:col-span-2 bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-sm outline-none focus:border-[#D4AF37]/60"
+            className="md:col-span-2 bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-sm outline-none focus:border-gold/60"
           />
 
           <textarea
@@ -229,7 +229,7 @@ export default function NoticesAdminPage() {
             placeholder="Full content"
             required
             rows={6}
-            className="md:col-span-2 bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-sm outline-none focus:border-[#D4AF37]/60"
+            className="md:col-span-2 bg-black/40 border border-white/10 rounded-xl px-4 py-3 text-sm outline-none focus:border-gold/60"
           />
         </div>
 
@@ -237,7 +237,7 @@ export default function NoticesAdminPage() {
           <button
             type="submit"
             disabled={saving || uploading}
-            className="px-6 py-3 rounded-xl bg-[#D4AF37] text-black font-semibold hover:opacity-90 transition disabled:opacity-50"
+            className="px-6 py-3 rounded-xl bg-gold text-black font-semibold hover:opacity-90 transition disabled:opacity-50"
           >
             {uploading ? "Uploading image..." : saving ? "Saving..." : editingId ? "Update Notice" : "Add Notice"}
           </button>
@@ -246,7 +246,7 @@ export default function NoticesAdminPage() {
             <button
               type="button"
               onClick={cancelEdit}
-              className="px-6 py-3 rounded-xl border border-white/20 hover:border-[#D4AF37] transition"
+              className="px-6 py-3 rounded-xl border border-white/20 hover:border-gold transition"
             >
               Cancel
             </button>
@@ -294,19 +294,19 @@ export default function NoticesAdminPage() {
                   <Link
                     href={`/notices/${n.slug}`}
                     target="_blank"
-                    className="px-3 py-1.5 rounded-lg border border-white/20 text-xs hover:border-[#D4AF37] transition"
+                    className="px-3 py-1.5 rounded-lg border border-white/20 text-xs hover:border-gold transition"
                   >
                     View
                   </Link>
                   <button
                     onClick={() => editNotice(n)}
-                    className="px-3 py-1.5 rounded-lg bg-[#D4AF37] text-black text-xs font-semibold hover:opacity-90 transition"
+                    className="px-3 py-1.5 rounded-lg bg-gold text-black text-xs font-semibold hover:opacity-90 transition"
                   >
                     Edit
                   </button>
                   <button
                     onClick={() => togglePublished(n)}
-                    className="px-3 py-1.5 rounded-lg border border-white/20 text-xs hover:border-[#D4AF37] transition"
+                    className="px-3 py-1.5 rounded-lg border border-white/20 text-xs hover:border-gold transition"
                   >
                     {n.published ? "Hide" : "Publish"}
                   </button>

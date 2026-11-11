@@ -200,9 +200,9 @@ export default function ProductClient({
     <div className="min-h-screen bg-black text-white overflow-hidden">
 
       {/* HERO */}
-      <section className="relative px-4 py-10 md:px-6 md:py-16 border-b border-[#D4AF37]/20">
+      <section className="relative px-4 py-10 md:px-6 md:py-16 border-b border-gold/20">
 
-        <div className="absolute inset-0 bg-gradient-to-b from-[#D4AF37]/10 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-b from-gold/10 to-transparent" />
 
         <div className="relative grid grid-cols-1 md:grid-cols-[1fr_1fr] gap-6 lg:gap-8 items-stretch max-w-7xl mx-auto">
 
@@ -226,7 +226,7 @@ export default function ProductClient({
 
               </span>
 
-              <span className="absolute top-4 right-4 bg-[#D4AF37] text-black text-xs font-semibold px-4 py-2 rounded-full z-10">
+              <span className="absolute top-4 right-4 bg-gold text-black text-xs font-semibold px-4 py-2 rounded-full z-10">
 
                 {product.badge}
 
@@ -285,7 +285,7 @@ export default function ProductClient({
                     onClick={() => setActiveImage(index)}
                     className={`relative shrink-0 w-16 h-16 rounded-xl overflow-hidden border transition ${
                       activeImage === index
-                        ? "border-[#D4AF37]"
+                        ? "border-gold"
                         : "border-white/10 opacity-70 hover:opacity-100"
                     }`}
                   >
@@ -311,7 +311,7 @@ export default function ProductClient({
           {/* PRODUCT DETAILS */}
           <div className="bg-white/5 border border-white/10 rounded-[28px] backdrop-blur-xl p-4 md:p-5">
 
-            <p className="uppercase tracking-[4px] text-[#D4AF37] text-[10px] mb-3">
+            <p className="uppercase tracking-[4px] text-gold text-[10px] mb-3">
 
               ANAMYST Luxury Collection
 
@@ -337,7 +337,7 @@ export default function ProductClient({
 
                 <a href="#reviews" className="flex items-center gap-3">
 
-                  <span className="text-[#D4AF37] text-lg">
+                  <span className="text-gold text-lg">
 
                     {"★".repeat(Math.round(product.rating))}
                     {"☆".repeat(5 - Math.round(product.rating))}
@@ -357,7 +357,7 @@ export default function ProductClient({
 
                 <a
                   href="#reviews"
-                  className="text-gray-400 text-sm hover:text-[#D4AF37] transition"
+                  className="text-gray-400 text-sm hover:text-gold transition"
                 >
                   No reviews yet
                 </a>
@@ -399,7 +399,7 @@ export default function ProductClient({
 
                   <span
                     key={index}
-                    className="bg-black text-[#D4AF37] border border-[#D4AF37]/20 px-3 py-1 rounded-full text-xs font-medium"
+                    className="bg-black text-gold border border-gold/20 px-3 py-1 rounded-full text-xs font-medium"
                   >
 
                     {note}
@@ -433,9 +433,9 @@ export default function ProductClient({
                 .map((item, index) => (
                   <div
                     key={index}
-                    className="bg-black/30 border border-[#D4AF37]/15 rounded-xl px-3 py-2 hover:border-[#D4AF37]/40 transition-all duration-300"
+                    className="bg-black/30 border border-gold/15 rounded-xl px-3 py-2 hover:border-gold/40 transition-all duration-300"
                   >
-                    <p className="text-[#D4AF37] text-[9px] uppercase tracking-[1.5px] mb-0.5">
+                    <p className="text-gold text-[9px] uppercase tracking-[1.5px] mb-0.5">
                       {item.label}
                     </p>
 
@@ -507,7 +507,7 @@ export default function ProductClient({
                         : 1
                     )
                   }
-                  className="w-12 h-12 flex items-center justify-center text-white text-xl font-bold hover:bg-[#D4AF37] hover:text-black transition"
+                  className="w-12 h-12 flex items-center justify-center text-white text-xl font-bold hover:bg-gold hover:text-black transition"
                 >
 
                   -
@@ -524,7 +524,7 @@ export default function ProductClient({
                   onClick={() =>
                     setQty(qty + 1)
                   }
-                  className="w-12 h-12 flex items-center justify-center text-white text-xl font-bold hover:bg-[#D4AF37] hover:text-black transition"
+                  className="w-12 h-12 flex items-center justify-center text-white text-xl font-bold hover:bg-gold hover:text-black transition"
                 >
 
                   +
@@ -562,7 +562,7 @@ export default function ProductClient({
                   );
 
                 }}
-                className="w-full bg-[#D4AF37] text-black py-3 rounded-xl text-base font-semibold hover:opacity-90 transition duration-300"
+                className="w-full bg-gold text-black py-3 rounded-xl text-base font-semibold hover:opacity-90 transition duration-300"
               >
 
                 Add to Cart
@@ -578,7 +578,7 @@ export default function ProductClient({
                     "/checkout";
 
                 }}
-                className="w-full border border-[#D4AF37] text-[#D4AF37] py-3 rounded-xl text-base font-semibold hover:bg-[#D4AF37] hover:text-black transition duration-300"
+                className="w-full border border-gold text-gold py-3 rounded-xl text-base font-semibold hover:bg-gold hover:text-black transition duration-300"
               >
 
                 Buy Now
@@ -615,7 +615,7 @@ export default function ProductClient({
                   className="h-full"
                 >
 
-                  <div className="h-full flex flex-col bg-white/5 border border-white/10 rounded-[32px] overflow-hidden hover:border-[#D4AF37]/40 transition duration-300 backdrop-blur-xl group">
+                  <div className="h-full flex flex-col bg-white/5 border border-white/10 rounded-[32px] overflow-hidden hover:border-gold/40 transition duration-300 backdrop-blur-xl group">
 
                     <div className="relative h-56 md:h-64 bg-black/40 overflow-hidden">
 
@@ -652,7 +652,7 @@ export default function ProductClient({
 
                         </span>
 
-                        <span className="text-[#D4AF37] text-xs uppercase tracking-[2px] font-medium">
+                        <span className="text-gold text-xs uppercase tracking-[2px] font-medium">
 
                           View →
 

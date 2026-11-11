@@ -3,6 +3,7 @@
 :root {
   --background: #000000;
   --foreground: #ffffff;
+  color-scheme: dark;
 }
 
 @theme inline {
@@ -18,7 +19,7 @@ body {
   padding: 0;
   overflow-x: hidden;
   scroll-behavior: smooth;
-  background: black;
+  background: var(--background);
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
@@ -47,7 +48,6 @@ textarea {
 
 /* Date inputs: visible calendar icon on dark theme */
 input[type="date"] {
-  color-scheme: dark;
   cursor: pointer;
 }
 
@@ -57,10 +57,10 @@ input:-webkit-autofill:hover,
 input:-webkit-autofill:focus,
 textarea:-webkit-autofill,
 select:-webkit-autofill {
-  -webkit-box-shadow: 0 0 0 1000px #000000 inset;
-  box-shadow: 0 0 0 1000px #000000 inset;
-  -webkit-text-fill-color: #ffffff;
-  caret-color: #ffffff;
+  -webkit-box-shadow: 0 0 0 1000px var(--background) inset;
+  box-shadow: 0 0 0 1000px var(--background) inset;
+  -webkit-text-fill-color: var(--foreground);
+  caret-color: var(--foreground);
   transition: background-color 9999s ease-in-out 0s;
 }
 /* ===== HOMEPAGE ===== */
@@ -122,7 +122,7 @@ select:-webkit-autofill {
   font-family: var(--font-accent), Georgia, serif;
   font-style: italic;
   font-size: 1.08em;
-  color: #d4af37;
+  color: var(--color-gold);
 }
 
 /* faint technical grid behind the desktop hero */
@@ -256,4 +256,299 @@ select:-webkit-autofill {
 /* closing section: gold light rising from behind the button */
 .closing-glow {
   background: radial-gradient(55% 90% at 50% 100%, rgba(212, 175, 55, 0.14), transparent 70%);
+}
+
+/* ===== DARK / LIGHT THEME =====
+   Brand colours as shared theme colours (text-gold, bg-surface, ...).
+   Dark gold is the default; the light look swaps the same colours, so
+   every page follows without per-page changes. */
+@theme {
+  --color-gold: #d4af37;
+  --color-gold-bright: #e6c34a;
+  --color-gold-deep: #c19b2e;
+  --color-gold-dark: #8a6d1f;
+  --color-surface: #111111;
+  --color-surface-deep: #0b0b0b;
+  --color-surface-warm: #0d0b05;
+}
+
+/* LIGHT: ivory and ink. White and black trade places, and every grey,
+   red, green and yellow shade flips (300 <-> 700 ...), so text that was
+   light on black becomes dark on ivory with the same contrast. */
+:root[data-theme="light"] {
+  color-scheme: light;
+  --background: #f7f3ea;
+  --foreground: #16120b;
+  --color-white: #16120b;
+  --color-black: #f7f3ea;
+  --color-gold: #8c6a12;
+  --color-gold-bright: #a27c17;
+  --color-gold-deep: #74570e;
+  --color-gold-dark: #5e470b;
+  --color-surface: #efe8da;
+  --color-surface-deep: #f2ece0;
+  --color-surface-warm: #efe4cc;
+  --color-gray-50: oklch(13% 0.028 261.692);
+  --color-gray-100: oklch(21% 0.034 264.665);
+  --color-gray-200: oklch(27.8% 0.033 256.848);
+  --color-gray-300: oklch(37.3% 0.034 259.733);
+  --color-gray-400: oklch(44.6% 0.03 256.802);
+  --color-gray-500: oklch(55.1% 0.027 264.364);
+  --color-gray-600: oklch(70.7% 0.022 261.325);
+  --color-gray-700: oklch(87.2% 0.01 258.338);
+  --color-gray-800: oklch(92.8% 0.006 264.531);
+  --color-gray-900: oklch(96.7% 0.003 264.542);
+  --color-gray-950: oklch(98.5% 0.002 247.839);
+  --color-red-50: oklch(25.8% 0.092 26.042);
+  --color-red-100: oklch(39.6% 0.141 25.723);
+  --color-red-200: oklch(44.4% 0.177 26.899);
+  --color-red-300: oklch(50.5% 0.213 27.518);
+  --color-red-400: oklch(57.7% 0.245 27.325);
+  --color-red-500: oklch(63.7% 0.237 25.331);
+  --color-red-600: oklch(70.4% 0.191 22.216);
+  --color-red-700: oklch(80.8% 0.114 19.571);
+  --color-red-800: oklch(88.5% 0.062 18.334);
+  --color-red-900: oklch(93.6% 0.032 17.717);
+  --color-red-950: oklch(97.1% 0.013 17.38);
+  --color-green-50: oklch(26.6% 0.065 152.934);
+  --color-green-100: oklch(39.3% 0.095 152.535);
+  --color-green-200: oklch(44.8% 0.119 151.328);
+  --color-green-300: oklch(52.7% 0.154 150.069);
+  --color-green-400: oklch(62.7% 0.194 149.214);
+  --color-green-500: oklch(72.3% 0.219 149.579);
+  --color-green-600: oklch(79.2% 0.209 151.711);
+  --color-green-700: oklch(87.1% 0.15 154.449);
+  --color-green-800: oklch(92.5% 0.084 155.995);
+  --color-green-900: oklch(96.2% 0.044 156.743);
+  --color-green-950: oklch(98.2% 0.018 155.826);
+  --color-yellow-50: oklch(28.6% 0.066 53.813);
+  --color-yellow-100: oklch(42.1% 0.095 57.708);
+  --color-yellow-200: oklch(47.6% 0.114 61.907);
+  --color-yellow-300: oklch(55.4% 0.135 66.442);
+  --color-yellow-400: oklch(68.1% 0.162 75.834);
+  --color-yellow-500: oklch(79.5% 0.184 86.047);
+  --color-yellow-600: oklch(85.2% 0.199 91.936);
+  --color-yellow-700: oklch(90.5% 0.182 98.111);
+  --color-yellow-800: oklch(94.5% 0.129 101.54);
+  --color-yellow-900: oklch(97.3% 0.071 103.193);
+  --color-yellow-950: oklch(98.7% 0.026 102.212);
+}
+
+/* Areas that stay dark in light mode: text over photos and video,
+   festive banners, and the admin panel. */
+:root[data-theme="light"] .theme-dark {
+  --color-white: #ffffff;
+  --color-black: #000000;
+  --color-gold: #d4af37;
+  --color-gold-bright: #e6c34a;
+  --color-gold-deep: #c19b2e;
+  --color-gold-dark: #8a6d1f;
+  --color-surface: #111111;
+  --color-surface-deep: #0b0b0b;
+  --color-surface-warm: #0d0b05;
+  --color-gray-50: oklch(98.5% 0.002 247.839);
+  --color-gray-100: oklch(96.7% 0.003 264.542);
+  --color-gray-200: oklch(92.8% 0.006 264.531);
+  --color-gray-300: oklch(87.2% 0.01 258.338);
+  --color-gray-400: oklch(70.7% 0.022 261.325);
+  --color-gray-500: oklch(55.1% 0.027 264.364);
+  --color-gray-600: oklch(44.6% 0.03 256.802);
+  --color-gray-700: oklch(37.3% 0.034 259.733);
+  --color-gray-800: oklch(27.8% 0.033 256.848);
+  --color-gray-900: oklch(21% 0.034 264.665);
+  --color-gray-950: oklch(13% 0.028 261.692);
+  --color-red-50: oklch(97.1% 0.013 17.38);
+  --color-red-100: oklch(93.6% 0.032 17.717);
+  --color-red-200: oklch(88.5% 0.062 18.334);
+  --color-red-300: oklch(80.8% 0.114 19.571);
+  --color-red-400: oklch(70.4% 0.191 22.216);
+  --color-red-500: oklch(63.7% 0.237 25.331);
+  --color-red-600: oklch(57.7% 0.245 27.325);
+  --color-red-700: oklch(50.5% 0.213 27.518);
+  --color-red-800: oklch(44.4% 0.177 26.899);
+  --color-red-900: oklch(39.6% 0.141 25.723);
+  --color-red-950: oklch(25.8% 0.092 26.042);
+  --color-green-50: oklch(98.2% 0.018 155.826);
+  --color-green-100: oklch(96.2% 0.044 156.743);
+  --color-green-200: oklch(92.5% 0.084 155.995);
+  --color-green-300: oklch(87.1% 0.15 154.449);
+  --color-green-400: oklch(79.2% 0.209 151.711);
+  --color-green-500: oklch(72.3% 0.219 149.579);
+  --color-green-600: oklch(62.7% 0.194 149.214);
+  --color-green-700: oklch(52.7% 0.154 150.069);
+  --color-green-800: oklch(44.8% 0.119 151.328);
+  --color-green-900: oklch(39.3% 0.095 152.535);
+  --color-green-950: oklch(26.6% 0.065 152.934);
+  --color-yellow-50: oklch(98.7% 0.026 102.212);
+  --color-yellow-100: oklch(97.3% 0.071 103.193);
+  --color-yellow-200: oklch(94.5% 0.129 101.54);
+  --color-yellow-300: oklch(90.5% 0.182 98.111);
+  --color-yellow-400: oklch(85.2% 0.199 91.936);
+  --color-yellow-500: oklch(79.5% 0.184 86.047);
+  --color-yellow-600: oklch(68.1% 0.162 75.834);
+  --color-yellow-700: oklch(55.4% 0.135 66.442);
+  --color-yellow-800: oklch(47.6% 0.114 61.907);
+  --color-yellow-900: oklch(42.1% 0.095 57.708);
+  --color-yellow-950: oklch(28.6% 0.066 53.813);
+  color-scheme: dark;
+  color: var(--color-white);
+}
+
+/* the phone hero puts its text over the video */
+@media (max-width: 1023.98px) {
+  :root[data-theme="light"] .theme-dark-mobile {
+    --color-white: #ffffff;
+    --color-black: #000000;
+    --color-gold: #d4af37;
+    --color-gold-bright: #e6c34a;
+    --color-gold-deep: #c19b2e;
+    --color-gold-dark: #8a6d1f;
+    --color-surface: #111111;
+    --color-surface-deep: #0b0b0b;
+    --color-surface-warm: #0d0b05;
+    --color-gray-50: oklch(98.5% 0.002 247.839);
+    --color-gray-100: oklch(96.7% 0.003 264.542);
+    --color-gray-200: oklch(92.8% 0.006 264.531);
+    --color-gray-300: oklch(87.2% 0.01 258.338);
+    --color-gray-400: oklch(70.7% 0.022 261.325);
+    --color-gray-500: oklch(55.1% 0.027 264.364);
+    --color-gray-600: oklch(44.6% 0.03 256.802);
+    --color-gray-700: oklch(37.3% 0.034 259.733);
+    --color-gray-800: oklch(27.8% 0.033 256.848);
+    --color-gray-900: oklch(21% 0.034 264.665);
+    --color-gray-950: oklch(13% 0.028 261.692);
+    --color-red-50: oklch(97.1% 0.013 17.38);
+    --color-red-100: oklch(93.6% 0.032 17.717);
+    --color-red-200: oklch(88.5% 0.062 18.334);
+    --color-red-300: oklch(80.8% 0.114 19.571);
+    --color-red-400: oklch(70.4% 0.191 22.216);
+    --color-red-500: oklch(63.7% 0.237 25.331);
+    --color-red-600: oklch(57.7% 0.245 27.325);
+    --color-red-700: oklch(50.5% 0.213 27.518);
+    --color-red-800: oklch(44.4% 0.177 26.899);
+    --color-red-900: oklch(39.6% 0.141 25.723);
+    --color-red-950: oklch(25.8% 0.092 26.042);
+    --color-green-50: oklch(98.2% 0.018 155.826);
+    --color-green-100: oklch(96.2% 0.044 156.743);
+    --color-green-200: oklch(92.5% 0.084 155.995);
+    --color-green-300: oklch(87.1% 0.15 154.449);
+    --color-green-400: oklch(79.2% 0.209 151.711);
+    --color-green-500: oklch(72.3% 0.219 149.579);
+    --color-green-600: oklch(62.7% 0.194 149.214);
+    --color-green-700: oklch(52.7% 0.154 150.069);
+    --color-green-800: oklch(44.8% 0.119 151.328);
+    --color-green-900: oklch(39.3% 0.095 152.535);
+    --color-green-950: oklch(26.6% 0.065 152.934);
+    --color-yellow-50: oklch(98.7% 0.026 102.212);
+    --color-yellow-100: oklch(97.3% 0.071 103.193);
+    --color-yellow-200: oklch(94.5% 0.129 101.54);
+    --color-yellow-300: oklch(90.5% 0.182 98.111);
+    --color-yellow-400: oklch(85.2% 0.199 91.936);
+    --color-yellow-500: oklch(79.5% 0.184 86.047);
+    --color-yellow-600: oklch(68.1% 0.162 75.834);
+    --color-yellow-700: oklch(55.4% 0.135 66.442);
+    --color-yellow-800: oklch(47.6% 0.114 61.907);
+    --color-yellow-900: oklch(42.1% 0.095 57.708);
+    --color-yellow-950: oklch(28.6% 0.066 53.813);
+    color-scheme: dark;
+    color: var(--color-white);
+  }
+}
+
+/* theme switch button: show the sun in dark mode, the moon in light */
+.theme-toggle .icon-moon,
+:root[data-theme="light"] .theme-toggle .icon-sun {
+  display: none;
+}
+
+:root[data-theme="light"] .theme-toggle .icon-moon {
+  display: block;
+}
+
+/* ===== FINISHING TOUCHES ===== */
+
+/* highlighted headline words in polished, metallic gold */
+.accent {
+  background-image: linear-gradient(
+    100deg,
+    var(--color-gold-deep) 0%,
+    var(--color-gold-bright) 40%,
+    var(--color-gold) 65%,
+    var(--color-gold-deep) 100%
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+  /* room for the italic's last letter, which leans past its box */
+  padding-right: 0.08em;
+}
+
+/* main gold buttons: brushed-metal finish and a soft gold halo */
+.btn-gold {
+  background-image: linear-gradient(
+    110deg,
+    var(--color-gold-deep) 0%,
+    var(--color-gold-bright) 45%,
+    var(--color-gold) 70%,
+    var(--color-gold-deep) 100%
+  );
+  box-shadow: 0 12px 32px -14px rgba(212, 175, 55, 0.55);
+}
+
+.btn-gold:hover {
+  filter: brightness(1.08);
+}
+
+/* switching themes cross-fades a little slower, so it feels deliberate */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 0.45s;
+}
+
+/* ----- light mode only ----- */
+
+/* darker metal on ivory, so the ivory button text stays easy to read */
+:root[data-theme="light"] .btn-gold {
+  background-image: linear-gradient(
+    110deg,
+    #6b500c 0%,
+    #8c6a12 50%,
+    #6b500c 100%
+  );
+  box-shadow: 0 14px 30px -16px rgba(107, 80, 12, 0.6);
+}
+
+/* where dark mode uses glow, light mode uses soft, warm depth */
+:root[data-theme="light"] .lux-card,
+:root[data-theme="light"] .spotlight:not(.bg-black) {
+  box-shadow:
+    0 1px 2px rgba(60, 42, 8, 0.05),
+    0 22px 44px -28px rgba(60, 42, 8, 0.35);
+  transition: box-shadow 0.4s ease;
+}
+
+:root[data-theme="light"] .lux-card:hover,
+:root[data-theme="light"] .spotlight:not(.bg-black):hover {
+  box-shadow:
+    0 1px 2px rgba(60, 42, 8, 0.05),
+    0 30px 60px -28px rgba(60, 42, 8, 0.45);
+}
+
+/* richer champagne light behind the hero and closing on ivory */
+:root[data-theme="light"] .hero-glow {
+  background:
+    radial-gradient(60% 70% at 15% 40%, rgba(212, 175, 55, 0.24), transparent 70%),
+    radial-gradient(45% 55% at 90% 90%, rgba(212, 175, 55, 0.14), transparent 70%);
+}
+
+:root[data-theme="light"] .closing-glow {
+  background: radial-gradient(55% 90% at 50% 100%, rgba(212, 175, 55, 0.26), transparent 70%);
+}
+
+:root[data-theme="light"] .hero-grid {
+  background-image:
+    linear-gradient(rgba(140, 106, 18, 0.12) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(140, 106, 18, 0.12) 1px, transparent 1px);
 }

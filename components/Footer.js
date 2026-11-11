@@ -13,7 +13,7 @@ export default function Footer() {
 
   return (
 
-    <footer className="bg-black border-t border-[#D4AF37]/20 text-white">
+    <footer className="bg-black border-t border-gold/20 text-white">
 
       <div className="max-w-7xl mx-auto px-6 py-16">
 
@@ -41,7 +41,7 @@ export default function Footer() {
           {/* SHOP */}
           <div>
 
-            <h3 className="text-[#D4AF37] text-lg font-semibold mb-5">
+            <h3 className="text-gold text-lg font-semibold mb-5">
 
               Shop
 
@@ -51,7 +51,7 @@ export default function Footer() {
 
               <Link
                 href="/shop"
-                className="hover:text-[#D4AF37] transition"
+                className="hover:text-gold transition"
               >
 
                 All Products
@@ -60,7 +60,7 @@ export default function Footer() {
 
               <Link
                 href="/cart"
-                className="hover:text-[#D4AF37] transition"
+                className="hover:text-gold transition"
               >
 
                 Cart
@@ -69,7 +69,7 @@ export default function Footer() {
 
               <Link
                 href="/faq"
-                className="hover:text-[#D4AF37] transition"
+                className="hover:text-gold transition"
               >
 
                 FAQ
@@ -77,21 +77,21 @@ export default function Footer() {
               </Link>
               <Link
                 href="/track-order"
-                className="hover:text-[#D4AF37] transition"
+                className="hover:text-gold transition"
               >
                 Track Order
               </Link>
 
               <Link
                 href="/notices"
-                className="hover:text-[#D4AF37] transition"
+                className="hover:text-gold transition"
               >
                 New Launches
               </Link>
 
               <Link
                 href="/contact"
-                className="hover:text-[#D4AF37] transition"
+                className="hover:text-gold transition"
               >
 
                 Contact
@@ -105,7 +105,7 @@ export default function Footer() {
           {/* POLICIES */}
           <div>
 
-            <h3 className="text-[#D4AF37] text-lg font-semibold mb-5">
+            <h3 className="text-gold text-lg font-semibold mb-5">
 
               Policies
 
@@ -115,7 +115,7 @@ export default function Footer() {
 
               <Link
                 href="/privacy-policy"
-                className="hover:text-[#D4AF37] transition"
+                className="hover:text-gold transition"
               >
 
                 Privacy Policy
@@ -124,7 +124,7 @@ export default function Footer() {
 
               <Link
                 href="/refund-policy"
-                className="hover:text-[#D4AF37] transition"
+                className="hover:text-gold transition"
               >
 
                 Refund Policy
@@ -133,7 +133,7 @@ export default function Footer() {
 
               <Link
                 href="/shipping-policy"
-                className="hover:text-[#D4AF37] transition"
+                className="hover:text-gold transition"
               >
 
                 Shipping Policy
@@ -142,7 +142,7 @@ export default function Footer() {
 
               <Link
                 href="/terms-and-conditions"
-                className="hover:text-[#D4AF37] transition"
+                className="hover:text-gold transition"
               >
 
                 Terms & Conditions
@@ -156,7 +156,7 @@ export default function Footer() {
           {/* CONTACT */}
           <div>
 
-            <h3 className="text-[#D4AF37] text-lg font-semibold mb-5">
+            <h3 className="text-gold text-lg font-semibold mb-5">
 
               Connect
 
@@ -169,7 +169,7 @@ export default function Footer() {
 
                 <Mail
                   size={18}
-                  className="text-[#D4AF37]"
+                  className="text-gold"
                 />
 
                 <span>
@@ -185,7 +185,7 @@ export default function Footer() {
 
                 <Phone
                   size={18}
-                  className="text-[#D4AF37]"
+                  className="text-gold"
                 />
 
                 <span>
@@ -201,7 +201,7 @@ export default function Footer() {
 
                 <MapPin
                   size={18}
-                  className="text-[#D4AF37] mt-1"
+                  className="text-gold mt-1"
                 />
 
                 <span>
@@ -218,10 +218,10 @@ export default function Footer() {
               <a
                 href="https://instagram.com/anamyst_official"
                 target="_blank"
-                className="flex items-center gap-3 hover:text-[#D4AF37] transition"
+                className="flex items-center gap-3 hover:text-gold transition"
               >
              <FaInstagram
-                className="text-[#D4AF37]"
+                className="text-gold"
                 size={18}
               />
 

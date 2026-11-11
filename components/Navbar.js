@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import BrandWordmark from "./BrandWordmark";
+import ThemeToggle from "./ThemeToggle";
 import Image from "next/image";
 
 import {
@@ -248,7 +249,7 @@ export default function Navbar({ initialCoupon = null }) {
               {/* HOME */}
               <Link
                 href="/"
-                className="hover:text-[#D4AF37] transition duration-300"
+                className="hover:text-gold transition duration-300"
               >
 
                 Home
@@ -258,7 +259,7 @@ export default function Navbar({ initialCoupon = null }) {
               {/* COLLECTIONS */}
               <div className="relative group">
 
-                <button className="flex items-center gap-2 hover:text-[#D4AF37] transition duration-300">
+                <button className="flex items-center gap-2 hover:text-gold transition duration-300">
 
                   COLLECTIONS
 
@@ -273,12 +274,12 @@ export default function Navbar({ initialCoupon = null }) {
                 {/* DROPDOWN */}
                 <div className="absolute top-full left-0 pt-4 opacity-0 invisible translate-y-2 group-hover:opacity-100 group-hover:visible group-hover:translate-y-0 transition-all duration-300 ease-out">
 
-                  <div className="w-[400px] bg-black/95 backdrop-blur-2xl border border-[#D4AF37]/20 rounded-2xl shadow-[0_25px_80px_rgba(0,0,0,0.85)] overflow-hidden">
+                  <div className="w-[400px] bg-black/95 backdrop-blur-2xl border border-gold/20 rounded-2xl shadow-[0_25px_80px_rgba(0,0,0,0.85)] overflow-hidden">
 
                     {/* HEADER */}
                     <div className="px-7 pt-6 pb-4 border-b border-white/5">
 
-                      <p className="text-[10px] tracking-[5px] text-[#D4AF37] uppercase">
+                      <p className="text-[10px] tracking-[5px] text-gold uppercase">
 
                         The Collections
 
@@ -320,12 +321,12 @@ export default function Navbar({ initialCoupon = null }) {
                         <Link
                           key={item.href}
                           href={item.href}
-                          className="group/item flex items-center justify-between px-7 py-4 hover:bg-[#D4AF37]/5 transition duration-300"
+                          className="group/item flex items-center justify-between px-7 py-4 hover:bg-gold/5 transition duration-300"
                         >
 
                           <div>
 
-                            <p className="text-white text-sm tracking-[3px] uppercase font-medium group-hover/item:text-[#D4AF37] transition duration-300">
+                            <p className="text-white text-sm tracking-[3px] uppercase font-medium group-hover/item:text-gold transition duration-300">
 
                               {item.name}
 
@@ -339,7 +340,7 @@ export default function Navbar({ initialCoupon = null }) {
 
                           </div>
 
-                          <span className="text-[#D4AF37] opacity-0 -translate-x-2 group-hover/item:opacity-100 group-hover/item:translate-x-0 transition-all duration-300">
+                          <span className="text-gold opacity-0 -translate-x-2 group-hover/item:opacity-100 group-hover/item:translate-x-0 transition-all duration-300">
 
                             →
 
@@ -354,10 +355,10 @@ export default function Navbar({ initialCoupon = null }) {
                     {/* FOOTER — ALL COLLECTIONS */}
                     <Link
                       href="/shop"
-                      className="block px-7 py-5 border-t border-white/5 bg-[#D4AF37]/5 hover:bg-[#D4AF37]/10 transition duration-300"
+                      className="block px-7 py-5 border-t border-white/5 bg-gold/5 hover:bg-gold/10 transition duration-300"
                     >
 
-                      <span className="text-[#D4AF37] text-xs tracking-[4px] uppercase font-semibold">
+                      <span className="text-gold text-xs tracking-[4px] uppercase font-semibold">
 
                         View All Collections →
 
@@ -374,7 +375,7 @@ export default function Navbar({ initialCoupon = null }) {
               {/* NOTICES */}
               <Link
                 href="/notices"
-                className="hover:text-[#D4AF37] transition duration-300"
+                className="hover:text-gold transition duration-300"
               >
 
                 New Launches
@@ -384,7 +385,7 @@ export default function Navbar({ initialCoupon = null }) {
               {/* ABOUT */}
               <Link
                 href="/about"
-                className="hover:text-[#D4AF37] transition duration-300"
+                className="hover:text-gold transition duration-300"
               >
 
                 About
@@ -394,7 +395,7 @@ export default function Navbar({ initialCoupon = null }) {
               {/* FAQ */}
               <Link
                 href="/faq"
-                className="hover:text-[#D4AF37] transition duration-300"
+                className="hover:text-gold transition duration-300"
               >
 
                 FAQ
@@ -402,7 +403,7 @@ export default function Navbar({ initialCoupon = null }) {
               </Link>
               <Link
                 href="/track-order"
-                className="hover:text-[#D4AF37] transition"
+                className="hover:text-gold transition"
               >
                 Track Order
               </Link>
@@ -410,14 +411,14 @@ export default function Navbar({ initialCoupon = null }) {
               {/* CART */}
               <Link
                 href="/cart"
-                className="relative hover:text-[#D4AF37] transition duration-300"
+                className="relative hover:text-gold transition duration-300"
               >
 
                 Cart
 
                 {cartCount > 0 && (
 
-                  <span className="absolute -top-2 -right-4 bg-[#D4AF37] text-black text-xs font-bold min-w-[22px] h-[22px] rounded-full flex items-center justify-center px-1">
+                  <span className="absolute -top-2 -right-4 bg-gold text-black text-xs font-bold min-w-[22px] h-[22px] rounded-full flex items-center justify-center px-1">
 
                     {cartCount}
 
@@ -428,6 +429,9 @@ export default function Navbar({ initialCoupon = null }) {
               </Link>
 
             </div>
+
+            {/* DARK / LIGHT SWITCH (every screen size) */}
+            <ThemeToggle />
 
           </div>
 
@@ -458,7 +462,7 @@ export default function Navbar({ initialCoupon = null }) {
                 }
 
               }}
-              className="w-full px-5 py-4 rounded-full bg-white/10 border border-[#D4AF37] text-white placeholder:text-gray-300 outline-none focus:border-[#D4AF37] transition"
+              className="w-full px-5 py-4 rounded-full bg-white/10 border border-gold text-white placeholder:text-gray-300 outline-none focus:border-gold transition"
             />
 
           </div>
@@ -473,7 +477,7 @@ export default function Navbar({ initialCoupon = null }) {
         className="md:hidden fixed bottom-6 right-5 z-[9999]"
       >
 
-        <div className="relative bg-black text-white w-16 h-16 rounded-full flex items-center justify-center shadow-2xl border border-[#D4AF37]">
+        <div className="relative bg-black text-white w-16 h-16 rounded-full flex items-center justify-center shadow-2xl border border-gold">
 
           <span className="text-2xl">
 
@@ -483,7 +487,7 @@ export default function Navbar({ initialCoupon = null }) {
 
           {cartCount > 0 && (
 
-            <span className="absolute -top-2 -right-2 bg-[#D4AF37] text-black text-xs font-bold w-6 h-6 rounded-full flex items-center justify-center">
+            <span className="absolute -top-2 -right-2 bg-gold text-black text-xs font-bold w-6 h-6 rounded-full flex items-center justify-center">
 
               {cartCount}
 

@@ -14,7 +14,7 @@ export default function AdminTopbar({ onMenuClick = () => {} }) {
 
   return (
 
-    <header className="h-20 border-b border-[#D4AF37]/20 bg-[#111] flex items-center justify-between px-4 md:px-8 gap-4">
+    <header className="h-20 border-b border-gold/20 bg-surface flex items-center justify-between px-4 md:px-8 gap-4">
 
       <div className="flex items-center gap-4 min-w-0">
 

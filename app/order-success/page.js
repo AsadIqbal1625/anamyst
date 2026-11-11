@@ -14,7 +14,7 @@ function SuccessContent({ orderId }) {
 
       <div className="flex items-center justify-center px-6 py-24">
 
-        <div className="bg-[#0B0B0B] border border-[#D4AF37]/20 rounded-3xl p-12 max-w-lg w-full text-center shadow-2xl">
+        <div className="bg-surface-deep border border-gold/20 rounded-3xl p-12 max-w-lg w-full text-center shadow-2xl">
 
           <div className="w-20 h-20 bg-green-500 rounded-2xl flex items-center justify-center mx-auto mb-8 text-5xl">
 
@@ -34,9 +34,9 @@ function SuccessContent({ orderId }) {
 
           </p>
 
-          <div className="bg-black border border-[#D4AF37]/20 rounded-2xl p-6 mb-10">
+          <div className="bg-black border border-gold/20 rounded-2xl p-6 mb-10">
 
-            <p className="text-[#D4AF37] text-lg mb-2">
+            <p className="text-gold text-lg mb-2">
 
               Order ID
 
@@ -60,14 +60,14 @@ function SuccessContent({ orderId }) {
 
             <Link
               href="/track-order"
-              className="bg-[#D4AF37] text-black py-4 rounded-2xl font-bold hover:opacity-90 transition"
+              className="bg-gold text-black py-4 rounded-2xl font-bold hover:opacity-90 transition"
             >
               Track Order
             </Link>
 
             <Link
               href="/shop"
-              className="border border-[#D4AF37]/30 py-4 rounded-2xl font-bold hover:bg-[#D4AF37]/10 transition"
+              className="border border-gold/30 py-4 rounded-2xl font-bold hover:bg-gold/10 transition"
             >
               Continue Shopping
             </Link>

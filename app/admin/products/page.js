@@ -480,7 +480,7 @@ export default function AdminPage() {
                     type="date"
                     value={exportFrom}
                     onChange={(e) => setExportFrom(e.target.value)}
-                    className="bg-black/40 border border-white/10 text-white rounded-xl px-3 py-2 text-sm outline-none focus:border-[#D4AF37]"
+                    className="bg-black/40 border border-white/10 text-white rounded-xl px-3 py-2 text-sm outline-none focus:border-gold"
                   />
                 </div>
 
@@ -492,13 +492,13 @@ export default function AdminPage() {
                     type="date"
                     value={exportTo}
                     onChange={(e) => setExportTo(e.target.value)}
-                    className="bg-black/40 border border-white/10 text-white rounded-xl px-3 py-2 text-sm outline-none focus:border-[#D4AF37]"
+                    className="bg-black/40 border border-white/10 text-white rounded-xl px-3 py-2 text-sm outline-none focus:border-gold"
                   />
                 </div>
 
                 <a
                   href={`/api/inventory/export?from=${exportFrom}&to=${exportTo}`}
-                  className="bg-white/10 border border-[#D4AF37]/40 hover:bg-white/20 text-white px-6 py-3 rounded-2xl font-semibold transition whitespace-nowrap"
+                  className="bg-white/10 border border-gold/40 hover:bg-white/20 text-white px-6 py-3 rounded-2xl font-semibold transition whitespace-nowrap"
                 >
                   Download Inventory (Excel)
                 </a>
@@ -516,7 +516,7 @@ export default function AdminPage() {
 
                 }}
 
-                className="bg-[#D4AF37] hover:opacity-90 text-black px-6 py-3 rounded-2xl font-semibold transition"
+                className="bg-gold hover:opacity-90 text-black px-6 py-3 rounded-2xl font-semibold transition"
 
               >
 
@@ -531,7 +531,7 @@ export default function AdminPage() {
           {/* FORM */}
           <form
             onSubmit={handleSubmit}
-            className="bg-white/5 border border-[#D4AF37]/20 rounded-[32px] backdrop-blur-xl p-6 md:p-8 mb-12"
+            className="bg-white/5 border border-gold/20 rounded-[32px] backdrop-blur-xl p-6 md:p-8 mb-12"
           >
 
             <div className="grid md:grid-cols-2 gap-5">
@@ -543,7 +543,7 @@ export default function AdminPage() {
                 placeholder="Product Name"
                 value={form.name}
                 onChange={handleChange}
-                className="w-full border border-white/10 bg-black/40 text-white placeholder:text-gray-400 rounded-2xl px-5 py-4 outline-none focus:border-[#D4AF37]"
+                className="w-full border border-white/10 bg-black/40 text-white placeholder:text-gray-400 rounded-2xl px-5 py-4 outline-none focus:border-gold"
                 required
               />
 
@@ -568,7 +568,7 @@ export default function AdminPage() {
 
                 {uploading && (
 
-                  <p className="text-[#D4AF37]">
+                  <p className="text-gold">
 
                     Uploading image(s)...
 
@@ -585,7 +585,7 @@ export default function AdminPage() {
 
                         <div
                           key={img + index}
-                          className="relative h-[100px] rounded-xl overflow-hidden border border-[#D4AF37]/20 bg-black/30"
+                          className="relative h-[100px] rounded-xl overflow-hidden border border-gold/20 bg-black/30"
                         >
 
                           <Image
@@ -599,7 +599,7 @@ export default function AdminPage() {
 
                           {index === 0 && (
 
-                            <span className="absolute bottom-1 left-1 bg-[#D4AF37] text-black text-[10px] font-semibold px-2 py-0.5 rounded-full">
+                            <span className="absolute bottom-1 left-1 bg-gold text-black text-[10px] font-semibold px-2 py-0.5 rounded-full">
 
                               Cover
 
@@ -637,7 +637,7 @@ export default function AdminPage() {
                 placeholder="Price"
                 value={form.price}
                 onChange={handleChange}
-                className="w-full border border-white/10 bg-black/40 text-white placeholder:text-gray-400 rounded-2xl px-5 py-4 outline-none focus:border-[#D4AF37]"
+                className="w-full border border-white/10 bg-black/40 text-white placeholder:text-gray-400 rounded-2xl px-5 py-4 outline-none focus:border-gold"
                 required
               />
 
@@ -648,7 +648,7 @@ export default function AdminPage() {
                 placeholder="Old Price"
                 value={form.oldPrice}
                 onChange={handleChange}
-                className="w-full border border-white/10 bg-black/40 text-white placeholder:text-gray-400 rounded-2xl px-5 py-4 outline-none focus:border-[#D4AF37]"
+                className="w-full border border-white/10 bg-black/40 text-white placeholder:text-gray-400 rounded-2xl px-5 py-4 outline-none focus:border-gold"
               />
 
               {/* COST PRICE */}
@@ -658,7 +658,7 @@ export default function AdminPage() {
                 placeholder="Cost Price (for profit reports)"
                 value={form.costPrice}
                 onChange={handleChange}
-                className="w-full border border-white/10 bg-black/40 text-white placeholder:text-gray-400 rounded-2xl px-5 py-4 outline-none focus:border-[#D4AF37]"
+                className="w-full border border-white/10 bg-black/40 text-white placeholder:text-gray-400 rounded-2xl px-5 py-4 outline-none focus:border-gold"
               />
 
               {/* CATEGORY */}
@@ -674,7 +674,7 @@ export default function AdminPage() {
                   name="category"
                   value={form.category}
                   onChange={handleChange}
-                  className="w-full border border-white/10 bg-black/40 text-white rounded-2xl px-5 py-4 outline-none focus:border-[#D4AF37]"
+                  className="w-full border border-white/10 bg-black/40 text-white rounded-2xl px-5 py-4 outline-none focus:border-gold"
                   required
                 >
 
@@ -719,7 +719,7 @@ export default function AdminPage() {
                 name="genderCategory"
                 value={form.genderCategory}
                 onChange={handleChange}
-                className="w-full border border-white/10 bg-black/40 text-white rounded-2xl px-5 py-4 outline-none focus:border-[#D4AF37]"
+                className="w-full border border-white/10 bg-black/40 text-white rounded-2xl px-5 py-4 outline-none focus:border-gold"
                 required
               >
 
@@ -750,7 +750,7 @@ export default function AdminPage() {
                 placeholder="Woody, Oud, Luxury"
                 value={form.notesTags}
                 onChange={handleChange}
-                className="w-full border border-white/10 bg-black/40 text-white placeholder:text-gray-400 rounded-2xl px-5 py-4 outline-none focus:border-[#D4AF37]"
+                className="w-full border border-white/10 bg-black/40 text-white placeholder:text-gray-400 rounded-2xl px-5 py-4 outline-none focus:border-gold"
               />
               {/* TOP NOTES */}
               <input
@@ -759,7 +759,7 @@ export default function AdminPage() {
                 placeholder="Top Notes (Bergamot, Lemon)"
                 value={form.topNotes}
                 onChange={handleChange}
-                className="w-full border border-white/10 bg-black/40 text-white placeholder:text-gray-400 rounded-2xl px-5 py-4 outline-none focus:border-[#D4AF37]"
+                className="w-full border border-white/10 bg-black/40 text-white placeholder:text-gray-400 rounded-2xl px-5 py-4 outline-none focus:border-gold"
               />
 
               {/* HEART NOTES */}
@@ -769,7 +769,7 @@ export default function AdminPage() {
                 placeholder="Heart Notes (Rose, Jasmine)"
                 value={form.heartNotes}
                 onChange={handleChange}
-                className="w-full border border-white/10 bg-black/40 text-white placeholder:text-gray-400 rounded-2xl px-5 py-4 outline-none focus:border-[#D4AF37]"
+                className="w-full border border-white/10 bg-black/40 text-white placeholder:text-gray-400 rounded-2xl px-5 py-4 outline-none focus:border-gold"
               />
 
               {/* BASE NOTES */}
@@ -779,7 +779,7 @@ export default function AdminPage() {
                 placeholder="Base Notes (Oud, Amber, Musk)"
                 value={form.baseNotes}
                 onChange={handleChange}
-                className="w-full border border-white/10 bg-black/40 text-white placeholder:text-gray-400 rounded-2xl px-5 py-4 outline-none focus:border-[#D4AF37]"
+                className="w-full border border-white/10 bg-black/40 text-white placeholder:text-gray-400 rounded-2xl px-5 py-4 outline-none focus:border-gold"
               />
 
               {/* LONGEVITY */}
@@ -789,7 +789,7 @@ export default function AdminPage() {
                 placeholder="Longevity (8-10 Hours)"
                 value={form.longevity}
                 onChange={handleChange}
-                className="w-full border border-white/10 bg-black/40 text-white placeholder:text-gray-400 rounded-2xl px-5 py-4 outline-none focus:border-[#D4AF37]"
+                className="w-full border border-white/10 bg-black/40 text-white placeholder:text-gray-400 rounded-2xl px-5 py-4 outline-none focus:border-gold"
               />
 
               {/* PROJECTION */}
@@ -799,7 +799,7 @@ export default function AdminPage() {
                 placeholder="Projection (Strong)"
                 value={form.projection}
                 onChange={handleChange}
-                className="w-full border border-white/10 bg-black/40 text-white placeholder:text-gray-400 rounded-2xl px-5 py-4 outline-none focus:border-[#D4AF37]"
+                className="w-full border border-white/10 bg-black/40 text-white placeholder:text-gray-400 rounded-2xl px-5 py-4 outline-none focus:border-gold"
               />
 
               {/* OCCASION */}
@@ -809,7 +809,7 @@ export default function AdminPage() {
                 placeholder="Occasion (Date Night, Office)"
                 value={form.occasion}
                 onChange={handleChange}
-                className="w-full border border-white/10 bg-black/40 text-white placeholder:text-gray-400 rounded-2xl px-5 py-4 outline-none focus:border-[#D4AF37]"
+                className="w-full border border-white/10 bg-black/40 text-white placeholder:text-gray-400 rounded-2xl px-5 py-4 outline-none focus:border-gold"
               />
 
               {/* SEASON */}
@@ -819,7 +819,7 @@ export default function AdminPage() {
                 placeholder="Season (Winter, Summer, All Season)"
                 value={form.season}
                 onChange={handleChange}
-                className="w-full border border-white/10 bg-black/40 text-white placeholder:text-gray-400 rounded-2xl px-5 py-4 outline-none focus:border-[#D4AF37]"
+                className="w-full border border-white/10 bg-black/40 text-white placeholder:text-gray-400 rounded-2xl px-5 py-4 outline-none focus:border-gold"
               />
 
               {/* BADGE */}
@@ -829,7 +829,7 @@ export default function AdminPage() {
                 placeholder="Premium / Luxury"
                 value={form.badge}
                 onChange={handleChange}
-                className="w-full border border-white/10 bg-black/40 text-white placeholder:text-gray-400 rounded-2xl px-5 py-4 outline-none focus:border-[#D4AF37]"
+                className="w-full border border-white/10 bg-black/40 text-white placeholder:text-gray-400 rounded-2xl px-5 py-4 outline-none focus:border-gold"
               />
 
               {/* TAG */}
@@ -839,7 +839,7 @@ export default function AdminPage() {
                 placeholder="Trending / Bestseller"
                 value={form.tag}
                 onChange={handleChange}
-                className="w-full border border-white/10 bg-black/40 text-white placeholder:text-gray-400 rounded-2xl px-5 py-4 outline-none focus:border-[#D4AF37]"
+                className="w-full border border-white/10 bg-black/40 text-white placeholder:text-gray-400 rounded-2xl px-5 py-4 outline-none focus:border-gold"
               />
 
               {/* RATING */}
@@ -850,7 +850,7 @@ export default function AdminPage() {
                 placeholder="Rating"
                 value={form.rating}
                 onChange={handleChange}
-                className="w-full border border-white/10 bg-black/40 text-white placeholder:text-gray-400 rounded-2xl px-5 py-4 outline-none focus:border-[#D4AF37]"
+                className="w-full border border-white/10 bg-black/40 text-white placeholder:text-gray-400 rounded-2xl px-5 py-4 outline-none focus:border-gold"
               />
 
               {/* REVIEWS */}
@@ -860,7 +860,7 @@ export default function AdminPage() {
                 placeholder="Reviews"
                 value={form.reviews}
                 onChange={handleChange}
-                className="w-full border border-white/10 bg-black/40 text-white placeholder:text-gray-400 rounded-2xl px-5 py-4 outline-none focus:border-[#D4AF37]"
+                className="w-full border border-white/10 bg-black/40 text-white placeholder:text-gray-400 rounded-2xl px-5 py-4 outline-none focus:border-gold"
               />
 
               {/* STOCK */}
@@ -870,7 +870,7 @@ export default function AdminPage() {
                 placeholder="Stock"
                 value={form.stock}
                 onChange={handleChange}
-                className="w-full border border-white/10 bg-black/40 text-white placeholder:text-gray-400 rounded-2xl px-5 py-4 outline-none focus:border-[#D4AF37]"
+                className="w-full border border-white/10 bg-black/40 text-white placeholder:text-gray-400 rounded-2xl px-5 py-4 outline-none focus:border-gold"
               />
 
             </div>
@@ -882,14 +882,14 @@ export default function AdminPage() {
               value={form.description}
               onChange={handleChange}
               rows={5}
-              className="w-full border border-white/10 bg-black/40 text-white placeholder:text-gray-400 rounded-2xl px-5 py-4 outline-none mt-5 focus:border-[#D4AF37]"
+              className="w-full border border-white/10 bg-black/40 text-white placeholder:text-gray-400 rounded-2xl px-5 py-4 outline-none mt-5 focus:border-gold"
             />
 
             {/* BUTTON */}
             <button
               type="submit"
               disabled={uploading}
-              className="mt-6 bg-[#D4AF37] text-black px-8 py-4 rounded-2xl hover:opacity-90 transition duration-300 font-semibold disabled:opacity-50"
+              className="mt-6 bg-gold text-black px-8 py-4 rounded-2xl hover:opacity-90 transition duration-300 font-semibold disabled:opacity-50"
             >
 
               {uploading
@@ -910,7 +910,7 @@ export default function AdminPage() {
 
                 <div
                   key={product._id}
-                  className="bg-white/5 border border-[#D4AF37]/20 rounded-[32px] overflow-hidden backdrop-blur-xl"
+                  className="bg-white/5 border border-gold/20 rounded-[32px] overflow-hidden backdrop-blur-xl"
                 >
 
                   <div className="relative h-[320px] bg-black/30">
@@ -944,7 +944,7 @@ export default function AdminPage() {
 
                       <div>
 
-                        <p className="text-3xl font-bold text-[#D4AF37]">
+                        <p className="text-3xl font-bold text-gold">
 
                           ₹{product.price}
 
@@ -968,7 +968,7 @@ export default function AdminPage() {
                               product
                             )
                           }
-                          className="bg-[#D4AF37] text-black px-5 py-2 rounded-xl hover:opacity-90 transition font-semibold"
+                          className="bg-gold text-black px-5 py-2 rounded-xl hover:opacity-90 transition font-semibold"
                         >
 
                           Edit

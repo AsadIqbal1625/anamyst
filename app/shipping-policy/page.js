@@ -14,13 +14,13 @@ export default function ShippingPolicyPage() {
     <div className="min-h-screen bg-black text-white overflow-hidden">
 
       {/* HERO */}
-      <section className="relative px-6 py-16 border-b border-[#D4AF37]/20">
+      <section className="relative px-6 py-16 border-b border-gold/20">
 
-        <div className="absolute inset-0 bg-gradient-to-b from-[#D4AF37]/10 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-b from-gold/10 to-transparent" />
 
         <div className="relative max-w-5xl mx-auto text-center">
 
-          <p className="uppercase tracking-[6px] text-[#D4AF37] text-xs mb-5">
+          <p className="uppercase tracking-[6px] text-gold text-xs mb-5">
 
             ANAMYST Policies
 
@@ -53,7 +53,7 @@ export default function ShippingPolicyPage() {
           {/* CARD */}
           <div className="bg-white/5 border border-white/10 rounded-[28px] p-8">
 
-            <h2 className="text-2xl font-bold mb-5 text-[#D4AF37]">
+            <h2 className="text-2xl font-bold mb-5 text-gold">
 
               Order Processing
 
@@ -74,7 +74,7 @@ export default function ShippingPolicyPage() {
           {/* CARD */}
           <div className="bg-white/5 border border-white/10 rounded-[28px] p-8">
 
-            <h2 className="text-2xl font-bold mb-5 text-[#D4AF37]">
+            <h2 className="text-2xl font-bold mb-5 text-gold">
 
               Delivery Timelines
 
@@ -96,7 +96,7 @@ export default function ShippingPolicyPage() {
           {/* CARD */}
           <div className="bg-white/5 border border-white/10 rounded-[28px] p-8">
 
-            <h2 className="text-2xl font-bold mb-5 text-[#D4AF37]">
+            <h2 className="text-2xl font-bold mb-5 text-gold">
 
               Shipping Coverage & Charges
 
@@ -117,7 +117,7 @@ export default function ShippingPolicyPage() {
           {/* CARD */}
           <div className="bg-white/5 border border-white/10 rounded-[28px] p-8">
 
-            <h2 className="text-2xl font-bold mb-5 text-[#D4AF37]">
+            <h2 className="text-2xl font-bold mb-5 text-gold">
 
               Order Tracking
 
@@ -138,7 +138,7 @@ export default function ShippingPolicyPage() {
           {/* CARD */}
           <div className="bg-white/5 border border-white/10 rounded-[28px] p-8">
 
-            <h2 className="text-2xl font-bold mb-5 text-[#D4AF37]">
+            <h2 className="text-2xl font-bold mb-5 text-gold">
 
               Damaged or Delayed Shipments
 
@@ -156,7 +156,7 @@ export default function ShippingPolicyPage() {
               <br />
               <br />
 
-              <span className="text-[#D4AF37]">
+              <span className="text-gold">
 
                 team@anamyst.com
 

@@ -98,13 +98,13 @@ export default function FAQPage() {
       <div className="min-h-screen bg-black text-white overflow-hidden">
 
         {/* HERO */}
-        <section className="relative px-6 py-20 border-b border-[#D4AF37]/20">
+        <section className="relative px-6 py-20 border-b border-gold/20">
 
-          <div className="absolute inset-0 bg-gradient-to-b from-[#D4AF37]/10 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-b from-gold/10 to-transparent" />
 
           <div className="relative max-w-5xl mx-auto text-center">
 
-            <p className="uppercase tracking-[6px] text-[#D4AF37] text-xs mb-5">
+            <p className="uppercase tracking-[6px] text-gold text-xs mb-5">
 
               Help & Support
 
@@ -136,12 +136,12 @@ export default function FAQPage() {
 
               <div
                 key={index}
-                className="bg-white/5 border border-white/10 rounded-[28px] p-8 hover:border-[#D4AF37]/40 transition duration-300"
+                className="bg-white/5 border border-white/10 rounded-[28px] p-8 hover:border-gold/40 transition duration-300"
               >
 
                 <div className="flex items-start gap-4">
 
-                  <span className="text-[#D4AF37] text-sm font-semibold mt-1.5">
+                  <span className="text-gold text-sm font-semibold mt-1.5">
 
                     {String(index + 1).padStart(2, "0")}
 
@@ -172,9 +172,9 @@ export default function FAQPage() {
           </div>
 
           {/* CONTACT CTA */}
-          <div className="max-w-3xl mx-auto mt-14 text-center bg-[#D4AF37]/5 border border-[#D4AF37]/20 rounded-[28px] p-10">
+          <div className="max-w-3xl mx-auto mt-14 text-center bg-gold/5 border border-gold/20 rounded-[28px] p-10">
 
-            <p className="uppercase tracking-[5px] text-[#D4AF37] text-xs mb-4">
+            <p className="uppercase tracking-[5px] text-gold text-xs mb-4">
 
               Still Have Questions?
 
@@ -189,7 +189,7 @@ export default function FAQPage() {
 
             <a
               href="/contact"
-              className="inline-block bg-[#D4AF37] text-black px-8 py-3.5 rounded-full font-semibold hover:opacity-90 transition"
+              className="inline-block bg-gold text-black px-8 py-3.5 rounded-full font-semibold hover:opacity-90 transition"
             >
 
               Contact Us

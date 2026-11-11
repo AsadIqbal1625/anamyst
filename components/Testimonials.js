@@ -26,8 +26,8 @@ export default function Testimonials() {
     <section className="px-6 lg:px-10 py-24 lg:py-32 border-t border-white/10">
       <div className="max-w-7xl mx-auto">
         <div className="mb-14">
-          <p className="flex items-center gap-4 uppercase tracking-[0.35em] text-[#D4AF37] text-[11px] mb-6">
-            <span className="w-8 h-px bg-[#D4AF37]" />
+          <p className="flex items-center gap-4 uppercase tracking-[0.35em] text-gold text-[11px] mb-6">
+            <span className="w-8 h-px bg-gold" />
             What Our Customers Say
           </p>
 
@@ -40,9 +40,9 @@ export default function Testimonials() {
           {testimonials.map((t) => (
             <div
               key={t._id}
-              className="spotlight border border-white/10 p-8 hover:border-[#D4AF37]/50 transition-colors duration-500"
+              className="spotlight border border-white/10 p-8 hover:border-gold/50 transition-colors duration-500"
             >
-              <p className="text-[#D4AF37] text-lg mb-4">
+              <p className="text-gold text-lg mb-4">
                 {"★".repeat(t.rating)}
                 {"☆".repeat(5 - t.rating)}
               </p>
@@ -51,7 +51,7 @@ export default function Testimonials() {
 
               <div className="flex items-center gap-4">
                 {t.image ? (
-                  <div className="relative w-[72px] h-[72px] rounded-full overflow-hidden border-2 border-[#D4AF37]/30 shrink-0">
+                  <div className="relative w-[72px] h-[72px] rounded-full overflow-hidden border-2 border-gold/30 shrink-0">
                     <Image
                       fill
                       sizes="72px"
@@ -61,7 +61,7 @@ export default function Testimonials() {
                     />
                   </div>
                 ) : (
-                  <div className="w-[72px] h-[72px] rounded-full bg-[#D4AF37]/10 border-2 border-[#D4AF37]/30 flex items-center justify-center text-[#D4AF37] text-2xl font-bold shrink-0">
+                  <div className="w-[72px] h-[72px] rounded-full bg-gold/10 border-2 border-gold/30 flex items-center justify-center text-gold text-2xl font-bold shrink-0">
                     {t.name.charAt(0)}
                   </div>
                 )}

@@ -94,7 +94,7 @@ export default function TrackOrderPage() {
         {/* HEADER */}
         <div className="text-center mb-14">
 
-          <p className="uppercase tracking-[6px] text-[#D4AF37] text-xs mb-5">
+          <p className="uppercase tracking-[6px] text-gold text-xs mb-5">
 
             ANAMYST Support
 
@@ -131,7 +131,7 @@ export default function TrackOrderPage() {
                 e.target.value
             )
             }
-            className="flex-1 bg-black/40 border border-white/10 rounded-2xl px-5 py-5 outline-none focus:border-[#D4AF37] text-white placeholder:text-gray-500"
+            className="flex-1 bg-black/40 border border-white/10 rounded-2xl px-5 py-5 outline-none focus:border-gold text-white placeholder:text-gray-500"
             required
         />
 
@@ -144,14 +144,14 @@ export default function TrackOrderPage() {
                 e.target.value
             )
             }
-            className="flex-1 bg-black/40 border border-white/10 rounded-2xl px-5 py-5 outline-none focus:border-[#D4AF37] text-white placeholder:text-gray-500"
+            className="flex-1 bg-black/40 border border-white/10 rounded-2xl px-5 py-5 outline-none focus:border-gold text-white placeholder:text-gray-500"
             required
         />
 
         {/* SEARCH BUTTON */}
         <button
             type="submit"
-            className="bg-[#D4AF37] hover:bg-[#c19b2e] text-black font-bold px-10 py-5 rounded-2xl transition duration-300"
+            className="bg-gold hover:bg-gold-deep text-black font-bold px-10 py-5 rounded-2xl transition duration-300"
         >
 
             {loading
@@ -315,7 +315,7 @@ export default function TrackOrderPage() {
 
                           </p>
 
-                          <p className="text-[#D4AF37] text-2xl font-bold mt-2">
+                          <p className="text-gold text-2xl font-bold mt-2">
 
                             ₹
                             {product.price}
@@ -358,7 +358,7 @@ export default function TrackOrderPage() {
 
                     </p>
 
-                    <h3 className="text-4xl font-bold text-[#D4AF37] mt-2">
+                    <h3 className="text-4xl font-bold text-gold mt-2">
 
                       ₹
                       {order.totalAmount}

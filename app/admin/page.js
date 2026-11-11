@@ -44,12 +44,12 @@ export default function DashboardPage() {
     {
       label: "Total Revenue",
       value: `₹${(stats?.revenue || 0).toLocaleString("en-IN")}`,
-      accent: "text-[#D4AF37]",
+      accent: "text-gold",
     },
     {
       label: "This Month",
       value: `₹${(stats?.monthRevenue || 0).toLocaleString("en-IN")}`,
-      accent: "text-[#D4AF37]",
+      accent: "text-gold",
     },
     {
       label: "Total Orders",
@@ -90,7 +90,7 @@ export default function DashboardPage() {
         {cards.map((card) => (
           <div
             key={card.label}
-            className="bg-white/5 border border-white/10 rounded-2xl p-6 hover:border-[#D4AF37]/40 transition"
+            className="bg-white/5 border border-white/10 rounded-2xl p-6 hover:border-gold/40 transition"
           >
             <p className="text-gray-400 text-sm mb-2">{card.label}</p>
             <p className={`text-3xl font-bold ${card.accent}`}>
@@ -107,7 +107,7 @@ export default function DashboardPage() {
             <h2 className="text-xl font-bold">Recent Orders</h2>
             <Link
               href="/admin/orders"
-              className="text-[#D4AF37] text-sm hover:underline"
+              className="text-gold text-sm hover:underline"
             >
               View All →
             </Link>
@@ -133,7 +133,7 @@ export default function DashboardPage() {
                       key={o._id}
                       className="border-b border-white/5"
                     >
-                      <td className="py-3 pr-4 text-[#D4AF37]">
+                      <td className="py-3 pr-4 text-gold">
                         {o.orderId || o._id.slice(-6)}
                       </td>
                       <td className="py-3 pr-4">{o.customerName}</td>

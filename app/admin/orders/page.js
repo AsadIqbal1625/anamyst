@@ -313,7 +313,7 @@ export default function OrdersPage() {
         {/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
         <a
           href="/api/orders/export"
-          className="bg-white/10 border border-[#D4AF37]/40 hover:bg-white/20 text-white px-5 py-2.5 rounded-xl text-sm font-semibold transition whitespace-nowrap"
+          className="bg-white/10 border border-gold/40 hover:bg-white/20 text-white px-5 py-2.5 rounded-xl text-sm font-semibold transition whitespace-nowrap"
         >
           Download Orders (Excel)
         </a>
@@ -337,7 +337,7 @@ export default function OrdersPage() {
             onClick={() => setActiveFilter(stat.key)}
             className={`rounded-2xl p-5 text-left border transition ${
               activeFilter === stat.key
-                ? "border-[#D4AF37]/60 bg-white/10"
+                ? "border-gold/60 bg-white/10"
                 : "border-white/10 bg-white/5 hover:border-white/20"
             }`}
           >
@@ -366,13 +366,13 @@ export default function OrdersPage() {
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           placeholder="Search Order ID, name, phone or email..."
-          className="flex-1 bg-white/5 border border-white/10 rounded-xl px-5 py-3 text-sm outline-none focus:border-[#D4AF37]/60"
+          className="flex-1 bg-white/5 border border-white/10 rounded-xl px-5 py-3 text-sm outline-none focus:border-gold/60"
         />
 
         <select
           value={paymentFilter}
           onChange={(e) => setPaymentFilter(e.target.value)}
-          className="bg-black/40 border border-white/10 text-white rounded-xl px-4 py-3 text-sm outline-none focus:border-[#D4AF37]/60"
+          className="bg-black/40 border border-white/10 text-white rounded-xl px-4 py-3 text-sm outline-none focus:border-gold/60"
         >
           <option value="All">All payments</option>
           <option value="Paid">Paid only</option>
@@ -453,7 +453,7 @@ export default function OrdersPage() {
                       type="checkbox"
                       checked={selected.includes(order._id)}
                       onChange={() => toggleSelect(order._id)}
-                      className="w-4 h-4 accent-[#D4AF37]"
+                      className="w-4 h-4 accent-gold"
                       title="Select for bulk delete"
                     />
 
@@ -499,7 +499,7 @@ export default function OrdersPage() {
                       onChange={(e) =>
                         updateStatus(order._id, e.target.value)
                       }
-                      className="bg-black/40 border border-white/10 text-white text-xs rounded-lg px-3 py-1.5 outline-none focus:border-[#D4AF37]/60"
+                      className="bg-black/40 border border-white/10 text-white text-xs rounded-lg px-3 py-1.5 outline-none focus:border-gold/60"
                     >
                       <option value="Pending">Pending</option>
                       <option value="Delivered">Delivered</option>
@@ -531,7 +531,7 @@ export default function OrdersPage() {
                           order.paymentStatus === "Paid" ? "Pending" : "Paid"
                         )
                       }
-                      className="text-[#D4AF37] hover:underline"
+                      className="text-gold hover:underline"
                     >
                       {order.paymentStatus === "Paid" ? "Mark Pending" : "Mark Paid"}
                     </button>
@@ -554,9 +554,9 @@ export default function OrdersPage() {
               {/* EDIT FORM */}
               {editingId === order._id && (
 
-                <div className="mt-5 bg-black/30 border border-[#D4AF37]/30 rounded-xl p-5">
+                <div className="mt-5 bg-black/30 border border-gold/30 rounded-xl p-5">
 
-                  <p className="text-[#D4AF37] text-xs font-semibold uppercase tracking-wide mb-4">
+                  <p className="text-gold text-xs font-semibold uppercase tracking-wide mb-4">
                     Edit Customer &amp; Shipping Details
                   </p>
 
@@ -578,7 +578,7 @@ export default function OrdersPage() {
                           setEditForm({ ...editForm, [key]: e.target.value })
                         }
                         placeholder={label}
-                        className="bg-black/40 border border-white/10 rounded-lg px-4 py-2.5 text-sm outline-none focus:border-[#D4AF37]/60"
+                        className="bg-black/40 border border-white/10 rounded-lg px-4 py-2.5 text-sm outline-none focus:border-gold/60"
                       />
 
                     ))}
@@ -590,7 +590,7 @@ export default function OrdersPage() {
                       }
                       placeholder="Full Address"
                       rows={2}
-                      className="md:col-span-2 bg-black/40 border border-white/10 rounded-lg px-4 py-2.5 text-sm outline-none focus:border-[#D4AF37]/60"
+                      className="md:col-span-2 bg-black/40 border border-white/10 rounded-lg px-4 py-2.5 text-sm outline-none focus:border-gold/60"
                     />
 
                   </div>
@@ -599,7 +599,7 @@ export default function OrdersPage() {
 
                     <button
                       onClick={() => saveEdit(order._id)}
-                      className="px-5 py-2 rounded-lg bg-[#D4AF37] text-black text-xs font-semibold hover:opacity-90 transition"
+                      className="px-5 py-2 rounded-lg bg-gold text-black text-xs font-semibold hover:opacity-90 transition"
                     >
                       Save Changes
                     </button>
@@ -623,7 +623,7 @@ export default function OrdersPage() {
                 {/* ADDRESS */}
                 <div className="bg-black/30 border border-white/10 rounded-xl p-4">
 
-                  <p className="text-[#D4AF37] text-xs font-semibold uppercase tracking-wide mb-2">
+                  <p className="text-gold text-xs font-semibold uppercase tracking-wide mb-2">
                     Shipping Address
                   </p>
 
@@ -669,7 +669,7 @@ export default function OrdersPage() {
 
                         </div>
 
-                        <p className="text-sm font-semibold text-[#D4AF37] shrink-0">
+                        <p className="text-sm font-semibold text-gold shrink-0">
                           ₹{product.quantity * product.price}
                         </p>
 
@@ -693,7 +693,7 @@ export default function OrdersPage() {
                         ? setEditingId(null)
                         : startEdit(order)
                     }
-                    className="px-4 py-2 rounded-lg border border-white/20 text-xs hover:border-[#D4AF37] transition"
+                    className="px-4 py-2 rounded-lg border border-white/20 text-xs hover:border-gold transition"
                   >
                     {editingId === order._id ? "Close Edit" : "Edit"}
                   </button>
@@ -713,7 +713,7 @@ export default function OrdersPage() {
                     Total Amount
                   </span>
 
-                  <span className="text-2xl font-bold text-[#D4AF37]">
+                  <span className="text-2xl font-bold text-gold">
                     ₹{order.totalAmount}
                   </span>
 

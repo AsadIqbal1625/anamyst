@@ -90,7 +90,19 @@ export default async function RootLayout({ children }) {
   const initialCoupon = await getActiveCoupon();
 
   return (
-    <html lang="en" data-scroll-behavior="smooth">
+    /* the theme script below may set data-theme before React loads */
+    <html lang="en" data-scroll-behavior="smooth" suppressHydrationWarning>
+
+      <head>
+
+        {/* apply a saved light/dark choice before the first paint, so the
+            page never flashes the wrong colours */}
+        <script
+          id="theme-init"
+          dangerouslySetInnerHTML={{ __html: "try{if(localStorage.getItem(\"theme\")===\"light\")document.documentElement.dataset.theme=\"light\"}catch(e){}" }}
+        />
+
+      </head>
 
       <body className="min-h-screen flex flex-col bg-black text-white">
 

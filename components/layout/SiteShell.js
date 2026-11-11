@@ -65,10 +65,10 @@ export default function SiteShell({ children, initialCoupon = null }) {
         href="https://wa.me/918840305018?text=Hello%20ANAMYST%20✨%0A%0AI%20need%20help%20choosing%20a%20luxury%20fragrance."
         target="_blank"
         rel="noopener noreferrer"
-        className="fixed bottom-24 md:bottom-6 right-4 md:right-6 z-[9999] group"
+        className="theme-dark fixed bottom-24 md:bottom-6 right-4 md:right-6 z-[9999] group"
       >
 
-        <div className="flex items-center justify-center w-14 h-14 rounded-full bg-black/70 backdrop-blur-xl border border-[#D4AF37]/30 hover:border-[#D4AF37] shadow-2xl transition-all duration-300 hover:scale-110">
+        <div className="flex items-center justify-center w-14 h-14 rounded-full bg-black/70 backdrop-blur-xl border border-gold/30 hover:border-gold shadow-2xl transition-all duration-300 hover:scale-110">
 
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -83,7 +83,7 @@ export default function SiteShell({ children, initialCoupon = null }) {
 
         {/* DESKTOP HOVER LABEL */}
 
-        <div className="hidden md:block absolute right-16 top-1/2 -translate-y-1/2 bg-black/80 border border-[#D4AF37]/20 px-4 py-2 rounded-xl opacity-0 group-hover:opacity-100 transition-all duration-300 whitespace-nowrap pointer-events-none">
+        <div className="hidden md:block absolute right-16 top-1/2 -translate-y-1/2 bg-black/80 border border-gold/20 px-4 py-2 rounded-xl opacity-0 group-hover:opacity-100 transition-all duration-300 whitespace-nowrap pointer-events-none">
 
           <p className="text-xs text-white">
 
