@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import mongoose from "mongoose";
 import { connectDB } from "../../../lib/mongodb";
 import AbandonedCheckout from "../../../models/AbandonedCheckout";
 import { rateLimit } from "../../../lib/rateLimit";
@@ -9,7 +10,7 @@ import { rateLimit } from "../../../lib/rateLimit";
    images (or nothing) are kept. */
 function safeImage(value) {
   const url = String(value || "").slice(0, 300);
-  return url.startsWith("https://res.cloudinary.com/") ? url : "";
+  return url.startsWith("https://res.cloudinary.com/dtmunbdlt/") ? url : "";
 }
 
 /* PUBLIC: called from two places —
@@ -147,6 +148,33 @@ export async function GET() {
 }
 
 /* ADMIN: remove one record (?id=) */
+/* ADMIN (gated by proxy.js): note that the owner has messaged this
+   customer, so nobody is contacted twice by accident */
+export async function PATCH(req) {
+  try {
+    const id = new URL(req.url).searchParams.get("id");
+
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return NextResponse.json({ success: false }, { status: 400 });
+    }
+
+    await connectDB();
+
+    await AbandonedCheckout.updateOne(
+      { _id: id },
+      { $set: { remindedAt: new Date() }, $inc: { reminderCount: 1 } }
+    );
+
+    return NextResponse.json({ success: true });
+  } catch (error) {
+    console.error("abandoned-checkout error:", error);
+    return NextResponse.json(
+      { success: false, error: "Something went wrong. Please try again." },
+      { status: 500 }
+    );
+  }
+}
+
 export async function DELETE(req) {
   try {
     const id = new URL(req.url).searchParams.get("id");

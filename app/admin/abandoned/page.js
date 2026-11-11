@@ -34,6 +34,12 @@ export default function AbandonedPage() {
     fetchItems();
   }
 
+  /* remember that this customer has been messaged */
+  async function markMessaged(id) {
+    await fetch(`/api/abandoned-checkout?id=${id}`, { method: "PATCH" });
+    fetchItems();
+  }
+
   function waLink(item) {
     const digits = item.phone.replace(/\D/g, "");
     const to = digits.length === 10 ? `91${digits}` : digits;
@@ -172,6 +178,16 @@ export default function AbandonedPage() {
                     </p>
                   )}
 
+                  {item.reminderCount > 0 && (
+                    <p className="text-xs text-green-400 mt-1">
+                      ✓ Messaged {item.reminderCount}×, last on{" "}
+                      {new Date(item.remindedAt).toLocaleString("en-IN", {
+                        dateStyle: "medium",
+                        timeStyle: "short",
+                      })}
+                    </p>
+                  )}
+
                   <p className="text-xs text-gray-500 mt-1">
                     Last active:{" "}
                     {new Date(item.lastActiveAt).toLocaleString("en-IN", {
@@ -191,6 +207,7 @@ export default function AbandonedPage() {
                       href={waLink(item)}
                       target="_blank"
                       rel="noopener noreferrer"
+                      onClick={() => markMessaged(item._id)}
                       title={
                         item.consentWhatsapp
                           ? "This customer opted in to WhatsApp updates"
@@ -198,8 +215,9 @@ export default function AbandonedPage() {
                       }
                       className="px-4 py-2 rounded-lg bg-green-600 hover:bg-green-500 text-white text-xs font-semibold transition"
                     >
-                      WhatsApp Follow-up
-                      {!item.consentWhatsapp && " ⚠"}
+                      {item.reminderCount > 0
+                        ? "Message Again"
+                        : "WhatsApp Follow-up"}
                     </a>
                   )}
 

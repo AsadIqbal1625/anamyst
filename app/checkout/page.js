@@ -164,13 +164,24 @@ export default function CheckoutPage() {
         }),
       }).catch(() => {});
 
-    }, 2000);
+    }, 600);
 
     return () => clearTimeout(t);
 
   }, [form.name, form.phone, form.email, cart]);
 
+  /* a full mobile number unlocks the rest of the form */
+  const [detailsOpen, setDetailsOpen] = useState(false);
+
   const handleChange = (e) => {
+
+    if (
+      e.target.name === "phone" &&
+      e.target.value.replace(/\D/g, "").length >= 10
+    ) {
+      setDetailsOpen(true);
+    }
+
 
     setForm({
 
@@ -386,6 +397,9 @@ export default function CheckoutPage() {
         });
 
       if (detailsError) {
+
+        /* make sure the field the message is about is on screen */
+        setDetailsOpen(true);
 
         toast.error(detailsError);
 
@@ -898,61 +912,64 @@ export default function CheckoutPage() {
 
               </h2>
 
-              <div className="grid md:grid-cols-2 gap-5">
+              {/* STEP 1: MOBILE NUMBER. Asked first and on its own, so the cart is
+                  saved with a contact the moment it is typed — even if the
+                  visitor leaves before filling in the rest. */}
+              <div>
+
+                <label
+                  htmlFor="checkout-phone"
+                  className="block text-sm text-gray-400 mb-2"
+                >
+                  Mobile number
+                </label>
+
+                <input
+                  id="checkout-phone"
+                  type="tel"
+                  inputMode="tel"
+                  autoComplete="tel"
+                  name="phone"
+                  placeholder="10-digit mobile number"
+                  value={form.phone}
+                  onChange={handleChange}
+                  maxLength={15}
+                  className="w-full bg-black border border-white/10 rounded-2xl px-5 py-3 outline-none focus:border-gold transition"
+                />
+
+                <p className="text-xs text-gray-500 mt-2">
+                  {detailsOpen
+                    ? "We'll use this number for order updates and to help with your order."
+                    : "Enter your mobile number to continue. We'll use it for order updates and to help with your order."}
+                </p>
+
+              </div>
+
+              {/* STEP 2: everything else, shown once a number is entered */}
+              {detailsOpen && (
+
+                <>
+
+              <div className="grid md:grid-cols-6 gap-5 mt-5">
 
                 {[
-                  {
-                    name: "name",
-                    placeholder:
-                      "Full Name",
-                  },
-
-                  {
-                    name: "phone",
-                    placeholder:
-                      "Phone Number",
-                  },
-
-                  {
-                    name: "email",
-                    placeholder:
-                      "Email Address",
-                  },
-
-                  {
-                    name: "city",
-                    placeholder:
-                      "City",
-                  },
-
-                  {
-                    name: "state",
-                    placeholder:
-                      "State",
-                  },
-
-                  {
-                    name: "pincode",
-                    placeholder:
-                      "Pincode",
-                  },
-
+                  { name: "name", placeholder: "Full Name", autoComplete: "name", span: "md:col-span-3" },
+                  { name: "email", placeholder: "Email Address", autoComplete: "email", span: "md:col-span-3" },
+                  { name: "city", placeholder: "City", autoComplete: "address-level2", span: "md:col-span-2" },
+                  { name: "state", placeholder: "State", autoComplete: "address-level1", span: "md:col-span-2" },
+                  { name: "pincode", placeholder: "Pincode", autoComplete: "postal-code", span: "md:col-span-2" },
                 ].map((field) => (
 
                   <input
                     key={field.name}
-                    type="text"
+                    type={field.name === "email" ? "email" : "text"}
+                    inputMode={field.name === "pincode" ? "numeric" : undefined}
                     name={field.name}
-                    placeholder={
-                      field.placeholder
-                    }
-                    value={
-                      form[field.name]
-                    }
-                    onChange={
-                      handleChange
-                    }
-                    className="bg-black border border-white/10 rounded-2xl px-5 py-3 outline-none focus:border-gold transition"
+                    autoComplete={field.autoComplete}
+                    placeholder={field.placeholder}
+                    value={form[field.name]}
+                    onChange={handleChange}
+                    className={`${field.span} bg-black border border-white/10 rounded-2xl px-5 py-3 outline-none focus:border-gold transition`}
                   />
 
                 ))}
@@ -961,6 +978,7 @@ export default function CheckoutPage() {
 
               <textarea
                 name="address"
+                autoComplete="street-address"
                 placeholder="Full Address"
                 value={form.address}
                 onChange={handleChange}
@@ -1012,6 +1030,10 @@ export default function CheckoutPage() {
                 </div>
 
               </div>
+
+                </>
+
+              )}
 
             </div>
 
