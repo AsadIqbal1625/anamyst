@@ -50,6 +50,7 @@ async function placeCodOrder(req, body) {
     items: body.products,
     couponCode: body.couponCode,
     paymentMethod: "COD",
+    phone: details.phone,
   });
 
   const { order } = await placeOrder({

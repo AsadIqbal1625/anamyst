@@ -6,6 +6,7 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import Tracker from "@/components/Tracker";
 import { Toaster } from "react-hot-toast";
+import WelcomeOfferPopup from "../WelcomeOfferPopup";
 
 const toasterProps = {
   position: "bottom-center",
@@ -50,6 +51,9 @@ export default function SiteShell({ children, initialCoupon = null }) {
       <Toaster {...toasterProps} />
 
       <Tracker />
+      
+      {/* one-time welcome offer after the first add to cart */}
+      <WelcomeOfferPopup />
 
       <Navbar initialCoupon={initialCoupon} />
 

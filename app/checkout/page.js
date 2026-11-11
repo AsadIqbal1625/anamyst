@@ -26,6 +26,11 @@ import {
   describeTierReward,
 } from "../../lib/pricing";
 
+import {
+  getSavedPhone,
+  isValidMobile,
+} from "../../lib/welcomeOfferConfig";
+
 import { getSessionId } from "../../lib/track";
 
 import toast from "react-hot-toast";
@@ -105,7 +110,8 @@ export default function CheckoutPage() {
 
       name: "",
       email: "",
-      phone: "",
+      /* filled in already if they gave it in the welcome popup */
+      phone: getSavedPhone(),
       address: "",
       city: "",
       state: "",
@@ -171,7 +177,46 @@ export default function CheckoutPage() {
   }, [form.name, form.phone, form.email, cart]);
 
   /* a full mobile number unlocks the rest of the form */
-  const [detailsOpen, setDetailsOpen] = useState(false);
+  const [detailsOpen, setDetailsOpen] = useState(
+    () => getSavedPhone().length >= 10
+  );
+
+  /* WELCOME OFFER — ask the server whether this number gets the
+     discount, so the total shown here matches the total charged */
+  const [welcomeAmount, setWelcomeAmount] = useState(0);
+
+  useEffect(() => {
+
+    if (!isValidMobile(form.phone)) return;
+
+    let alive = true;
+
+    const t = setTimeout(() => {
+
+      fetch("/api/welcome-offer", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ action: "check", phone: form.phone }),
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          if (alive) {
+            setWelcomeAmount(data.success ? Number(data.amount) || 0 : 0);
+          }
+        })
+        .catch(() => {});
+
+    }, 500);
+
+    return () => {
+      alive = false;
+      clearTimeout(t);
+    };
+
+  }, [form.phone]);
+
+  /* only counts while the number on screen is a complete one */
+  const welcomeDiscount = isValidMobile(form.phone) ? welcomeAmount : 0;
 
   const handleChange = (e) => {
 
@@ -265,6 +310,7 @@ export default function CheckoutPage() {
         paymentMethod,
         couponCode: appliedCoupon?.code || "",
         couponDiscount: discount,
+        welcomeDiscount,
       }),
     [
       total,
@@ -274,6 +320,7 @@ export default function CheckoutPage() {
       paymentMethod,
       appliedCoupon,
       discount,
+      welcomeDiscount,
     ]
   );
 
@@ -942,6 +989,15 @@ export default function CheckoutPage() {
                     ? "We'll use this number for order updates and to help with your order."
                     : "Enter your mobile number to continue. We'll use it for order updates and to help with your order."}
                 </p>
+
+                {totals.welcomeDiscount > 0 && (
+
+                  <p className="text-xs text-green-400 mt-2">
+                    ✓ Welcome offer: ₹{totals.welcomeDiscount} off applied to
+                    this order
+                  </p>
+
+                )}
 
               </div>
 

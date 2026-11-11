@@ -31,6 +31,7 @@ export async function POST(req) {
       items: body.products,
       couponCode: body.couponCode,
       paymentMethod: "RAZORPAY",
+      phone: details.phone,
     });
 
     if (totals.total <= 0) {
