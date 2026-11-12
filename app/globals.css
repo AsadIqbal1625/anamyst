@@ -701,3 +701,19 @@ select:-webkit-autofill {
 :root[data-theme="light"] {
   --color-gray-500: #5b6372;
 }
+
+/* Phones: show the finished wordmark and a still gold title instead of
+   animating them. These two effects repaint on the main processor on
+   every frame, which slowed the first paint on phones. Desktop keeps
+   them. */
+@media (max-width: 1023.98px) {
+  .wordmark-draw path {
+    animation: none;
+    stroke-dasharray: none;
+    stroke-dashoffset: 0;
+  }
+
+  .accent-shimmer {
+    animation: none;
+  }
+}

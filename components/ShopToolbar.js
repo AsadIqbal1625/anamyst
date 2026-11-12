@@ -28,7 +28,7 @@ export default function ShopToolbar({
   const tabLabel = (t) => (
     <>
       {t.label}
-      {t.count > 0 && <span className="ml-1.5 text-white/30">{t.count}</span>}
+      {t.count > 0 && <span className="ml-1.5 text-white/50">{t.count}</span>}
     </>
   );
 
@@ -106,7 +106,7 @@ export default function ShopToolbar({
 
           <div className="flex items-center gap-3">
 
-            <span className="text-white/40 text-[11px] uppercase tracking-[0.2em]">
+            <span className="text-white/60 text-[11px] uppercase tracking-[0.2em]">
               {total} {total === 1 ? "item" : "items"}
             </span>
 
