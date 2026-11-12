@@ -1,3 +1,4 @@
+import { cache } from "react";
 import { connectDB } from "../../../lib/mongodb";
 import Product from "../../../models/Product";
 import ProductClient from "./ProductClient";
@@ -6,6 +7,21 @@ import Review from "../../../models/Review";
 import { getReviewStats } from "../../../lib/reviews";
 import mongoose from "mongoose";
 import { notFound } from "next/navigation";
+
+/* Built on a visitor's first request, then kept ready for up to 60
+   seconds (and refreshed straight away when admin edits the product or
+   approves a review), instead of being rebuilt for every visitor. */
+export const revalidate = 60;
+
+export function generateStaticParams() {
+  return [];
+}
+
+/* the metadata and the page both need the product: fetch it once */
+const getProduct = cache(async (id) => {
+  await connectDB();
+  return Product.findById(id).lean();
+});
 
 export async function generateMetadata({ params }) {
   const { id } = await params;
@@ -17,9 +33,7 @@ export async function generateMetadata({ params }) {
     };
   }
 
-  await connectDB();
-
-  const product = await Product.findById(id).lean();
+  const product = await getProduct(id);
 
   if (!product) {
     return {
@@ -89,9 +103,7 @@ export default async function ProductPage({ params }) {
     notFound();
   }
 
-  await connectDB();
-
-  const product = await Product.findById(id).lean();
+  const product = await getProduct(id);
 
   if (!product) {
     notFound();

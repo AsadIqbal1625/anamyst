@@ -341,8 +341,7 @@ export default async function Home() {
             </h1>
 
             <p
-              className="hero-rise text-white/80 text-xl lg:text-2xl font-light mt-6 lg:mt-8 max-w-md leading-relaxed"
-              style={{ "--d": "250ms" }}
+              className="text-white/80 text-xl lg:text-2xl font-light mt-6 lg:mt-8 max-w-md leading-relaxed"
             >
 
               Discover fragrances that define your{" "}

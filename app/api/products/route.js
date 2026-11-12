@@ -1,3 +1,4 @@
+import { refreshStorePages } from "../../../lib/refreshStorePages";
 import { connectDB }
 from "../../../lib/mongodb";
 
@@ -54,6 +55,8 @@ export async function POST(req) {
 
     const product =
       await Product.create(body);
+
+    refreshStorePages();
 
     return Response.json({
       success: true,

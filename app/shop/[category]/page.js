@@ -1,7 +1,14 @@
 import { connectDB } from "../../../lib/mongodb";
 import Product from "../../../models/Product";
 import CategoryClient from "./CategoryClient";
-import { countByCollection } from "../../../lib/shopFilters";
+import { COLLECTIONS, countByCollection } from "../../../lib/shopFilters";
+
+/* kept ready for up to 60 seconds instead of rebuilt for every visitor */
+export const revalidate = 60;
+
+export function generateStaticParams() {
+  return COLLECTIONS.map((c) => ({ category: c.slug }));
+}
 
 export async function generateMetadata({ params }) {
   const { category } = await params;

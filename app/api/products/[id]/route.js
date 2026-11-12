@@ -1,3 +1,4 @@
+import { refreshStorePages } from "../../../../lib/refreshStorePages";
 import { connectDB }
 from "../../../../lib/mongodb";
 
@@ -96,6 +97,8 @@ export async function PATCH(
 
       );
 
+    refreshStorePages(id);
+
     return Response.json({
 
       success: true,
@@ -140,6 +143,8 @@ export async function DELETE(
     await Product.findByIdAndDelete(
       id
     );
+
+    refreshStorePages(id);
 
     return Response.json({
 

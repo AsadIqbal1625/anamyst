@@ -1,6 +1,10 @@
 import { connectDB } from "../../lib/mongodb";
 import Product from "../../models/Product";
-import ShopClient from "./ShopClient";
+import { Suspense } from "react";
+import ShopClient, { ShopWithSearch } from "./ShopClient";
+
+/* kept ready for up to 60 seconds instead of rebuilt for every visitor */
+export const revalidate = 60;
 
 export const metadata = {
   title: "Shop Luxury Perfumes | ANAMYST",
@@ -11,9 +15,8 @@ export const metadata = {
   },
 };
 
-export default async function ShopPage({ searchParams }) {
+export default async function ShopPage() {
 
-  const { search } = await searchParams;
   await connectDB();
 
   const products = await Product.find({})
@@ -26,10 +29,11 @@ export default async function ShopPage({ searchParams }) {
     _id: product._id.toString(),
   }));
 
+  /* the full product list is in the page HTML from the start; a search
+     from the navbar (?search=) is then applied in the browser */
   return (
-    <ShopClient
-      initialProducts={serializedProducts}
-      search={String(search || "").trim().toLowerCase()}
-    />
+    <Suspense fallback={<ShopClient initialProducts={serializedProducts} />}>
+      <ShopWithSearch initialProducts={serializedProducts} />
+    </Suspense>
   );
 }

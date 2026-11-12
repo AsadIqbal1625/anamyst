@@ -4,6 +4,7 @@ import { connectDB } from "../../../../lib/mongodb";
 import Review from "../../../../models/Review";
 import { isAdminRequest } from "../../../../lib/adminAuth";
 import { syncProductRating } from "../../../../lib/reviews";
+import { refreshStorePages } from "../../../../lib/refreshStorePages";
 
 const STATUSES = ["pending", "approved", "hidden"];
 
@@ -58,6 +59,8 @@ export async function PATCH(req, { params }) {
 
     await syncProductRating(review.productId);
 
+    refreshStorePages(review.productId);
+
     return NextResponse.json({ success: true, review });
 
   } catch (error) {
@@ -84,7 +87,10 @@ export async function DELETE(req, { params }) {
 
     const review = await Review.findByIdAndDelete(id).lean();
 
-    if (review) await syncProductRating(review.productId);
+    if (review) {
+      await syncProductRating(review.productId);
+      refreshStorePages(review.productId);
+    }
 
     return NextResponse.json({ success: true });
 

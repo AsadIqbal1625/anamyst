@@ -225,7 +225,7 @@ export default function Navbar({ initialCoupon = null }) {
 
                 <Image
                   src="/logo.jpeg"
-                  alt="ANAMYST"
+                  alt=""
                   width={42}
                   height={42}
                   loading="lazy"

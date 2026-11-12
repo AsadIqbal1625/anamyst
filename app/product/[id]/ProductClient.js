@@ -414,9 +414,9 @@ export default function ProductClient({
 
           <div className="mb-4">
 
-            <h3 className="text-lg font-semibold text-white mb-2">
+            <h2 className="text-lg font-semibold text-white mb-2">
               Fragrance Profile
-            </h3>
+            </h2>
 
             <div className="grid grid-cols-2 gap-2">
 

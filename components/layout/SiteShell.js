@@ -69,6 +69,7 @@ export default function SiteShell({ children, initialCoupon = null }) {
         href="https://wa.me/918840305018?text=Hello%20ANAMYST%20✨%0A%0AI%20need%20help%20choosing%20a%20luxury%20fragrance."
         target="_blank"
         rel="noopener noreferrer"
+        aria-label="Chat with ANAMYST on WhatsApp"
         className="theme-dark fixed bottom-24 md:bottom-6 right-4 md:right-6 z-[9999] group"
       >
 

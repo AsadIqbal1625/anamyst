@@ -1,6 +1,6 @@
 
 import "./globals.css";
-import Script from "next/script";
+import Analytics from "../components/Analytics";
 import SiteShell from "../components/layout/SiteShell";
 import { connectDB } from "../lib/mongodb";
 import Coupon from "../models/Coupon";
@@ -152,22 +152,7 @@ export default async function RootLayout({ children }) {
 
         {/* GOOGLE ANALYTICS (active only when NEXT_PUBLIC_GA_ID is set) */}
 
-        {process.env.NEXT_PUBLIC_GA_ID && (
-          <>
-            <Script
-              src={`https://www.googletagmanager.com/gtag/js?id=${process.env.NEXT_PUBLIC_GA_ID}`}
-              strategy="lazyOnload"
-            />
-            <Script id="ga-init" strategy="lazyOnload">
-              {`
-                window.dataLayer = window.dataLayer || [];
-                function gtag(){dataLayer.push(arguments);}
-                gtag('js', new Date());
-                gtag('config', '${process.env.NEXT_PUBLIC_GA_ID}');
-              `}
-            </Script>
-          </>
-        )}
+        <Analytics id={process.env.NEXT_PUBLIC_GA_ID} />
 
       </body>
 

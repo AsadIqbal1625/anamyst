@@ -691,3 +691,13 @@ select:-webkit-autofill {
 .festive-ticket {
   color: #1a1408;
 }
+
+/* small grey text: a touch lighter on black and darker on ivory, so it
+   meets the 4.5:1 contrast needed for easy reading */
+:root {
+  --color-gray-500: #7e8696;
+}
+
+:root[data-theme="light"] {
+  --color-gray-500: #5b6372;
+}

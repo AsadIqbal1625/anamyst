@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { useSearchParams } from "next/navigation";
 import ProductCard from "../../components/ProductCard";
 import ShopToolbar from "../../components/ShopToolbar";
 import {
@@ -12,6 +13,15 @@ import {
 
 /* search comes from the server (already lower-cased), so the full
    product list is in the page HTML from the first byte */
+
+/* reads ?search= from the address bar */
+export function ShopWithSearch({ initialProducts }) {
+
+  const search = (useSearchParams().get("search") || "").trim().toLowerCase();
+
+  return <ShopClient initialProducts={initialProducts} search={search} />;
+
+}
 
 export default function ShopClient({ initialProducts = [], search = "" }) {
 
