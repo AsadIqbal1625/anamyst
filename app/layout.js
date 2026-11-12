@@ -4,6 +4,45 @@ import Analytics from "../components/Analytics";
 import SiteShell from "../components/layout/SiteShell";
 import { connectDB } from "../lib/mongodb";
 import Coupon from "../models/Coupon";
+import Setting from "../models/Setting";
+
+/* the "spend more, save more" offers for the bar in the header, read on
+   the server so the bar is there from the first paint */
+async function getOfferSettings() {
+
+  try {
+
+    await connectDB();
+
+    const s = await Setting.findOne(
+      { key: "store" },
+      "discountTiers campaign"
+    ).lean();
+
+    if (!s) return null;
+
+    return {
+      discountTiers: (s.discountTiers || []).map((t) => ({
+        label: t.label || "",
+        minAmount: Number(t.minAmount) || 0,
+        discountPercent: Number(t.discountPercent) || 0,
+        freeShipping: Boolean(t.freeShipping),
+        active: t.active !== false,
+      })),
+      campaign: {
+        enabled: Boolean(s.campaign?.enabled),
+        title: s.campaign?.title || "",
+        emoji: s.campaign?.emoji || "",
+      },
+    };
+
+  } catch {
+
+    return null;
+
+  }
+
+}
 
 export const metadata = {
   metadataBase: new URL("https://www.anamyst.com"),
@@ -87,7 +126,10 @@ async function getActiveCoupon() {
 
 export default async function RootLayout({ children }) {
 
-  const initialCoupon = await getActiveCoupon();
+  const [initialCoupon, initialOfferSettings] = await Promise.all([
+    getActiveCoupon(),
+    getOfferSettings(),
+  ]);
 
   return (
     /* the theme script below may set data-theme before React loads */
@@ -143,7 +185,10 @@ export default async function RootLayout({ children }) {
 
         {/* STORE CHROME (navbar/footer hidden on /admin routes) */}
 
-        <SiteShell initialCoupon={initialCoupon}>
+        <SiteShell
+          initialCoupon={initialCoupon}
+          initialOfferSettings={initialOfferSettings}
+        >
           {children}
         </SiteShell>
 

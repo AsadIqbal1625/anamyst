@@ -26,7 +26,11 @@ const toasterProps = {
   },
 };
 
-export default function SiteShell({ children, initialCoupon = null }) {
+export default function SiteShell({
+  children,
+  initialCoupon = null,
+  initialOfferSettings = null,
+}) {
 
   const pathname = usePathname();
 
@@ -55,7 +59,10 @@ export default function SiteShell({ children, initialCoupon = null }) {
       {/* one-time welcome offer after the first add to cart */}
       <WelcomeOfferPopup />
 
-      <Navbar initialCoupon={initialCoupon} />
+      <Navbar
+        initialCoupon={initialCoupon}
+        initialOfferSettings={initialOfferSettings}
+      />
 
       <main className="flex-1">
         {children}

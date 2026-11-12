@@ -10,28 +10,30 @@ import { getPricingBenefits, describeTierReward } from "../lib/pricing";
    the navbar) so customers see the offer while they're still browsing,
    not only after they've already committed to checkout. */
 
-export default function TierPromoBar() {
+export default function TierPromoBar({ initialSettings = null }) {
 
-  const [mounted, setMounted] = useState(false);
-
-  const [settings, setSettings] = useState(null);
+  /* initialSettings comes from the server, so the bar is part of the
+     first paint and the header never grows after the page appears */
+  const [settings, setSettings] = useState(initialSettings);
 
   const [total, setTotal] = useState(0);
 
   useEffect(() => {
 
-    setMounted(true);
-
     setTotal(getCartTotal());
 
-    fetch("/api/settings")
-      .then((res) => res.json())
-      .then((data) => {
+    if (!initialSettings) {
 
-        if (data.success) setSettings(data.settings);
+      fetch("/api/settings")
+        .then((res) => res.json())
+        .then((data) => {
 
-      })
-      .catch(() => {});
+          if (data.success) setSettings(data.settings);
+
+        })
+        .catch(() => {});
+
+    }
 
     const onCartUpdate = () => setTotal(getCartTotal());
 
@@ -40,9 +42,9 @@ export default function TierPromoBar() {
     return () =>
       window.removeEventListener("cartUpdated", onCartUpdate);
 
-  }, []);
+  }, [initialSettings]);
 
-  if (!mounted || !settings) return null;
+  if (!settings) return null;
 
   const tiers = settings.discountTiers || [];
 

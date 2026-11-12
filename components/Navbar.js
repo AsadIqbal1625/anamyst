@@ -27,7 +27,10 @@ from "./PromoBar";
 import TierPromoBar
 from "./TierPromoBar";
 
-export default function Navbar({ initialCoupon = null }) {
+export default function Navbar({
+  initialCoupon = null,
+  initialOfferSettings = null,
+}) {
 
   const router =
     useRouter();
@@ -51,31 +54,7 @@ export default function Navbar({ initialCoupon = null }) {
   const [hidden, setHidden] =
     useState(false);
 
-  const [navHeight, setNavHeight] =
-    useState(0);
-
   useEffect(() => {
-
-    const measure = () =>
-      setNavHeight(
-        navRef.current?.offsetHeight || 0
-      );
-
-    measure();
-
-    window.addEventListener(
-      "resize",
-      measure
-    );
-
-    /* re-measure when navbar content changes (e.g. promo bar loads) */
-
-    const observer =
-      new ResizeObserver(measure);
-
-    if (navRef.current) {
-      observer.observe(navRef.current);
-    }
 
     let lastY = window.scrollY;
 
@@ -108,16 +87,9 @@ export default function Navbar({ initialCoupon = null }) {
     return () => {
 
       window.removeEventListener(
-        "resize",
-        measure
-      );
-
-      window.removeEventListener(
         "scroll",
         onScroll
       );
-
-      observer.disconnect();
 
     };
 
@@ -178,13 +150,10 @@ export default function Navbar({ initialCoupon = null }) {
         setIsOpen={setIsOpen}
       />
 
-      {/* SPACER (keeps page content below the fixed navbar) */}
-      <div style={{ height: navHeight }} />
-
       {/* NAVBAR */}
       <nav
         ref={navRef}
-        className={`fixed top-0 left-0 right-0 z-30 bg-black/95 backdrop-blur-xl border-b border-white/10 w-full transition-transform duration-300 ${
+        className={`sticky top-0 z-30 bg-black/95 backdrop-blur-xl border-b border-white/10 w-full transition-transform duration-300 ${
           hidden
             ? "-translate-y-full"
             : "translate-y-0"
@@ -195,7 +164,7 @@ export default function Navbar({ initialCoupon = null }) {
         <PromoBar initialCoupon={initialCoupon} />
 
         {/* TIER OFFER BAR (spend more, save more) */}
-        <TierPromoBar />
+        <TierPromoBar initialSettings={initialOfferSettings} />
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3">
 

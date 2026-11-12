@@ -31,6 +31,10 @@ export default function BrandWordmark({
 
       <svg
         viewBox="0 0 654 100"
+        /* natural size, so the browser reserves the right shape before
+           the styles apply; the className still sets the real size */
+        width="654"
+        height="100"
         aria-hidden="true"
         focusable="false"
         fill="none"
