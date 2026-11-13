@@ -21,6 +21,11 @@ import {
 
 import { getOrderTotals } from "../../lib/pricing";
 
+import {
+  getSavedPhone,
+  isValidMobile,
+} from "../../lib/welcomeOfferConfig";
+
 import OccasionTierTrack from "../../components/OccasionTierTrack";
 
 export default function CartPage() {
@@ -155,6 +160,48 @@ export default function CartPage() {
   /* TIER BENEFITS — the cart has no payment method chosen yet, so it
      shows the online-payment price; any COD fee is added at checkout */
 
+  /* WELCOME OFFER — if this visitor gave their number in the welcome
+     popup, ask the server whether it still gets the discount, so the
+     cart shows the same total the checkout will. Re-checked when the
+     popup is completed while this page is open. */
+  const [welcomeDiscount, setWelcomeDiscount] = useState(0);
+
+  useEffect(() => {
+
+    let alive = true;
+
+    const check = () => {
+
+      const phone = getSavedPhone();
+
+      if (!isValidMobile(phone)) return;
+
+      fetch("/api/welcome-offer", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ action: "check", phone }),
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          if (alive) {
+            setWelcomeDiscount(data.success ? Number(data.amount) || 0 : 0);
+          }
+        })
+        .catch(() => {});
+
+    };
+
+    check();
+
+    window.addEventListener("welcomeOfferClaimed", check);
+
+    return () => {
+      alive = false;
+      window.removeEventListener("welcomeOfferClaimed", check);
+    };
+
+  }, []);
+
   const totals = useMemo(
     () =>
       getOrderTotals({
@@ -162,8 +209,9 @@ export default function CartPage() {
         tiers: settings.discountTiers,
         shippingFee: settings.shippingFee,
         paymentMethod: "RAZORPAY",
+        welcomeDiscount,
       }),
-    [total, settings.discountTiers, settings.shippingFee]
+    [total, settings.discountTiers, settings.shippingFee, welcomeDiscount]
   );
 
   const benefits = totals.benefits;
@@ -590,7 +638,7 @@ export default function CartPage() {
 
                     <div className="flex justify-between text-green-400">
 
-                      <span>{benefits.discountPercent}% OFF</span>
+                      <span>Discount ({totals.discountLabel})</span>
 
                       <span>−₹{discountAmount}</span>
 

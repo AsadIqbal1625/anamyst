@@ -132,6 +132,9 @@ export default function WelcomeOfferPopup() {
       /* the checkout starts with this number already filled in */
       savePhone(phone);
 
+      /* lets the cart show the discount straight away */
+      window.dispatchEvent(new Event("welcomeOfferClaimed"));
+
       setResult(data.eligible ? "unlocked" : "used");
 
     } catch {
