@@ -5,6 +5,7 @@ import SiteShell from "../components/layout/SiteShell";
 import { connectDB } from "../lib/mongodb";
 import Coupon from "../models/Coupon";
 import Setting from "../models/Setting";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 
 /* the "spend more, save more" offers for the bar in the header, read on
    the server so the bar is there from the first paint */
@@ -198,6 +199,10 @@ export default async function RootLayout({ children }) {
         {/* GOOGLE ANALYTICS (active only when NEXT_PUBLIC_GA_ID is set) */}
 
         <Analytics id={process.env.NEXT_PUBLIC_GA_ID} />
+
+        {/* VERCEL SPEED INSIGHTS */}
+
+        <SpeedInsights />
 
       </body>
 
